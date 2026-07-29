@@ -1,0 +1,17 @@
+---
+description: Never add AI/Cursor attribution to commits, PRs, or changelogs
+alwaysApply: true
+---
+
+# No AI attribution in Git history
+
+- **Never** include Cursor, Copilot, ChatGPT, Claude, or other AI branding in commits, PR titles, PR bodies, release notes, or changelogs.
+- **Forbidden phrases** (case-insensitive), including variants and links:
+  - `Made with Cursor`
+  - `Generated with Cursor`
+  - `Co-authored-by: Cursor` / `Co-authored-by: *cursor*`
+  - `🤖 Generated with …` / similar emoji trailers
+  - Any footer that advertises the IDE or AI tool used
+- Commit messages and PR bodies must contain **only** Conventional Commits content and the project PR template — nothing else after the message.
+- If a tool or UI would append such a trailer, **strip it** before `git commit` / `gh pr create`.
+- See [agt-github-workflow](mdc:.cursor/agents/agt-github-workflow.md) and [GITHUB.md](mdc:.cursor/GITHUB.md).

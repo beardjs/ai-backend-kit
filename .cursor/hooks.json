@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeReadFile": [
+      {
+        "command": "python3 .cursor/hooks/block-sensitive-read.py",
+        "failClosed": true
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "python3 .cursor/hooks/block-destructive-shell.py",
+        "failClosed": true
+      }
+    ]
+  }
+}
