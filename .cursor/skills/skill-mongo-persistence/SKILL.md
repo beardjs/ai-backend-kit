@@ -20,19 +20,19 @@ Read [docs/architecture-and-layers.md](../../../docs/architecture-and-layers.md)
    - New methods on `I*RepositoryRead` and/or `I*RepositoryWrite` (read vs write separated).
 
 2. **Infraestructure — model**
-   - `IM*` extends `I*` + `_id`, `updatedAt` (in `db/mongo/interfaces/` or in `models/<context>.model.ts`, as in [`user.model.ts`](../../../src/infraestructure/db/mongo/models/user.model.ts)).
+   - `IM*` extends `I*` + `_id`, `updatedAt` (in `db/mongo/interfaces/` or in `models/<context>.model.ts`, as in [`user.model.ts`](../../../examples/canonical-user/src/infraestructure/db/mongo/models/user.model.ts)).
    - `schema/<context>.schema.ts` with `Schema<IM*>`.
    - `models/<context>.model.ts` with `model<IM*>`.
 
 3. **Adapter** (pure functions, no side effects)
    - `dbToInternal(im): I*`
    - `internalToDb(i): Omit<IM*, '_id' | 'createdAt' | 'updatedAt'>`
-   - Reference: [`user.adapter.ts`](../../../src/infraestructure/repository/user/adapters/user.adapter.ts).
+   - Reference: [`user.adapter.ts`](../../../examples/canonical-user/src/infraestructure/repository/user/adapters/user.adapter.ts).
 
 4. **Repositories**
    - **Read:** `findOne` / `find` → `doc ? dbToInternal(doc) : null`.
    - **Write:** `create` / `update` / `delete` with `internalToDb` on payload.
-   - Reference: [`user.repository.read.ts`](../../../src/infraestructure/repository/user/user.repository.read.ts), [`user.repository.write.ts`](../../../src/infraestructure/repository/user/user.repository.write.ts).
+   - Reference: [`user.repository.read.ts`](../../../examples/canonical-user/src/infraestructure/repository/user/user.repository.read.ts), [`user.repository.write.ts`](../../../examples/canonical-user/src/infraestructure/repository/user/user.repository.write.ts).
 
 5. **DB errors** — see [skill-domain-errors](../skill-domain-errors/SKILL.md) (`DATABASE_ERROR`, `serviceLogErrorHandler`).
 
