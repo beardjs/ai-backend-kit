@@ -1,13 +1,19 @@
 ---
-description: Release via semantic-release — conventional commits, not Changesets
-globs: package.json,release.config.js
+description: Release via semantic-release — conventional commits, not Changesets (service package)
+globs: release.config.js
 alwaysApply: false
 ---
 
-# Release
+# Release (service package)
 
-- Versioning and changelog are automated by **semantic-release** (`yarn release` → `semantic-release`).
-- Config lives in [release.config.js](release.config.js); plugins are declared in [package.json](package.json) (`@semantic-release/commit-analyzer`, `release-notes-generator`, `changelog`, `git`, `exec`).
-- Version bumps are derived from **Conventional Commits** (`feat:`, `fix:`, `BREAKING CHANGE:`); do not bump versions by hand.
-- **Do not** use Changesets in this repo — there is no `.changeset/` and no `changeset` script.
-- Do not edit `CHANGELOG.md` or the `version` field in `package.json` manually; let the release pipeline manage them.
+Applies to **backend services** that adopt this kit and ship an npm package via semantic-release (`release.config.js` present).
+
+- Versioning and changelog for the **service** are automated by **semantic-release** (`yarn release` → `semantic-release`).
+- Config lives in the service’s `release.config.js`; plugins are declared in the service’s `package.json` (`@semantic-release/commit-analyzer`, `release-notes-generator`, `changelog`, `git`, `exec`).
+- Version bumps are derived from **Conventional Commits** (`feat:`, `fix:`, `BREAKING CHANGE:`); do not bump the service version by hand.
+- **Do not** use Changesets in service repos — there is no `.changeset/` and no `changeset` script.
+- Do not edit the service `CHANGELOG.md` or the `version` field in `package.json` manually; let the release pipeline manage them.
+
+## Kit version (separate)
+
+The Cursor kit package `@sauvvitech/st-cursor-backend` uses SemVer in [`VERSION`](mdc:VERSION) + [`package.json`](mdc:package.json) + [`CHANGELOG.md`](mdc:CHANGELOG.md), published on tag `v*` (see `.github/workflows/publish.yml`), and stamped into services as `.cursor/KIT_VERSION` by the CLI / sync script. That is **not** the same as a service package version.
