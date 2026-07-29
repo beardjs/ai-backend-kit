@@ -10,5 +10,5 @@ alwaysApply: true
 - Repository contracts in domain (`I*RepositoryRead` / `I*RepositoryWrite`); implementations in `src/infraestructure/repository/<context>/`.
 - Composition and DI in `src/configuration/factory/`.
 - Tests in `src/__tests__/`; coverage target ≥ 80% (`yarn test:coverage` in AGENTS.md).
-- Endpoints: when changing routes/contracts, update [src/contracts/service.yaml](src/contracts/service.yaml).
+- Endpoints: when changing routes/contracts, update [src/contracts/service.yaml](../../examples/canonical-user/src/contracts/service.yaml).
 - **Business rules** belong **mandatorily** in **Service** (`src/domain/<context>/service/`); never in Repository or Controller. See [rule.business-rules-layers.mdc](rule.business-rules-layers.mdc).
