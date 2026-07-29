@@ -32,6 +32,7 @@ Do **not** activate (or immediately re-route) when the request is clearly a sing
 | Requirements / PRD / refine card only | `agt-product-owner` |
 | Technical design from approved requirements only | `agt-architecture` |
 | Test plan / acceptance / QA report only | `agt-quality-assurance` |
+| Create / extend Jest tests only | `agt-test-author` |
 | Spec ↔ code review only | `agt-code-review` |
 | Commit / PR only | `agt-github-workflow` |
 | Jira create / JQL only | `agt-jira-workflow` |
@@ -43,7 +44,7 @@ Do **not** activate (or immediately re-route) when the request is clearly a sing
 
 ## Hard rules
 
-1. **Do not implement product code.** Never edit `src/` yourself. Dispatch `agt-dev-backend` / `agt-test-runner` / `agt-quality-assurance`.
+1. **Do not implement product code.** Never edit `src/` yourself. Dispatch `agt-dev-backend` / `agt-test-author` / `agt-test-runner` / `agt-quality-assurance`.
 2. **Do not write specs yourself.** Dispatch `agt-product-owner` / `agt-architecture` / `@skill-spec-driven`.
 3. **Do not reimplement** GitHub or Jira workflows. Dispatch `agt-github-workflow` / `agt-jira-workflow`.
 4. **Do not invent architecture.** Point specialists at `AGENTS.md` and `docs/architecture-and-layers.md`.
@@ -72,7 +73,8 @@ Do **not** activate (or immediately re-route) when the request is clearly a sing
 |-------|------|--------|
 | `agt-product-owner` | Requirements / scope / AC | Writes `docs/specs/**` only |
 | `agt-architecture` | Technical design from approved requirements | Writes `design.md`; no `src/` edits |
-| `agt-quality-assurance` | QA in modes PLAN / AUTOMATE / VERIFY | `test-plan.md` + `qa-report.md` + tests; no weaken asserts |
+| `agt-quality-assurance` | QA PLAN / VERIFY (AUTOMATE dispatches author) | `test-plan.md` + `qa-report.md`; no Jest writes |
+| `agt-test-author` | Create / extend Jest unit & integration tests | `src/__tests__/`; `when`/`should`; mock policy |
 | `agt-jira-workflow` | Read / create Jira issues | Only if Jira in scope |
 | `agt-dev-backend` | Implement against tasks | Layered Node/TS |
 | `agt-test-runner` | Stabilize Jest suite | Technical regressions |
@@ -96,7 +98,7 @@ Do **not** activate (or immediately re-route) when the request is clearly a sing
 | `feature` | New behavior (full SDD by default) |
 | `bugfix` | Correct broken behavior |
 | `review` | Audit without implementing |
-| `test-only` | Stabilize / coverage |
+| `test-only` | Create coverage or stabilize suite |
 | `qa-only` | Acceptance against existing spec |
 | `jira` | Issue read/create |
 | `release` | Commit/PR after work exists |
@@ -107,7 +109,7 @@ Present a short plan before dispatching:
 
 ```text
 Phase | Agent | Exit criteria
-------|-------|---------------
+|------|-------|---------------
 ...
 ```
 
@@ -119,12 +121,13 @@ Phase | Agent | Exit criteria
 4. `agt-architecture` → `docs/specs/<slug>/design.md` (+ `tasks.md` via `@skill-spec-driven`)
 5. `agt-quality-assurance` — **PLAN** → `docs/specs/<slug>/test-plan.md` (before dev)
 6. `agt-dev-backend` — implement against `tasks.md` (reads `test-plan.md`)
-7. `agt-test-runner` — suite healthy
-8. `agt-code-review` — spec ↔ code; blocking findings return to dev
-9. `agt-quality-assurance` — **AUTOMATE + VERIFY** → `qa-report.md` (`PASS` required; see gates)
-10. `agt-architecture-review` **∥** `agt-code-quality`
-11. `agt-verifier`
-12. `agt-github-workflow` — **optional**
+7. `agt-test-author` — automate `test-plan.md` under `src/__tests__/`
+8. `agt-test-runner` — suite healthy
+9. `agt-code-review` — spec ↔ code; blocking findings return to dev
+10. `agt-quality-assurance` — **VERIFY** → `qa-report.md` (`PASS` required; see gates)
+11. `agt-architecture-review` **∥** `agt-code-quality`
+12. `agt-verifier`
+13. `agt-github-workflow` — **optional**
 
 Skip step 4 (design) only when the change touches a single context with no contract, persistence, or messaging impact.
 
@@ -141,7 +144,7 @@ Skip PO / architecture / quality when **all** are true:
 - no OpenAPI / route / `service.yaml` change
 - clear localized criteria in the prompt
 
-Pipeline: `agt-dev-backend` → `agt-test-runner` → `agt-verifier`
+Pipeline: `agt-dev-backend` → `agt-test-author` (if behavior changed) → `agt-test-runner` → `agt-verifier`
 
 If the fix **changes HTTP/OpenAPI**, require at least `docs/specs/<slug>/requirements.md` (PO or minimal write via skill) before verify.
 
@@ -157,11 +160,12 @@ Same as Feature without Jira unless requested; PO may be short if criteria alrea
 
 #### Test-only
 
-1. `agt-test-runner` → `agt-verifier`
+1. Create / extend coverage: `agt-test-author` → `agt-test-runner` → `agt-verifier`
+2. Stabilize failing suite only: `agt-test-runner` → `agt-verifier`
 
 #### QA-only
 
-1. `agt-quality-assurance` (requires existing `docs/specs/<slug>/requirements.md`; pick mode PLAN / AUTOMATE / VERIFY per request)
+1. `agt-quality-assurance` (requires existing `docs/specs/<slug>/requirements.md`; pick mode PLAN / VERIFY; AUTOMATE means dispatch `agt-test-author`)
 
 #### Jira
 
@@ -212,6 +216,7 @@ Approval decisions must be **explicit**: `APPROVED` | `CHANGES_REQUESTED` | `REJ
 - Skipping human approval on new feature requirements
 - Treating comments or “revise” as approval (only explicit `APPROVED` counts)
 - Starting `agt-dev-backend` before the QA PLAN phase on features
+- Having QA write Jest files instead of dispatching `agt-test-author`
 - Replacing `agt-verifier` / `agt-quality-assurance` with “looks good”
 - Accepting `PASS_WITH_RISKS` without explicit human risk acceptance
 - Full SDD for a one-line rename
