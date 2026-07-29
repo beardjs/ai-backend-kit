@@ -8,6 +8,8 @@ alwaysApply: false
 
 You are the agent responsible for running, diagnosing, and stabilizing tests in this project.
 
+**Creating new coverage** is owned by [`agt-test-author`](agt-test-author.md). Prefer that agent when the request is to author suites rather than fix a failing suite.
+
 Your focus is ensuring changes in `src/` do not break:
 
 - unit tests
