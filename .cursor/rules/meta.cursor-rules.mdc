@@ -1,0 +1,62 @@
+---
+description: Guidelines for creating and maintaining Cursor rules to ensure consistency and effectiveness.
+globs: .cursor/rules/**/*
+alwaysApply: false
+---
+- **Required Rule Structure:**
+  ```markdown
+  ---
+  description: Clear, one-line description of what the rule enforces
+  globs: path/to/files/*.ext, other/path/**/*
+  alwaysApply: boolean
+  ---
+
+  - **Main Points in Bold**
+    - Sub-points with details
+    - Examples and explanations
+  ```
+
+- **Naming convention (this repo):**
+  - Layer/subject rules MUST use the prefix `rule.` + `kebab-case`: `rule.<name>.mdc`.
+    - ✅ `rule.naming-patterns.mdc`, `rule.domain.mdc`, `rule.business-rules-layers.mdc`
+    - ❌ `rule-domain.mdc`, `domain.mdc`, `ruleDomain.mdc`
+  - Meta rules (rules about maintaining rules) use the prefix `meta.` + `kebab-case`: `meta.<name>.mdc`.
+    - ✅ `meta.cursor-rules.mdc`, `meta.self-improve.mdc`
+  - Name aligns with the layer or subject it governs (`rule.application`, `rule.infraestructure`, `rule.tests`).
+  - Do NOT create rules without a `rule.` or `meta.` prefix; imported tool rules are not used in this repo.
+  - Frontmatter is required: a one-line `description` and `alwaysApply` (use `globs` only when the rule is path-scoped).
+
+- **File References:**
+  - Use `[filename](mdc:path/to/file)` ([filename](mdc:filename)) to reference files
+  - Example: [rule.naming-patterns.mdc](mdc:.cursor/rules/rule.naming-patterns.mdc) for rule references
+  - Example: [user.entity.ts](mdc:src/domain/user/entity/user.entity.ts) for code references
+
+- **Code Examples:**
+  - Use language-specific code blocks
+  ```typescript
+  // ✅ DO: Show good examples
+  const goodExample = true;
+  
+  // ❌ DON'T: Show anti-patterns
+  const badExample = false;
+  ```
+
+- **Rule Content Guidelines:**
+  - Start with high-level overview
+  - Include specific, actionable requirements
+  - Show examples of correct implementation
+  - Reference existing code when possible
+  - Keep rules DRY by referencing other rules
+
+- **Rule Maintenance:**
+  - Update rules when new patterns emerge
+  - Add examples from actual codebase
+  - Remove outdated patterns
+  - Cross-reference related rules
+
+- **Best Practices:**
+  - Use bullet points for clarity
+  - Keep descriptions concise
+  - Include both DO and DON'T examples
+  - Reference actual code over theoretical examples
+  - Use consistent formatting across rules 

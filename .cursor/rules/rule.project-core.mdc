@@ -1,0 +1,14 @@
+---
+description: Project core — layered backend, folder spelling, and AGENTS.md
+alwaysApply: true
+---
+# Project core — layered backend
+
+- Source of truth: [AGENTS.md](AGENTS.md) and [docs/architecture-and-layers.md](docs/architecture-and-layers.md).
+- Fixed folders: **`infraestructure`** (with "e"), **`configuration`** (singular) — do not rename to "infrastructure" / "configurations".
+- **Domain** must not import **Infraestructure** (no Mongoose, `IM*`, concrete Kafka in domain).
+- Repository contracts in domain (`I*RepositoryRead` / `I*RepositoryWrite`); implementations in `src/infraestructure/repository/<context>/`.
+- Composition and DI in `src/configuration/factory/`.
+- Tests in `src/__tests__/`; coverage target ≥ 80% (`yarn test:coverage` in AGENTS.md).
+- Endpoints: when changing routes/contracts, update [src/contracts/service.yaml](src/contracts/service.yaml).
+- **Business rules** belong **mandatorily** in **Service** (`src/domain/<context>/service/`); never in Repository or Controller. See [rule.business-rules-layers.mdc](rule.business-rules-layers.mdc).

@@ -1,0 +1,13 @@
+---
+description: Release via semantic-release — conventional commits, not Changesets
+globs: package.json,release.config.js
+alwaysApply: false
+---
+
+# Release
+
+- Versioning and changelog are automated by **semantic-release** (`yarn release` → `semantic-release`).
+- Config lives in [release.config.js](release.config.js); plugins are declared in [package.json](package.json) (`@semantic-release/commit-analyzer`, `release-notes-generator`, `changelog`, `git`, `exec`).
+- Version bumps are derived from **Conventional Commits** (`feat:`, `fix:`, `BREAKING CHANGE:`); do not bump versions by hand.
+- **Do not** use Changesets in this repo — there is no `.changeset/` and no `changeset` script.
+- Do not edit `CHANGELOG.md` or the `version` field in `package.json` manually; let the release pipeline manage them.

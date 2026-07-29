@@ -1,0 +1,11 @@
+---
+description: Configuration — dotenv, env, composition factories
+globs: src/configuration/**/*
+alwaysApply: false
+---
+# Configuration (`src/configuration`)
+
+- **Factories** in `factory/`: `*.controller.factory.ts`, `*.service.factory.ts`, messaging in `factory/messaging/` when present.
+- Responsibility: **assemble** the graph (controllers ← services ← concrete repos / producers); do not put business rules here (nor rule workarounds in the factory).
+- Product rules live in **service** — see [rule.business-rules-layers.mdc](rule.business-rules-layers.mdc).
+- Env: `dotenv.ts`, `env-constants/` — named constants, do not scatter `process.env` in the domain.
