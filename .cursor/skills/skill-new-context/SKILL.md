@@ -27,9 +27,9 @@ Read [AGENTS.md](../../../AGENTS.md) (sections 1–3 and 5–6) and [docs/archit
 
 3. **Application** — `src/application/controllers/<context>.controller.ts` (thin, calls service)
 
-4. **Configuration** — `src/configuration/factory/<context>.service.factory.ts`, `<context>.controller.factory.ts`; register controller in [src/app.ts](../../../src/app.ts) if needed
+4. **Configuration** — `src/configuration/factory/<context>.service.factory.ts`, `<context>.controller.factory.ts`; register controller in [src/app.ts](../../../examples/canonical-user/src/app.ts) if needed
 
-5. **Contracts** — update [src/contracts/service.yaml](../../../src/contracts/service.yaml) with paths and schemas
+5. **Contracts** — update [src/contracts/service.yaml](../../../examples/canonical-user/src/contracts/service.yaml) with paths and schemas
 
 6. **Tests** — `src/__tests__/integration/` and `unit/` mirroring `user` as reference
 
