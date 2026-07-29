@@ -16,9 +16,9 @@ Read [docs/architecture-and-layers.md](../../../docs/architecture-and-layers.md)
 ## Implementation order
 
 1. **Domain — service**
-   - Declare method in `src/domain/<context>/interfaces/<context>.service.interface.ts`.
+   - Declare method in `src/domain/<context>/service/<context>.service.interface.ts` (when the project uses a service interface).
    - Implement in `src/domain/<context>/service/<context>.service.ts`: business rules, `*ServiceEntity`, `IThrowedError` + `EErrorCode` (see [skill-domain-errors](../skill-domain-errors/SKILL.md)).
-   - Reference: [`user.service.ts`](../../../src/domain/user/service/user.service.ts).
+   - Reference: [`user.service.ts`](../../../examples/canonical-user/src/domain/user/service/user.service.ts).
 
 2. **Repository (if new data is needed)**
    - Extend `I*RepositoryRead` / `I*RepositoryWrite` in the domain.
@@ -28,7 +28,7 @@ Read [docs/architecture-and-layers.md](../../../docs/architecture-and-layers.md)
    - Register route in `initRoutes()` of `src/application/controllers/<context>.controller.ts`.
    - Thin handler: extract `params` / `body` / `query` → call service → `res.status(...).json(...)`.
    - `try/catch` with `handleTranslatedError(error, ErrorCatalog, res)`.
-   - Reference: [`user.controller.ts`](../../../src/application/controllers/user.controller.ts).
+   - Reference: [`user.controller.ts`](../../../examples/canonical-user/src/application/controllers/user.controller.ts).
 
 4. **Configuration — factory**
    - Change `src/configuration/factory/<context>.service.factory.ts` **only** if the service gains new constructor dependencies.
