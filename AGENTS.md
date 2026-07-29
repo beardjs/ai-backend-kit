@@ -2,7 +2,7 @@
 
 Short contract for **any** Node.js/TypeScript service that adopts this Cursor kit. Detail: [docs/architecture-and-layers.md](docs/architecture-and-layers.md). Cursor index: [`.cursor/RULES.md`](.cursor/RULES.md).
 
-> Examples using the `user` context (`UserService`, `IUser`, …) are the kit’s **canonical pattern**. Replace `<context>` with the service’s real bounded context.
+> Examples using the `user` context (`UserService`, `IUser`, …) are the kit’s **canonical pattern**. Illustrative files: [`examples/canonical-user/`](examples/canonical-user/). Replace `<context>` with the service’s real bounded context.
 
 ## 1. Stack and commands
 
