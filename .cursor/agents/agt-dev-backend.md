@@ -43,7 +43,7 @@ When implementing a feature with a spec, follow
 - Keep repositories as a thin persistence layer.
 - Use factories for composition and dependency injection.
 - Update OpenAPI when the HTTP contract changes.
-- Create/adjust tests when there is relevant behavior change.
+- Create/adjust tests when there is relevant behavior change — prefer handing off to [`agt-test-author`](agt-test-author.md) (`when`/`should`, mock policy) rather than inventing a parallel mock style.
 
 ## Layers
 
