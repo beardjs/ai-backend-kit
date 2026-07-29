@@ -1,0 +1,45 @@
+{
+  "name": "@sauvvitech/st-cursor-backend",
+  "version": "1.1.0",
+  "description": "Cursor kit CLI for layered Node.js/TypeScript backends — syncs .cursor rules, agents, skills, and shared docs into a service.",
+  "license": "UNLICENSED",
+  "private": false,
+  "bin": {
+    "st-cursor-backend": "bin/st-cursor-backend.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    ".cursor",
+    "AGENTS.md",
+    "VERSION",
+    "docs/architecture-and-layers.md",
+    "docs/specs",
+    "docs/templates",
+    "examples/canonical-user",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SauvviTech/cursor-backend.git"
+  },
+  "keywords": [
+    "cursor",
+    "backend",
+    "layered-architecture",
+    "kit",
+    "sauvvitech"
+  ],
+  "scripts": {
+    "sync": "node bin/st-cursor-backend.js",
+    "check:version": "node scripts/check-version.js",
+    "prepack": "node scripts/check-version.js"
+  }
+}
