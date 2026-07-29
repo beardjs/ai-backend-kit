@@ -1,0 +1,67 @@
+name: Kit CI
+
+on:
+  push:
+    branches: [staging, main, master]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check VERSION matches package.json
+        run: node scripts/check-version.js
+
+      - name: Shell syntax (sync script)
+        run: bash -n scripts/sync-cursor.sh
+
+      - name: CLI sync against fixture
+        run: |
+          set -euo pipefail
+          FIXTURE="$(mktemp -d)"
+          mkdir -p "$FIXTURE/.git"
+          printf '%s\n' '{"name":"kit-fixture"}' > "$FIXTURE/package.json"
+          mkdir -p "$FIXTURE/.cursor/local"
+          echo "service-local" > "$FIXTURE/.cursor/local/keep-me.txt"
+          node bin/st-cursor-backend.js "$FIXTURE" --dry-run --with-pr-template
+          node bin/st-cursor-backend.js "$FIXTURE" --with-pr-template
+          test -f "$FIXTURE/.cursor/KIT_VERSION"
+          test -f "$FIXTURE/.cursor/local/keep-me.txt"
+          test -f "$FIXTURE/AGENTS.md"
+          test -f "$FIXTURE/examples/canonical-user/README.md"
+          test -f "$FIXTURE/.github/PULL_REQUEST_TEMPLATE.md"
+          KIT_V="$(tr -d '[:space:]' < VERSION)"
+          STAMP="$(tr -d '[:space:]' < "$FIXTURE/.cursor/KIT_VERSION")"
+          test "$KIT_V" = "$STAMP"
+          # default target = cwd
+          (
+            cd "$FIXTURE"
+            node "$GITHUB_WORKSPACE/bin/st-cursor-backend.js" --dry-run
+          )
+          rm -rf "$FIXTURE"
+
+      - name: Bash sync smoke (optional rsync path)
+        run: |
+          set -euo pipefail
+          FIXTURE="$(mktemp -d)"
+          mkdir -p "$FIXTURE/.git" "$FIXTURE/.cursor/local"
+          printf '%s\n' '{"name":"kit-fixture"}' > "$FIXTURE/package.json"
+          echo "service-local" > "$FIXTURE/.cursor/local/keep-me.txt"
+          ./scripts/sync-cursor.sh "$FIXTURE" --with-pr-template
+          test -f "$FIXTURE/.cursor/KIT_VERSION"
+          test -f "$FIXTURE/.cursor/local/keep-me.txt"
+          rm -rf "$FIXTURE"
+
+      - name: Check internal markdown links
+        run: python3 scripts/check-md-links.py
+
+      - name: npm pack dry-run
+        run: npm pack --dry-run
