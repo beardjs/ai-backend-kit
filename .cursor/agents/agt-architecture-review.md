@@ -2,7 +2,7 @@
 name: agt-architecture-review
 description: Architecture audit for Node.js/TypeScript layered backends (Domain / Application / Infraestructure / Configuration). Validates layer separation, contracts, factories, Mongo adapters and improper coupling.
 model: inherit
-readonly: false
+readonly: true
 alwaysApply: false
 ---
 
