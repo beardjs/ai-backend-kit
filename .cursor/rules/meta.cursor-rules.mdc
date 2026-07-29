@@ -27,9 +27,9 @@ alwaysApply: false
   - Frontmatter is required: a one-line `description` and `alwaysApply` (use `globs` only when the rule is path-scoped).
 
 - **File References:**
-  - Use `[filename](mdc:path/to/file)` ([filename](mdc:filename)) to reference files
+  - Use Cursor `mdc:` links of the form `mdc:<path-from-repo-root>` (example syntax only — not a live link).
   - Example: [rule.naming-patterns.mdc](mdc:.cursor/rules/rule.naming-patterns.mdc) for rule references
-  - Example: [user.entity.ts](mdc:src/domain/user/entity/user.entity.ts) for code references
+  - Example: [user.entity.ts](mdc:examples/canonical-user/src/domain/user/entity/user.entity.ts) for code references in this kit
 
 - **Code Examples:**
   - Use language-specific code blocks
