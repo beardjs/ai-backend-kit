@@ -4,7 +4,7 @@ description: >-
   Spec-Driven workflow for this repo: Specify → Design → Tasks → consistency
   checklist, writing under docs/specs/<slug>/. Use before implementing features
   or when refining ambiguous requirements. Pairs with agt-product-owner,
-  agt-architecture and agt-quality-assurance.
+  agt-architecture, agt-quality-assurance, and agt-test-author.
 ---
 
 # Spec-Driven Development (this repo)
@@ -26,8 +26,9 @@ Lightweight equivalent of Spec Kit phases **without** installing Spec Kit CLI. A
 | Tasks | this skill (+ human / light tech input) |
 | Test plan (before dev) | `agt-quality-assurance` — PLAN |
 | Implement | `agt-dev-backend` |
+| Automate tests | `agt-test-author` |
 | Code review | `agt-code-review` |
-| Acceptance + QA report | `agt-quality-assurance` — AUTOMATE + VERIFY |
+| QA report | `agt-quality-assurance` — VERIFY |
 | Route all | `agt-orchestrator` |
 
 ## Procedure
@@ -66,10 +67,11 @@ Before `agt-dev-backend`:
 
 1. `agt-quality-assurance` (PLAN) derives `test-plan.md` from approved requirements + design.
 2. `agt-dev-backend` works task-by-task against `tasks.md` (reads `test-plan.md` as input).
-3. `agt-test-runner` stabilizes the suite.
-4. `agt-code-review` compares spec ↔ implementation; blocking findings return to dev.
-5. `agt-quality-assurance` (AUTOMATE + VERIFY) writes acceptance tests and `qa-report.md`.
-6. `agt-verifier` checks delivery evidence.
+3. `agt-test-author` automates the test plan under `src/__tests__/`.
+4. `agt-test-runner` stabilizes the suite.
+5. `agt-code-review` compares spec ↔ implementation; blocking findings return to dev.
+6. `agt-quality-assurance` (VERIFY) writes `qa-report.md`.
+7. `agt-verifier` checks delivery evidence.
 
 ## Anti-patterns
 
@@ -85,4 +87,5 @@ Before `agt-dev-backend`:
 - [agt-product-owner](../../agents/agt-product-owner.md)
 - [agt-architecture](../../agents/agt-architecture.md)
 - [agt-quality-assurance](../../agents/agt-quality-assurance.md)
+- [agt-test-author](../../agents/agt-test-author.md)
 - [agt-orchestrator](../../agents/agt-orchestrator.md)
