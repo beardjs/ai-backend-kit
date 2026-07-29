@@ -2,7 +2,7 @@
 
 Reference document for **any backend service** that adopts the kit in [st-cursor-backend](../README.md). Complements [AGENTS.md](../AGENTS.md).
 
-> The `user` context appears in examples as the **canonical pattern**. In each service, replace it with the real `<context>` (`order`, `payment`, `catalog`, …).
+> The `user` context appears in examples as the **canonical pattern**. Illustrative files: [`examples/canonical-user/`](../examples/canonical-user/). In each service, replace it with the real `<context>` (`order`, `payment`, `catalog`, …).
 
 ## 1. Goal
 
@@ -188,3 +188,5 @@ See [`.cursor/rules/rule.tests.mdc`](../.cursor/rules/rule.tests.mdc).
 | Specs | `docs/specs/` + `.cursor/SPECS.md` |
 | Naming/REST quality | `.cursor/QUALITY.md` |
 | Kit adoption | [ADOPTION.md](ADOPTION.md) |
+| Skills map | [`.cursor/SKILLS.md`](../.cursor/SKILLS.md) |
+| Canonical `user` snippets | [`examples/canonical-user/`](../examples/canonical-user/) |
