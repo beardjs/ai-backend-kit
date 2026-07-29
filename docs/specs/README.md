@@ -31,12 +31,13 @@ docs/specs/
 3. **`agt-architecture`** writes `design.md` (+ `tasks.md` via skill / tech review).
 4. **`agt-quality-assurance`** (PLAN mode) derives `test-plan.md` **before** development.
 5. **`agt-dev-backend`** implements against `tasks.md`.
-6. **`agt-test-runner`** stabilizes the suite.
-7. **`agt-code-review`** compares spec ↔ code (blocking findings return to dev).
-8. **`agt-quality-assurance`** (AUTOMATE + VERIFY) fills `qa-report.md`; does not weaken asserts.
-9. Reviews + **`agt-verifier`**.
+6. **`agt-test-author`** automates the test plan under `src/__tests__/`.
+7. **`agt-test-runner`** stabilizes the suite.
+8. **`agt-code-review`** compares spec ↔ code (blocking findings return to dev).
+9. **`agt-quality-assurance`** (VERIFY) fills `qa-report.md`; does not weaken asserts.
+10. Reviews + **`agt-verifier`**.
 
 Index: [`.cursor/SPECS.md`](../../.cursor/SPECS.md). Templates: [`_templates/`](_templates/).
 
-> In **st-cursor-backend** (this kit), only `_templates/` and this README live under `docs/specs/`. Feature folders (`docs/specs/<slug>/`) are created **inside each service** after adoption.
+> In **st-cursor-backend** (this kit), only `_templates/` and this README live under `docs/specs/`. Feature folders (`docs/specs/<slug>/`) are created **inside each service** after adoption. Pedagogical code shapes: [`examples/canonical-user/`](../../examples/canonical-user/).
 
