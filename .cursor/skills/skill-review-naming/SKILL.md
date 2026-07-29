@@ -22,7 +22,7 @@ Sources: [docs/architecture-and-layers.md](../../../docs/architecture-and-layers
 | Artifact | Expected pattern | Example path |
 |----------|------------------|--------------|
 | Domain interface | `I` + PascalCase | `entity/interfaces/user.interface.ts` → `IUser` |
-| Service interface | `I<Context>Service` | `interfaces/user.service.interface.ts` |
+| Service interface | `I<Context>Service` | `service/user.service.interface.ts` |
 | Repository contract | `I*RepositoryRead` / `Write` | `user.repository.read.ts` |
 | Mongo interface | `IM*` | `infraestructure/db/mongo/interfaces/user.interface.ts` |
 | Entity class | `<Context>ServiceEntity` | `user.entity.ts` |
