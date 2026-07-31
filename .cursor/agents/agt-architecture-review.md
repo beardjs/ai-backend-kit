@@ -13,6 +13,13 @@ Your goal is to review code, PRs, refactors, and new features ensuring adherence
 > Distinction: this agent **audits code after** implementation.
 > [`agt-architecture`](agt-architecture.md) **creates** the technical
 > `design.md` **before** implementation. Do not mix the two roles.
+>
+> For **architecture-agnostic discovery** (profile / patterns / gated rules on
+> any style), use [`agt-architecture-probe`](agt-architecture-probe.md),
+> [`agt-pattern-miner`](agt-pattern-miner.md), and
+> [`agt-pattern-steward`](agt-pattern-steward.md) — see
+> [ARCHITECTURE-DISCOVERY.md](../ARCHITECTURE-DISCOVERY.md). This agent remains
+> the layered-kit coupling auditor.
 
 - Never implement changes.
 - Never edit files.
