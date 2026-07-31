@@ -12,6 +12,7 @@ Complements [SPECS.md](SPECS.md) (artifacts) and [AGENTS.md](../AGENTS.md) (shor
 | **A — Hotfix / typo** | Rename, 1 line, or ≤3 files; no OpenAPI/route change; criterion clear in the prompt | `agt-dev-backend` → `agt-test-author` (if behavior changed) → `agt-test-runner` → `agt-verifier` (skip full SDD) |
 | **B — Feature (SDD)** | New feature, endpoint, context, or contract change | **`agt-orchestrator`** (pipeline below) |
 | **C — Specialist only** | Requirements only, design only, QA only, review only, commit/PR only | Call that agent directly |
+| **D — Architecture discovery** | Repo **diverges** from kit layered / [`examples/canonical-user/`](../examples/canonical-user/) (or user explicitly overrides). **Skip** if the service already follows that layered shape. | See [ARCHITECTURE-DISCOVERY.md](ARCHITECTURE-DISCOVERY.md) (`agt-architecture-probe` → `agt-pattern-miner` → `agt-pattern-steward` + gate) |
 
 Skill map (scaffold vs SDD vs review): [SKILLS.md](SKILLS.md). Canonical shapes: [`examples/canonical-user/`](../examples/canonical-user/).
 
