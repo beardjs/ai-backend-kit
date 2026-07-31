@@ -1,0 +1,31 @@
+---
+paths:
+  - "src/application/**/*"
+---
+# Application (`src/application`)
+
+- **Thin** controllers: extract `params`/`body`/`query`, call **service**, set status and JSON.
+- Implement domain `IController` when applicable; routes on the controller router.
+- **Forbidden:** business rules (uniqueness, conflicts, "exists?"), access to `*Model` / Mongoose, manually instantiating repositories — always delegate to **service** (e.g. `this.userService.createUser(...)`).
+- **Avoid:** product validation in the controller; use **factories** in configuration for DI.
+- ❌/✅ examples: [business-rules-layers.md](business-rules-layers.md).
+
+## Error handling and authorization (project pattern)
+
+Reference: [user.controller.ts](../../examples/canonical-user/src/application/controllers/user.controller.ts) (canonical example — map to the service’s `<context>`).
+
+- **Errors:** every handler wraps the service call in `try/catch` and translates with `handleTranslatedError(error, ErrorCatalog, res)` from `@sauvvitech/st-packages`. The service throws `IThrowedError` carrying an `EErrorCode`; the controller never builds status/body for errors by hand.
+- **Catalog:** `ErrorCatalog` lives in [src/infraestructure/i18n/error-catalog.ts](../../examples/canonical-user/src/infraestructure/i18n/error-catalog.ts), keyed by `EErrorCode` ([EErrorCode.ts](../../examples/canonical-user/src/domain/common/errors/enums/EErrorCode.ts)) with `pt-BR` / `en` / `es` messages. New domain errors require a new `EErrorCode` member + catalog entry.
+- **Authorization:** guard routes with `authorizeByGroup([EUserGroup...])` from `@sauvvitech/st-packages` as Express middleware in `initRoutes()` (e.g. `this.router.get('/users', authorizeByGroup([EUserGroup.BACKOFFICE, EUserGroup.ADMIN]), this.getUsers)`).
+
+```ts
+// ✅ thin controller handler
+getUserById = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
+  try {
+    const user = await this.userService.getUserById(req.params.id);
+    res.status(200).json(user);
+  } catch (error) {
+    handleTranslatedError(error, ErrorCatalog, res);
+  }
+};
+```
