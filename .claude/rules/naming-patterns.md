@@ -1,0 +1,42 @@
+---
+paths:
+  - "src/**/*.ts"
+---
+# Type and naming patterns (`src/`)
+
+Supplementary source of truth: [AGENTS.md](../../AGENTS.md) (conventions section).
+
+## Domain interfaces and contracts
+
+- Prefix **`I`** + PascalCase: `IUser`, `IUserService`, `IUserRepositoryRead`.
+- Repository contracts: `I*RepositoryRead` / `I*RepositoryWrite` in `*.repository.read.ts` / `*.repository.write.ts` files.
+
+## Persistence models (Mongo)
+
+- Prefix **`IM`** + concept name: `IMUser` (extends domain with `_id`, timestamps, etc.), aligned with schemas/models in `src/infraestructure/db/mongo/`.
+
+## Enums (fixed values: status, type, error code, etc.)
+
+- Type name: prefix **`E`** + PascalCase: `EUserStatus`, `EErrorCode`.
+- Suggested file: `E<Name>.ts`, in context `enums/` folder when it makes sense (e.g. `src/domain/<context>/entity/enums/` or `.../errors/enums/`).
+- **String enum required** for values exposed in API, logs, persistence, or stable comparisons: each member repeats the same string literal as the member identifier.
+
+Example (project pattern):
+
+```ts
+export enum EUserStatus {
+  PENDING = 'PENDING',
+  ACTIVE = 'ACTIVE',
+  BLOCKED = 'BLOCKED',
+}
+```
+
+- Members in **UPPER_SNAKE_CASE**; value always **`'SAME_NAME_AS_MEMBER'`** (e.g. `STATUS_REQUIRES_FIELDS = 'STATUS_REQUIRES_FIELDS'`).
+- Avoid numeric enums for business states when the value is serialized or compared as a string.
+- Do not use loose `const` with magic strings in the domain when there is a closed set of values — prefer `enum E*`.
+
+## What to avoid
+
+- Interface without `I` prefix in domain contracts.
+- Numeric `enum` for codes/states that travel as strings.
+- Enum members with a string value different from the member name (breaks predictability and code search), except documented external requirement.
