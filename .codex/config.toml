@@ -1,0 +1,15 @@
+developer_instructions = """
+Use the repository AGENTS.md and shared architecture documentation as the durable contract.
+For Codex workflows, use only the agents and skills shipped by this Codex kit; do not load
+another assistant kit as an instruction source. Keep the primary thread responsible for
+classification, user gates, coordination, and the final synthesis. Delegate only bounded,
+independent work and wait for every required result before reporting completion.
+"""
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 3
+interrupt_message = true
+
+[features]
+hooks = true
