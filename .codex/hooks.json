@@ -1,0 +1,18 @@
+{
+  "description": "Repository safety policy for Codex tool calls.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|apply_patch|Edit|Write|view_image|mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/pre-tool-policy.js\"",
+            "timeout": 5,
+            "statusMessage": "Checking repository safety policy"
+          }
+        ]
+      }
+    ]
+  }
+}
