@@ -1,0 +1,155 @@
+---
+paths:
+  - "src/{domain,application,contracts}/**/*"
+---
+# Semantic quality (naming and REST)
+
+Supplementary sources: [AGENTS.md](../../AGENTS.md), [docs/architecture-and-layers.md](../../docs/architecture-and-layers.md). Type prefixes (`I*`, `IM*`, `E*`) live in [naming-patterns.md](naming-patterns.md). Layer responsibilities in [business-rules-layers.md](business-rules-layers.md).
+
+**Use cases in this repo** = methods on `*Service` in domain (e.g. `createUser`, `getUserById`), not separate `*UseCase` classes.
+
+**HTTP contracts (DTOs)** = OpenAPI schemas in `src/contracts/service.yaml` (`User`, `NewUser`, `UpdateUser`) aligned with domain `I*`.
+
+For audits, use agents: `agt-code-quality`, `agt-rest-endpoint-design`, `agt-naming-refactor` (see the quality section of [.claude/README.md](../README.md)).
+
+---
+
+## Variables
+
+**Objective:** Names reveal domain meaning at a glance.
+
+**Criteria:** `camelCase`; prefer specific nouns over generics when context allows.
+
+```ts
+// ❌
+const data = await this.userRepositoryRead.findUserByEmail(email);
+const result = await this.createUser(params);
+
+// ✅
+const existingUser = await this.userRepositoryRead.findUserByEmail(email);
+const createdUser = await this.userRepositoryWrite.createUser(userEntity);
+```
+
+Avoid when a better name exists: `data`, `result`, `item`, `obj`, `payload`, `temp`, `info`, `res2`.
+
+---
+
+## Functions and methods
+
+**Objective:** Name expresses business intent or HTTP/resource role.
+
+**Criteria:** `camelCase`; service methods = verb + resource/concept; controller handlers align with HTTP + resource.
+
+```ts
+// ❌
+async getData(id: string) { ... }
+fetch = async (req, res) => { ... }
+
+// ✅
+async getUserById(id: string): Promise<IUser> { ... }
+getUserById = async (req, res) => { ... }
+```
+
+---
+
+## Classes
+
+**Objective:** Class name identifies layer and responsibility.
+
+**Criteria:** `PascalCase` + project suffixes: `*Service`, `*ServiceEntity`, `*Controller`, `*RepositoryRead`, `*RepositoryWrite`, `*Factory`.
+
+```ts
+// ❌
+class UserManager { ... }
+class DataHandler { ... }
+
+// ✅
+class UserService { ... }
+class UserController { ... }
+```
+
+---
+
+## Files
+
+**Objective:** File name matches role and context.
+
+**Criteria:** `kebab-case` + role suffix under `src/domain/<context>/`, `src/application/`, `src/infraestructure/`, `src/configuration/`.
+
+```txt
+❌ userService.ts, UserRepository.ts, user-read.ts
+✅ user.service.ts, user.repository.read.ts, user.controller.ts
+```
+
+---
+
+## Interfaces
+
+**Objective:** Domain contracts use `I` prefix; Mongo persistence uses `IM*`.
+
+**Criteria:** See [naming-patterns.md](naming-patterns.md). Do not duplicate here.
+
+```ts
+✅ IUser, IUserRepositoryRead, IMAppointment
+❌ UserInterface, AppointmentDbModel (without IM)
+```
+
+---
+
+## REST paths (summary)
+
+**Objective:** Resources as plural nouns; HTTP verb on the method, not in the path.
+
+**Criteria:** Plural kebab-case collection (`/users`); item `/:id`; filters via query (`?email=`); no action segments (`/getUsers`, `/users/create`, `/users/all`). Truth source: controller `initRoutes()` + [service.yaml](../../examples/canonical-user/src/contracts/service.yaml).
+
+> Note: routes are resource-style (`/users`, `/users/:id`). Prefer the service’s controller `initRoutes()` + `src/contracts/service.yaml` as the source of truth. The `user` context is the canonical example pattern.
+
+```ts
+// ❌
+this.router.get('/getUsers', ...);
+this.router.post('/users/create', ...);
+
+// ✅ (project reference)
+this.router.get('/users', this.getUsers);
+this.router.get('/users/:id', this.getUserById);
+```
+
+Deep REST review: [review-rest-endpoints](../skills/review-rest-endpoints/SKILL.md).
+
+---
+
+## OpenAPI schemas (DTOs)
+
+**Objective:** Schema names describe payload role and align with domain.
+
+**Criteria:** `PascalCase` in `components/schemas`; distinguish create/update/read (`NewUser`, `UpdateUser`, `User`); fields mirror `I*` where applicable.
+
+```yaml
+# ❌
+InputDto:
+  type: object
+
+# ✅
+NewUser:
+  type: object
+  required: [name, email]
+```
+
+---
+
+## Layers (summary)
+
+**Objective:** Semantic names do not replace layer boundaries.
+
+**Criteria:** Controllers thin; business rules in service; repositories persistence-only; factories wire only. Details: [business-rules-layers.md](business-rules-layers.md).
+
+---
+
+## Expected output format (reviews)
+
+When reporting violations (agents/skills):
+
+- Sections: `Summary`, `Passed`, `Failed` or `Issues`, `Verdict`
+- Each issue: **rule**, **full path**, **minimal evidence**, **concrete fix**
+- Severity: `blocker` | `major` | `minor` | `info`
+- No vague “rename everything” advice
