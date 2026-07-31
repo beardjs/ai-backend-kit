@@ -48,9 +48,18 @@ Versioned specs, PO, architecture (design), QA (PLAN/VERIFY), test author, and c
 
 Full flow (idea → release gate): [WORKFLOW.md](WORKFLOW.md).
 
+## Architecture discovery (agnostic)
+
+Map any repo as-is, mine patterns, steward Cursor rules (gated) — without
+assuming Clean/Hexagonal/MVC. Coexists with layered SDD agents:
+
+[ARCHITECTURE-DISCOVERY.md](ARCHITECTURE-DISCOVERY.md) ·
+`agt-architecture-probe` · `agt-pattern-miner` · `agt-pattern-steward` ·
+`skill-architecture-discovery`.
+
 ## Skills index
 
-Scaffold, Spec-Driven, review, and ops skills: [SKILLS.md](SKILLS.md).
+Scaffold, Spec-Driven, review, discovery, and ops skills: [SKILLS.md](SKILLS.md).
 
 ## Quality toolkit
 
