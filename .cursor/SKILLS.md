@@ -34,6 +34,15 @@ Canonical code shapes: [`examples/canonical-user/`](../examples/canonical-user/)
 | [skill-review-naming](skills/skill-review-naming/SKILL.md) | Identifier audit by layer |
 | [skill-review-rest-endpoints](skills/skill-review-rest-endpoints/SKILL.md) | Routes, verbs, YAML parity (+ `reference-rest.md`) |
 
+## Architecture discovery (agnostic)
+
+| Skill | Purpose |
+|-------|---------|
+| [skill-architecture-discovery](skills/skill-architecture-discovery/SKILL.md) | As-is profile, pattern mining, gated rule stewardship (any style/stack) |
+
+Agents: `agt-architecture-probe`, `agt-pattern-miner`, `agt-pattern-steward` —
+see [ARCHITECTURE-DISCOVERY.md](ARCHITECTURE-DISCOVERY.md).
+
 ## Ops
 
 | Skill | Purpose |
@@ -46,6 +55,7 @@ Canonical code shapes: [`examples/canonical-user/`](../examples/canonical-user/)
 | Doc | Focus |
 |-----|--------|
 | [SPECS.md](SPECS.md) | Spec artifacts and PO/architecture/QA agents |
+| [ARCHITECTURE-DISCOVERY.md](ARCHITECTURE-DISCOVERY.md) | Agnostic probe / miner / steward |
 | [QUALITY.md](QUALITY.md) | Naming / REST agents |
 | [RULES.md](RULES.md) | Rules index |
 | [GITHUB.md](GITHUB.md) | Commits and PRs |
