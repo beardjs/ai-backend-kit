@@ -1,0 +1,71 @@
+---
+paths:
+  - ".claude/rules/**/*"
+---
+# Continuously improving `.claude/rules/`
+
+- **Rule improvement triggers:**
+  - New code patterns not covered by existing rules
+  - Repeated similar implementations across files
+  - Common error patterns that could be prevented
+  - New libraries or tools being used consistently
+  - Emerging best practices in the codebase
+
+- **Analysis process:**
+  - Compare new code with existing rules
+  - Identify patterns that should be standardized
+  - Look for references to external documentation
+  - Check for consistent error handling patterns
+  - Monitor test patterns and coverage
+
+- **Rule updates:**
+  - **Add new rules when:**
+    - A new technology/pattern is used in 3+ files
+    - Common bugs could be prevented by a rule
+    - Code reviews repeatedly mention the same feedback
+    - New security or performance patterns emerge
+
+  - **Modify existing rules when:**
+    - Better examples exist in the codebase
+    - Additional edge cases are discovered
+    - Related rules have been updated
+    - Implementation details have changed
+
+- **Example pattern recognition:**
+  ```typescript
+  // If you see repeated patterns like:
+  const doc = await UserModel.findOne({ id });
+  return doc ? dbToInternal(doc) : null;
+
+  // Consider updating [infraestructure.md](infraestructure.md):
+  // - Adapter usage (dbToInternal / internalToDb)
+  // - Returning null instead of throwing in repositories
+  // - try/catch -> DATABASE_ERROR conventions
+  ```
+
+- **Rule quality checks:**
+  - Rules should be actionable and specific
+  - Examples should come from actual code
+  - References should be up to date
+  - Patterns should be consistently enforced
+
+- **Continuous improvement:**
+  - Monitor code review comments
+  - Track common development questions
+  - Update rules after major refactors
+  - Add links to relevant documentation
+  - Cross-reference related rules
+
+- **Rule deprecation:**
+  - Mark outdated patterns as deprecated
+  - Remove rules that no longer apply
+  - Update references to deprecated rules
+  - Document migration paths for old patterns
+
+- **Documentation updates:**
+  - Keep examples synchronized with code
+  - Update references to external docs
+  - Maintain links between related rules
+  - Document breaking changes
+
+Follow [meta-claude-rules.md](meta-claude-rules.md) for proper rule formatting and structure. Rule changes driven by pattern stewardship require an explicit `APPROVED` gate (see `agt-pattern-steward`).
