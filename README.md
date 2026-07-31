@@ -1,18 +1,21 @@
 # st-cursor-backend
 
-Versioned Cursor kit for layered Node.js/TypeScript backends (Domain → Application → Infraestructure → Configuration).
+Versioned AI kit for layered Node.js/TypeScript backends (Domain → Application → Infraestructure → Configuration).
 
-This repository is **not a microservice**. It is the source of truth for `.cursor` (rules, agents, skills, hooks) and the short contracts (`AGENTS.md`, `docs/architecture-and-layers.md`, spec templates) that must be **replicated** into every backend service.
+This repository is **not a microservice**. It is the source of truth for independent Cursor (`.cursor`), Claude Code (`.claude`), and Codex (`.codex` + `.agents/skills`) kits plus the shared contracts that must be **replicated** into every backend service.
 
 **npm:** [`@sauvvitech/st-cursor-backend`](https://www.npmjs.com/package/@sauvvitech/st-cursor-backend) (public)
 
-Kit SemVer: [`VERSION`](VERSION) · [`package.json`](package.json) · changes: [`CHANGELOG.md`](CHANGELOG.md). After sync, services get `.cursor/KIT_VERSION`.
+Kit SemVer: [`VERSION`](VERSION) · [`package.json`](package.json) · changes: [`CHANGELOG.md`](CHANGELOG.md). After sync, services get `<kit-dir>/KIT_VERSION`.
 
 ## What this repo contains
 
 | Path | Role |
 |------|------|
-| [`.cursor/`](.cursor/) | Rules, agents, skills, hooks, and indexes (`RULES.md`, `WORKFLOW.md`, …) |
+| [`.cursor/`](.cursor/) | Cursor kit — rules, agents, skills, hooks, and indexes (`RULES.md`, `WORKFLOW.md`, …) |
+| [`.claude/`](.claude/) | Claude Code kit — `CLAUDE.md`, path-scoped rules, subagents, skills, hooks + `settings.json` ([index](.claude/README.md)) |
+| [`.codex/`](.codex/) | Codex kit — project config, nine custom agents, hooks, execpolicy, and index ([README](.codex/README.md)) |
+| [`.agents/skills/`](.agents/skills/) | Codex-native repository skills (progressive disclosure) |
 | [`AGENTS.md`](AGENTS.md) | Short backend contract (commands, layers, DoD) |
 | [`docs/architecture-and-layers.md`](docs/architecture-and-layers.md) | Layer detail and boundaries |
 | [`docs/specs/_templates/`](docs/specs/_templates/) | Spec-Driven templates (`requirements`, `design`, `tasks`, `test-plan`, `qa-report`) |
@@ -36,31 +39,38 @@ Kit SemVer: [`VERSION`](VERSION) · [`package.json`](package.json) · changes: [
 | Path | When | Entry |
 |------|------|--------|
 | **A — Hotfix / typo** | Rename, 1-liner, or ≤3 files with no OpenAPI/route change | Specialist agent directly (`agt-dev-backend` → `agt-test-runner` → `agt-verifier`) |
-| **B — Feature (SDD)** | New endpoint/context or contract change | **`agt-orchestrator`** (PO → human gate → design → QA plan → …) |
+| **B — Feature (SDD)** | New endpoint/context or contract change | **`agt-orchestrator`** (Cursor) / **`/orchestrate`** (Claude Code) / primary Codex agent + `$spec-driven` — PO → human gate → design → QA plan → … |
 | **C — Specialist only** | Requirements only, design only, review only, PR only | Call that agent (`agt-product-owner`, `agt-code-review`, `agt-github-workflow`, …) |
 
-Shortcuts detail: [`.cursor/WORKFLOW.md`](.cursor/WORKFLOW.md).
+Shortcuts detail: [`.cursor/WORKFLOW.md`](.cursor/WORKFLOW.md) / [`.claude/WORKFLOW.md`](.claude/WORKFLOW.md).
 
 ## Quick adoption
 
 ```bash
-# First-time (service repo root)
-npx @sauvvitech/st-cursor-backend --with-pr-template
+# First-time (service repo root) — opens interactive panel
+npx @sauvvitech/st-cursor-backend
+
+# Non-interactive (CI / scripts)
+npx @sauvvitech/st-cursor-backend -y --with-pr-template
+npx @sauvvitech/st-cursor-backend --kit cursor --with-pr-template
+npx @sauvvitech/st-cursor-backend --kit claude            # Claude Code kit
+npx @sauvvitech/st-cursor-backend --kit codex             # Codex + repository skills
+npx @sauvvitech/st-cursor-backend --kit cursor,claude,codex
 
 # Pin + updates
 yarn add -D @sauvvitech/st-cursor-backend
 yarn st-cursor-backend
 ```
 
-What to overwrite vs keep local: [docs/ADOPTION.md](docs/ADOPTION.md).
+Bare `npx` opens an interactive panel (↑↓ + Enter): one kit, all kits, or custom multi-select; then PR template and backup. Shared docs (`AGENTS.md`, architecture, specs templates, examples) always sync. What to overwrite vs keep local: [docs/ADOPTION.md](docs/ADOPTION.md).
 
-Maintainer clone of this repo can still use `./scripts/sync-cursor.sh /path/to/service`.
+Maintainer clone of this repo can still use `./scripts/sync-cursor.sh /path/to/service --kit cursor`.
 
 ## After sync, in the target service
 
-1. Confirm `AGENTS.md`, `docs/architecture-and-layers.md`, and `.cursor/KIT_VERSION` exist.
+1. Confirm `AGENTS.md`, `docs/architecture-and-layers.md`, and `<kit-dir>/KIT_VERSION` exist (e.g. `.cursor/KIT_VERSION`).
 2. Feature specs live under `docs/specs/<feature-slug>/` **in the service** (not in this template).
-3. Open Cursor in the service and pick path A, B, or C above.
+3. Open Cursor, Claude Code, or Codex in the service and pick path A, B, or C above.
 
 ## Cursor kit indexes
 
@@ -74,12 +84,31 @@ Maintainer clone of this repo can still use `./scripts/sync-cursor.sh /path/to/s
 | [`.cursor/GITHUB.md`](.cursor/GITHUB.md) | Commits and PRs |
 | [`.cursor/JIRA.md`](.cursor/JIRA.md) | Jira issues (org defaults) |
 
+## Claude Code kit (`.claude/`)
+
+Native port of the same pipeline, optimized for Claude Code:
+
+- [`CLAUDE.md`](.claude/CLAUDE.md) — lean project memory importing `AGENTS.md`
+- [`README.md`](.claude/README.md) — kit index (rules / agents / skills / quality / ops)
+- [`WORKFLOW.md`](.claude/WORKFLOW.md) — idea → release-gate pipeline (`/orchestrate` entry)
+- `rules/` — path-scoped rules that load only when Claude touches matching files
+- `agents/` — 17 subagents with tiered models (`haiku` / `sonnet` / `inherit`) and per-role tool restrictions
+- `skills/` — 19 skills (directory name = `/command`; manual ones use `disable-model-invocation`)
+ 
+## Codex kit (`.codex/` + `.agents/skills/`)
+
+- [`config.toml`](.codex/config.toml) — project-scoped multi-agent configuration with a three-subagent cap and inherited models
+- [`agents/`](.codex/agents/) — nine consolidated roles with per-role reasoning and sandbox boundaries
+- [`hooks.json`](.codex/hooks.json) + `rules/` — trusted-project guardrails for sensitive files and destructive commands
+- [`.agents/skills/`](.agents/skills/) — 18 focused workflows discovered natively and loaded progressively
+- [`README.md`](.codex/README.md) — agent map, trust setup, and default delivery flow
+
 ## Kit version vs service release
 
 | Concern | Mechanism |
 |---------|-----------|
-| This Cursor kit (npm) | `VERSION` + `package.json` + `CHANGELOG.md` → stamped as `.cursor/KIT_VERSION` |
-| Service npm package | semantic-release in the **service** ([`rule.release.mdc`](.cursor/rules/rule.release.mdc)) |
+| This kit (npm) | `VERSION` + `package.json` + `CHANGELOG.md` → stamped as `<kit-dir>/KIT_VERSION` |
+| Service npm package | semantic-release in the **service** ([`rule.release.mdc`](.cursor/rules/rule.release.mdc) / [`release.md`](.claude/rules/release.md)) |
 
 ## Maintenance
 
@@ -87,3 +116,7 @@ Maintainer clone of this repo can still use `./scripts/sync-cursor.sh /path/to/s
 2. Bump `VERSION` **and** `package.json` `version` together; update `CHANGELOG.md` for consumer-visible changes.
 3. Open a PR here with Conventional Commits (no AI attribution).
 4. After merge, tag `vX.Y.Z` to publish to npm (see `.github/workflows/publish.yml`), then services run `yarn up @sauvvitech/st-cursor-backend && yarn st-cursor-backend`.
+
+---
+
+Developed by [Filipe Paixão](https://github.com/FilipePaixao).
