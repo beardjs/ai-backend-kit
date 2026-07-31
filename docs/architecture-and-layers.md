@@ -56,7 +56,7 @@ __tests__/           # under src/__tests__/ — mirror by layer/context
 | Examples | valid email, required name | unique email, “not found”, “can delete?”, workflow |
 | Persistence | Does not query repo | Uses only `I*Repository*` contracts |
 
-Detail with ❌/✅: [`.cursor/rules/rule.business-rules-layers.mdc`](../.cursor/rules/rule.business-rules-layers.mdc).
+Detail with ❌/✅: [`.cursor/rules/rule.business-rules-layers.mdc`](../.cursor/rules/rule.business-rules-layers.mdc) / [`.claude/rules/business-rules-layers.md`](../.claude/rules/business-rules-layers.md).
 
 ## 4. Application (`src/application`)
 
@@ -177,16 +177,16 @@ When the service has events:
 - Coverage target ≥ 80% (`yarn test:coverage`)
 - Integration may use models in the **test layer**; production stays layered
 
-See [`.cursor/rules/rule.tests.mdc`](../.cursor/rules/rule.tests.mdc).
+See [`.cursor/rules/rule.tests.mdc`](../.cursor/rules/rule.tests.mdc) / [`.claude/rules/tests.md`](../.claude/rules/tests.md).
 
-## 12. Relation to the Cursor kit
+## 12. Relation to the agent kits
 
-| Need | Where |
-|------|-------|
-| Per-layer rules | `.cursor/rules/rule.*.mdc` |
-| Feature pipeline | `.cursor/WORKFLOW.md` + `agt-orchestrator` |
-| Specs | `docs/specs/` + `.cursor/SPECS.md` |
-| Naming/REST quality | `.cursor/QUALITY.md` |
-| Kit adoption | [ADOPTION.md](ADOPTION.md) |
-| Skills map | [`.cursor/SKILLS.md`](../.cursor/SKILLS.md) |
-| Canonical `user` snippets | [`examples/canonical-user/`](../examples/canonical-user/) |
+| Need | Cursor kit | Claude Code kit |
+|------|-----------|-----------------|
+| Per-layer rules | `.cursor/rules/rule.*.mdc` | `.claude/rules/*.md` |
+| Feature pipeline | `.cursor/WORKFLOW.md` + `agt-orchestrator` | `.claude/WORKFLOW.md` + `/orchestrate` |
+| Specs | `docs/specs/` + `.cursor/SPECS.md` | `docs/specs/` + `.claude/README.md` |
+| Naming/REST quality | `.cursor/QUALITY.md` | `.claude/README.md` (quality section) |
+| Kit adoption | [ADOPTION.md](ADOPTION.md) | [ADOPTION.md](ADOPTION.md) |
+| Skills map | [`.cursor/SKILLS.md`](../.cursor/SKILLS.md) | [`.claude/README.md`](../.claude/README.md) |
+| Canonical `user` snippets | [`examples/canonical-user/`](../examples/canonical-user/) | idem |
