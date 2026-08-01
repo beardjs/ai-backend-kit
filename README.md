@@ -1,10 +1,10 @@
-# st-cursor-backend
+# ai-backend-kit
 
 Versioned AI kit for layered Node.js/TypeScript backends (Domain → Application → Infraestructure → Configuration).
 
 This repository is **not a microservice**. It is the source of truth for independent Cursor (`.cursor`), Claude Code (`.claude`), and Codex (`.codex` + `.agents/skills`) kits plus the shared contracts that must be **replicated** into every backend service.
 
-**npm:** [`@sauvvitech/st-cursor-backend`](https://www.npmjs.com/package/@sauvvitech/st-cursor-backend) (public)
+**npm:** [`@beardjs/ai-backend-kit`](https://www.npmjs.com/package/@beardjs/ai-backend-kit) (public)
 
 Kit SemVer: [`VERSION`](VERSION) · [`package.json`](package.json) · changes: [`CHANGELOG.md`](CHANGELOG.md). After sync, services get `<kit-dir>/KIT_VERSION`.
 
@@ -22,7 +22,7 @@ Kit SemVer: [`VERSION`](VERSION) · [`package.json`](package.json) · changes: [
 | [`docs/ADOPTION.md`](docs/ADOPTION.md) | How to adopt / sync into a service |
 | [`docs/templates/PULL_REQUEST_TEMPLATE.md`](docs/templates/PULL_REQUEST_TEMPLATE.md) | Optional PR template seed for services |
 | [`examples/canonical-user/`](examples/canonical-user/) | Illustrative `user` context (not a runnable app) |
-| [`bin/st-cursor-backend.js`](bin/st-cursor-backend.js) | npm CLI entry (`npx` / `yarn st-cursor-backend`) |
+| [`bin/ai-backend-kit.js`](bin/ai-backend-kit.js) | npm CLI entry (`npx` / `yarn ai-backend-kit`) |
 | [`lib/sync-kit.js`](lib/sync-kit.js) | Sync implementation (Node, no rsync) |
 | [`scripts/sync-cursor.sh`](scripts/sync-cursor.sh) | Maintainer alternative (bash + rsync) |
 
@@ -48,18 +48,18 @@ Shortcuts detail: [`.cursor/WORKFLOW.md`](.cursor/WORKFLOW.md) / [`.claude/WORKF
 
 ```bash
 # First-time (service repo root) — opens interactive panel
-npx @sauvvitech/st-cursor-backend
+npx @beardjs/ai-backend-kit
 
 # Non-interactive (CI / scripts)
-npx @sauvvitech/st-cursor-backend -y --with-pr-template
-npx @sauvvitech/st-cursor-backend --kit cursor --with-pr-template
-npx @sauvvitech/st-cursor-backend --kit claude            # Claude Code kit
-npx @sauvvitech/st-cursor-backend --kit codex             # Codex + repository skills
-npx @sauvvitech/st-cursor-backend --kit cursor,claude,codex
+npx @beardjs/ai-backend-kit -y --with-pr-template
+npx @beardjs/ai-backend-kit --kit cursor --with-pr-template
+npx @beardjs/ai-backend-kit --kit claude            # Claude Code kit
+npx @beardjs/ai-backend-kit --kit codex             # Codex + repository skills
+npx @beardjs/ai-backend-kit --kit cursor,claude,codex
 
 # Pin + updates
-yarn add -D @sauvvitech/st-cursor-backend
-yarn st-cursor-backend
+yarn add -D @beardjs/ai-backend-kit
+yarn ai-backend-kit
 ```
 
 Bare `npx` opens an interactive panel (↑↓ + Enter): one kit, all kits, or custom multi-select; then PR template and backup. Shared docs (`AGENTS.md`, architecture, specs templates, examples) always sync. What to overwrite vs keep local: [docs/ADOPTION.md](docs/ADOPTION.md).
@@ -115,7 +115,7 @@ Native port of the same pipeline, optimized for Claude Code:
 1. Evolve rules/agents/skills **in this** repository.
 2. Bump `VERSION` **and** `package.json` `version` together; update `CHANGELOG.md` for consumer-visible changes.
 3. Open a PR here with Conventional Commits (no AI attribution).
-4. After merge, tag `vX.Y.Z` to publish to npm (see `.github/workflows/publish.yml`), then services run `yarn up @sauvvitech/st-cursor-backend && yarn st-cursor-backend`.
+4. After merge, tag `vX.Y.Z` to publish to npm (see `.github/workflows/publish.yml`), then services run `yarn up @beardjs/ai-backend-kit && yarn ai-backend-kit`.
 
 ---
 

@@ -1,5 +1,5 @@
 {
-  "name": "@sauvvitech/st-cursor-backend",
+  "name": "@beardjs/ai-backend-kit",
   "version": "1.3.0",
   "description": "AI backend kit CLI for layered Node.js/TypeScript services \u2014 syncs .cursor / .claude / .codex tool kits plus shared docs into a service.",
   "author": {
@@ -9,7 +9,7 @@
   "license": "UNLICENSED",
   "private": false,
   "bin": {
-    "st-cursor-backend": "bin/st-cursor-backend.js"
+    "ai-backend-kit": "bin/ai-backend-kit.js"
   },
   "files": [
     "bin",
@@ -35,7 +35,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SauvviTech/cursor-backend.git"
+    "url": "git+https://github.com/beardjs/ai-backend-kit.git"
   },
   "keywords": [
     "cursor",
@@ -44,10 +44,10 @@
     "backend",
     "layered-architecture",
     "kit",
-    "sauvvitech"
+    "beardjs"
   ],
   "scripts": {
-    "sync": "node bin/st-cursor-backend.js",
+    "sync": "node bin/ai-backend-kit.js",
     "test": "node --test test/*.test.js",
     "check:version": "node scripts/check-version.js",
     "prepack": "node scripts/check-version.js"

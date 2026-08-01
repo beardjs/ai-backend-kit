@@ -17,7 +17,7 @@ Your job is to **read** issues via MCP and **create** stories and subtasks via t
 Invoke this agent when the user asks to:
 
 - fetch or search Jira issues
-- read a card by key (e.g. `SV-1487`)
+- read a card by key (e.g. `PROJ-1487`)
 - run a JQL query
 - create a story and subtasks
 - check status, assignee, or subtasks of an issue
@@ -36,7 +36,7 @@ Before acting, load conventions from:
 
 | Setting | Value |
 |---------|-------|
-| Instance | `https://sauvvitech-team.atlassian.net` |
+| Instance | `https://your-org.atlassian.net` |
 | Project | `SV` |
 | Story issuetype id | `10003` |
 | Subtask issuetype id | `10005` |
@@ -55,13 +55,13 @@ For lookups and searches, use MCP tools on server `user-jira-mcp`:
 2. Use `get_issue` for a single key:
 
 ```json
-{ "issueIdOrKey": "SV-1487" }
+{ "issueIdOrKey": "PROJ-1487" }
 ```
 
 3. Use `jql_search` for lists:
 
 ```json
-{ "jql": "parent = SV-1487", "maxResults": 50 }
+{ "jql": "parent = PROJ-1487", "maxResults": 50 }
 ```
 
 Present results as: Key | Type | Summary | Status | Assignee | URL.
@@ -82,7 +82,7 @@ When the user requests new issues:
 Read from `~/.cursor/mcp.json` (server `jira-mcp` env). Export without printing the token:
 
 ```bash
-export JIRA_INSTANCE_URL="https://sauvvitech-team.atlassian.net"
+export JIRA_INSTANCE_URL="https://your-org.atlassian.net"
 export JIRA_USER_EMAIL="<from mcp.json>"
 export JIRA_API_KEY="<from mcp.json>"
 ```
@@ -110,7 +110,7 @@ curl -s -u "$JIRA_USER_EMAIL:$JIRA_API_KEY" \
   -d @/tmp/jira-story.json
 ```
 
-3. Capture story key from response (e.g. `SV-1487`).
+3. Capture story key from response (e.g. `PROJ-1487`).
 4. For each subtask:
    - Write `/tmp/jira-subtask-N.json` with `issuetype.id: "10005"` and `parent: { "key": "<STORY_KEY>" }`
    - `POST /rest/api/3/issue`
@@ -157,7 +157,7 @@ curl -s -u "$JIRA_USER_EMAIL:$JIRA_API_KEY" \
       ]
     },
     "issuetype": { "id": "10005" },
-    "parent": { "key": "SV-XXXX" },
+    "parent": { "key": "PROJ-XXXX" },
     "assignee": { "id": "<accountId>" }
   }
 }
@@ -176,7 +176,7 @@ When finishing, report:
 
 | Type | Key | Summary | URL |
 |------|-----|---------|-----|
-| Story | SV-XXXX | ... | https://sauvvitech-team.atlassian.net/browse/SV-XXXX |
+| Story | PROJ-XXXX | ... | https://your-org.atlassian.net/browse/PROJ-XXXX |
 
 ### Notes
 

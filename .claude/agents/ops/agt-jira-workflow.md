@@ -16,7 +16,7 @@ Your job is to **read** issues via the Jira MCP server (when available) and **cr
 Invoke this agent when the user asks to:
 
 - fetch or search Jira issues
-- read a card by key (e.g. `SV-1487`)
+- read a card by key (e.g. `PROJ-1487`)
 - run a JQL query
 - create a story and subtasks
 - check status, assignee, or subtasks of an issue
@@ -35,7 +35,7 @@ Before acting, load conventions from:
 
 | Setting | Value |
 |---------|-------|
-| Instance | `https://sauvvitech-team.atlassian.net` |
+| Instance | `https://your-org.atlassian.net` |
 | Project | `SV` |
 | Story issuetype id | `10003` |
 | Subtask issuetype id | `10005` |
@@ -51,8 +51,8 @@ Before acting, load conventions from:
 Prefer the Jira/Atlassian MCP server configured in the session (discover its
 tools with ToolSearch when they are deferred):
 
-1. Use the MCP issue-lookup tool for a single key (e.g. `SV-1487`).
-2. Use the MCP JQL search tool for lists (e.g. `parent = SV-1487`, `maxResults: 50`).
+1. Use the MCP issue-lookup tool for a single key (e.g. `PROJ-1487`).
+2. Use the MCP JQL search tool for lists (e.g. `parent = PROJ-1487`, `maxResults: 50`).
 
 Present results as: Key | Type | Summary | Status | Assignee | URL.
 
@@ -61,7 +61,7 @@ used for creation:
 
 ```bash
 curl -s -u "$JIRA_USER_EMAIL:$JIRA_API_KEY" \
-  "$JIRA_INSTANCE_URL/rest/api/3/issue/SV-1487"
+  "$JIRA_INSTANCE_URL/rest/api/3/issue/PROJ-1487"
 ```
 
 ### Phase 2 — Plan creation
@@ -78,7 +78,7 @@ When the user requests new issues:
 Read credentials from the environment or MCP config. Export without printing the token:
 
 ```bash
-export JIRA_INSTANCE_URL="https://sauvvitech-team.atlassian.net"
+export JIRA_INSTANCE_URL="https://your-org.atlassian.net"
 export JIRA_USER_EMAIL="<from env or mcp config>"
 export JIRA_API_KEY="<from env or mcp config>"
 ```
@@ -106,7 +106,7 @@ curl -s -u "$JIRA_USER_EMAIL:$JIRA_API_KEY" \
   -d @/tmp/jira-story.json
 ```
 
-3. Capture story key from response (e.g. `SV-1487`).
+3. Capture story key from response (e.g. `PROJ-1487`).
 4. For each subtask:
    - Write `/tmp/jira-subtask-N.json` with `issuetype.id: "10005"` and `parent: { "key": "<STORY_KEY>" }`
    - `POST /rest/api/3/issue`
@@ -153,7 +153,7 @@ curl -s -u "$JIRA_USER_EMAIL:$JIRA_API_KEY" \
       ]
     },
     "issuetype": { "id": "10005" },
-    "parent": { "key": "SV-XXXX" },
+    "parent": { "key": "PROJ-XXXX" },
     "assignee": { "id": "<accountId>" }
   }
 }
@@ -172,7 +172,7 @@ When finishing, report:
 
 | Type | Key | Summary | URL |
 |------|-----|---------|-----|
-| Story | SV-XXXX | ... | https://sauvvitech-team.atlassian.net/browse/SV-XXXX |
+| Story | PROJ-XXXX | ... | https://your-org.atlassian.net/browse/PROJ-XXXX |
 
 ### Notes
 

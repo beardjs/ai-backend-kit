@@ -2,7 +2,7 @@
 
 How to replicate the Cursor, Claude Code, and Codex kits into a layered Node.js/TypeScript backend service.
 
-**Canonical install:** public npm package [`@sauvvitech/st-cursor-backend`](https://www.npmjs.com/package/@sauvvitech/st-cursor-backend).
+**Canonical install:** public npm package [`@beardjs/ai-backend-kit`](https://www.npmjs.com/package/@beardjs/ai-backend-kit).
 
 Kit SemVer: see [`VERSION`](../VERSION) / `package.json` and [`CHANGELOG.md`](../CHANGELOG.md). After sync, the applied version is stamped at `<kit-dir>/KIT_VERSION` in the target (e.g. `.cursor/KIT_VERSION`).
 
@@ -10,21 +10,21 @@ Kit SemVer: see [`VERSION`](../VERSION) / `package.json` and [`CHANGELOG.md`](..
 
 ```bash
 # First-time — from the service repository root (opens interactive panel)
-npx @sauvvitech/st-cursor-backend
+npx @beardjs/ai-backend-kit
 
 # Non-interactive (CI / scripts)
-npx @sauvvitech/st-cursor-backend -y --with-pr-template
-npx @sauvvitech/st-cursor-backend --kit cursor --with-pr-template
+npx @beardjs/ai-backend-kit -y --with-pr-template
+npx @beardjs/ai-backend-kit --kit cursor --with-pr-template
 
 # Pin for updates (devDependency)
-yarn add -D @sauvvitech/st-cursor-backend
-yarn st-cursor-backend                 # interactive panel in a TTY
-yarn st-cursor-backend -y              # sync cwd with default kit (cursor)
-yarn st-cursor-backend --dry-run --kit cursor
-yarn st-cursor-backend --backup --no-delete --kit cursor
+yarn add -D @beardjs/ai-backend-kit
+yarn ai-backend-kit                 # interactive panel in a TTY
+yarn ai-backend-kit -y              # sync cwd with default kit (cursor)
+yarn ai-backend-kit --dry-run --kit cursor
+yarn ai-backend-kit --backup --no-delete --kit cursor
 ```
 
-Bare `npx` / `yarn st-cursor-backend` in a terminal opens an interactive panel (↑↓ + Enter): pick one kit, **All available kits**, or a custom multi-select; then PR template and backup. Default target is the **current working directory**. Pass an explicit path if needed: `npx @sauvvitech/st-cursor-backend /path/to/service`.
+Bare `npx` / `yarn ai-backend-kit` in a terminal opens an interactive panel (↑↓ + Enter): pick one kit, **All available kits**, or a custom multi-select; then PR template and backup. Default target is the **current working directory**. Pass an explicit path if needed: `npx @beardjs/ai-backend-kit /path/to/service`.
 
 There is **no** `postinstall` hook — sync only runs when you invoke the CLI (avoids overwriting kit folders on every `yarn install`).
 
@@ -54,14 +54,14 @@ If every selected kit is missing from the package, sync fails. `local/` under an
 - The primary Codex thread orchestrates; nine custom agents cover product, architecture, discovery, implementation, tests, review, QA, GitHub, and Jira.
 - Models inherit from the active session. Role files set only reasoning effort and sandbox boundaries, and configuration caps spawned threads at three.
 - After first sync or a hook update, trust the repository and review the hook with `/hooks`.
-- The sync manifest owns only `st-backend-*` skill directories. Unrelated service/team skills under `.agents/skills/` are never deleted.
+- The sync manifest owns only `ai-backend-kit-*` skill directories. Unrelated service/team skills under `.agents/skills/` are never deleted.
 
 ## What gets synced
 
 | From the kit package | Into the target service |
 |----------------------|-------------------------|
 | Selected kit dirs (`.cursor/`, `.claude/`, `.codex/` when present) | Same path; stamps `<kit-dir>/KIT_VERSION` |
-| Codex managed skills (`.agents/skills/st-backend-*`) | Same path when `codex` is selected; unrelated skills are preserved |
+| Codex managed skills (`.agents/skills/ai-backend-kit-*`) | Same path when `codex` is selected; unrelated skills are preserved |
 | `AGENTS.md` | `AGENTS.md` (service root) |
 | `docs/architecture-and-layers.md` | `docs/architecture-and-layers.md` |
 | `docs/specs/_templates/` | `docs/specs/_templates/` |
@@ -100,26 +100,26 @@ The CLI:
 2. Resolves kits (prompt / `--kit` / `--all` / default `cursor`).
 3. Syncs each available selected kit dir (deletes removed kit files by default; always excludes `local/`).
 4. Writes `<kit-dir>/KIT_VERSION` from the package `VERSION`.
-5. When Codex is selected, syncs only manifest-owned `st-backend-*` skills and preserves every unrelated skill.
+5. When Codex is selected, syncs only manifest-owned `ai-backend-kit-*` skills and preserves every unrelated skill.
 6. Always syncs shared payload: `AGENTS.md`, architecture doc, specs templates, examples.
 7. Copies `docs/specs/README.md` only when missing (unless `--force-specs-readme`).
 8. Optionally seeds the PR template with `--with-pr-template`.
 
 ## Maintainer alternative (this git repo)
 
-If you have cloned **st-cursor-backend** locally:
+If you have cloned **ai-backend-kit** locally:
 
 ```bash
-./scripts/sync-cursor.sh /path/to/st-some-service --dry-run --kit cursor
-./scripts/sync-cursor.sh /path/to/st-some-service --backup --with-pr-template --kit cursor
-./scripts/sync-cursor.sh /path/to/st-some-service --all
+./scripts/sync-cursor.sh /path/to/some-service --dry-run --kit cursor
+./scripts/sync-cursor.sh /path/to/some-service --backup --with-pr-template --kit cursor
+./scripts/sync-cursor.sh /path/to/some-service --all
 ```
 
 The bash script requires `rsync`. Prefer the npm CLI for day-to-day adoption; keep the script for kit maintainers. Behavior should stay aligned with `lib/sync-kit.js`.
 
 ## First-time checklist
 
-1. Run `npx @sauvvitech/st-cursor-backend` (interactive panel) or `yarn st-cursor-backend -y` after pinning.
+1. Run `npx @beardjs/ai-backend-kit` (interactive panel) or `yarn ai-backend-kit -y` after pinning.
 2. Confirm `<kit-dir>/KIT_VERSION` matches the kit version you intended.
 3. Confirm the service has `.github/PULL_REQUEST_TEMPLATE.md` if you use `agt-github-workflow`.
 4. Confirm Jest scripts match [AGENTS.md](../AGENTS.md) (`yarn test`, `yarn lint`, `yarn test:coverage`).
@@ -128,14 +128,14 @@ The bash script requires `rsync`. Prefer the npm CLI for day-to-day adoption; ke
 
 ## Updating services after kit changes
 
-1. Publish a new `@sauvvitech/st-cursor-backend` version (bump `VERSION` + `package.json` + `CHANGELOG.md`, tag `v*`).
-2. In the service: `yarn up @sauvvitech/st-cursor-backend` (or bump the pin) then `yarn st-cursor-backend -y` (use `--backup` if unsure).
+1. Publish a new `@beardjs/ai-backend-kit` version (bump `VERSION` + `package.json` + `CHANGELOG.md`, tag `v*`).
+2. In the service: `yarn up @beardjs/ai-backend-kit` (or bump the pin) then `yarn ai-backend-kit -y` (use `--backup` if unsure).
 3. Review the service diff: expect kit dirs (incl. `KIT_VERSION`), `AGENTS.md`, and shared docs — not feature specs.
 4. Open a PR on the service if the sync must be reviewed there.
 
 ## Local overrides
 
-Put service-only Cursor files under `.cursor/local/`, Claude Code files under `.claude/local/`, and service-owned Codex notes/assets under `.codex/local/`. Add service-owned Codex skills with names outside the managed `st-backend-*` namespace. Sync preserves those paths and unrelated skills; personal Codex runtime overrides belong in the user's global configuration.
+Put service-only Cursor files under `.cursor/local/`, Claude Code files under `.claude/local/`, and service-owned Codex notes/assets under `.codex/local/`. Add service-owned Codex skills with names outside the managed `ai-backend-kit-*` namespace. Sync preserves those paths and unrelated skills; personal Codex runtime overrides belong in the user's global configuration.
 
 ## Canonical examples (`user`)
 

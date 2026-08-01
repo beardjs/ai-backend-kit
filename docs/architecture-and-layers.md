@@ -1,6 +1,6 @@
 # Architecture and layers
 
-Reference document for **any backend service** that adopts the kit in [st-cursor-backend](../README.md). Complements [AGENTS.md](../AGENTS.md).
+Reference document for **any backend service** that adopts the kit in [ai-backend-kit](../README.md). Complements [AGENTS.md](../AGENTS.md).
 
 > The `user` context appears in examples as the **canonical pattern**. Illustrative files: [`examples/canonical-user/`](../examples/canonical-user/). In each service, replace it with the real `<context>` (`order`, `payment`, `catalog`, …).
 

@@ -2,7 +2,7 @@
 
 Index of project rules in [`rules/`](rules/). Architecture source of truth: [AGENTS.md](../AGENTS.md) and [docs/architecture-and-layers.md](../docs/architecture-and-layers.md).
 
-This kit is maintained in **st-cursor-backend** and synced into each backend service. See [docs/ADOPTION.md](../docs/ADOPTION.md).
+This kit is maintained in **ai-backend-kit** and synced into each backend service. See [docs/ADOPTION.md](../docs/ADOPTION.md).
 
 ## Naming convention
 

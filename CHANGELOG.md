@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the **st-cursor-backend** agent kits are documented in this file.
+All notable changes to the **ai-backend-kit** agent kits are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -68,8 +68,8 @@ Kit version lives in [`VERSION`](VERSION). After sync, the applied version is st
 
 ### Added
 
-- Public npm package `@sauvvitech/st-cursor-backend` with CLI (`npx` / `yarn st-cursor-backend`)
-- Node sync implementation [`lib/sync-kit.js`](lib/sync-kit.js) / [`bin/st-cursor-backend.js`](bin/st-cursor-backend.js) (no rsync required for consumers)
+- Public npm package `@beardjs/ai-backend-kit` with CLI (`npx` / `yarn ai-backend-kit`)
+- Node sync implementation [`lib/sync-kit.js`](lib/sync-kit.js) / [`bin/ai-backend-kit.js`](bin/ai-backend-kit.js) (no rsync required for consumers)
 - Kit SemVer (`VERSION`) and this changelog
 - Sync stamps `.cursor/KIT_VERSION` on the target service
 - Hardened `scripts/sync-cursor.sh`: `--dry-run`, `--no-delete`, `--backup`, `--force-specs-readme`, `--with-pr-template`, flexible arg order, target validation

@@ -39,5 +39,5 @@ docs/specs/
 
 Index: [`.cursor/SPECS.md`](../../.cursor/SPECS.md) (Cursor) / [`.claude/README.md`](../../.claude/README.md) (Claude Code). Templates: [`_templates/`](_templates/).
 
-> In **st-cursor-backend** (this kit), only `_templates/` and this README live under `docs/specs/`. Feature folders (`docs/specs/<slug>/`) are created **inside each service** after adoption. Pedagogical code shapes: [`examples/canonical-user/`](../../examples/canonical-user/).
+> In **ai-backend-kit** (this kit), only `_templates/` and this README live under `docs/specs/`. Feature folders (`docs/specs/<slug>/`) are created **inside each service** after adoption. Pedagogical code shapes: [`examples/canonical-user/`](../../examples/canonical-user/).
 

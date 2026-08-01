@@ -50,7 +50,7 @@ async function runInteractivePanel(options) {
   const available = listAvailableKits(KIT_ROOT);
   const availableSet = new Set(available);
 
-  p.intro('st-cursor-backend — sync AI backend kit');
+  p.intro('ai-backend-kit — sync AI backend kit');
   p.note(
     `${AUTHOR_CREDIT}\nUse ↑↓ to navigate, Enter to confirm. Esc cancels.`,
     'About',
@@ -206,7 +206,7 @@ async function main() {
   if (useClack) {
     p = require('@clack/prompts');
     if (!prompted) {
-      p.intro('st-cursor-backend — sync AI backend kit');
+      p.intro('ai-backend-kit — sync AI backend kit');
     }
     spinner = p.spinner();
     spinner.start(`Syncing ${kits.join(', ')}…`);

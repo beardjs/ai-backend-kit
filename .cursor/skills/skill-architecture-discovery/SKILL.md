@@ -128,7 +128,7 @@ Assign one or more labels with confidence (`high` | `medium` | `low`):
 
 Allow **hybrid**. Prefer `unknown-hybrid` over forcing a single name.
 
-**Special case — this kit (`st-cursor-backend`):** if
+**Special case — this kit (`ai-backend-kit`):** if
 `docs/architecture-and-layers.md` and layered `rule.*.mdc` exist, record
 documented style = layered and point to that canon. Do not rewrite it into a
 competing `profile.md` narrative; keep the profile short and referential.

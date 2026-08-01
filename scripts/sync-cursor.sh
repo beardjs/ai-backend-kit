@@ -160,7 +160,7 @@ done < <(resolve_requested_kits)
 PREVIOUS_CODEX_SKILLS=()
 if [[ " ${REQUESTED_KITS[*]} " == *" codex "* && -f "$TARGET/.codex/skills-manifest.json" ]]; then
   while IFS= read -r _skill_line; do
-    [[ "$_skill_line" =~ ^st-backend-[a-z0-9-]+$ ]] && PREVIOUS_CODEX_SKILLS+=("$_skill_line")
+    [[ "$_skill_line" =~ ^ai-backend-kit-[a-z0-9-]+$ ]] && PREVIOUS_CODEX_SKILLS+=("$_skill_line")
   done < <(node -e 'const fs=require("fs"); try { const m=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); for (const s of m.skills || []) console.log(s); } catch {}' "$TARGET/.codex/skills-manifest.json")
 fi
 
@@ -257,7 +257,7 @@ if [[ " ${SYNCED_KITS[*]} " == *" codex "* ]]; then
   echo "→ Syncing Codex repository skills (.agents/skills/)"
   CODEX_SKILLS=()
   while IFS= read -r _skill_line; do
-    [[ "$_skill_line" =~ ^st-backend-[a-z0-9-]+$ ]] && CODEX_SKILLS+=("$_skill_line")
+    [[ "$_skill_line" =~ ^ai-backend-kit-[a-z0-9-]+$ ]] && CODEX_SKILLS+=("$_skill_line")
   done < <(node -e 'const fs=require("fs"); const m=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); for (const s of m.skills || []) console.log(s);' "$ROOT/.codex/skills-manifest.json")
 
   [[ ${#CODEX_SKILLS[@]} -gt 0 ]] || { echo "Codex skills manifest is empty." >&2; exit 1; }
