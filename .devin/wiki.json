@@ -1,0 +1,68 @@
+{
+  "repo_notes": [
+    {
+      "content": "This repository is ai-backend-kit (@beardjs/ai-backend-kit): a versioned AI agent kit for layered Node.js/TypeScript backends. It is NOT a microservice and does not ship a runnable HTTP app. It is the source of truth for Cursor (.cursor/), Claude Code (.claude/), and Codex (.codex/ + .agents/skills/) kits plus shared contracts (AGENTS.md, docs/architecture-and-layers.md) that sync into each backend service via npx @beardjs/ai-backend-kit / lib/sync-kit.js.",
+      "author": "ai-backend-kit maintainers"
+    },
+    {
+      "content": "Canonical architecture: Domain → Application → Infraestructure → Configuration. Fixed folder spellings: infraestructure (with e) and configuration (singular). Domain must not import Infraestructure (no Mongoose, IM* models, or concrete Kafka in domain). Business rules belong in Service (src/domain/<context>/service/); never in Repository or Controller. Entity = local invariants; Service = uniqueness, 404/409, workflows, idempotency. Repository returns null when missing and maps DATABASE_ERROR only. Canonical pedagogical example context is user under examples/canonical-user/ (illustrative, not runnable).",
+      "author": "ai-backend-kit maintainers"
+    },
+    {
+      "content": "Documentation priorities: (1) layered contracts in AGENTS.md and docs/architecture-and-layers.md; (2) Spec-Driven flow under docs/specs/_templates/ and WORKFLOW indexes; (3) three tool kits (.cursor, .claude, .codex) as parallel packaging of the same pipeline; (4) adoption/sync in docs/ADOPTION.md and lib/sync-kit.js; (5) versioning via VERSION, package.json, CHANGELOG.md stamped as <kit-dir>/KIT_VERSION. Do not treat examples/canonical-user as a production module. English only for kit docs.",
+      "author": "ai-backend-kit maintainers"
+    }
+  ],
+  "pages": [
+    {
+      "title": "Kit Overview",
+      "purpose": "Explain what ai-backend-kit is: portable agent kits for layered backends, npm package @beardjs/ai-backend-kit, not a microservice. Cover README.md, package purpose, and the relationship between this template repo and target services.",
+      "parent": null
+    },
+    {
+      "title": "Layered Architecture",
+      "purpose": "Document Domain, Application, Infraestructure, and Configuration layers using AGENTS.md and docs/architecture-and-layers.md: folder ownership, naming (I*, IM*, E*, *ServiceEntity), factories in src/configuration/factory/, OpenAPI in src/contracts/service.yaml, and Domain must not import Infraestructure.",
+      "parent": "Kit Overview"
+    },
+    {
+      "title": "Business Rules by Layer",
+      "purpose": "Document the non-negotiable rule that product business rules live in Service only. Cover Entity vs Service vs Repository vs Controller responsibilities, with the canonical user patterns (createUser uniqueness, getUserById 404) as pedagogical examples from examples/canonical-user/ and .cursor/rules/rule.business-rules-layers.mdc.",
+      "parent": "Layered Architecture"
+    },
+    {
+      "title": "Cursor Kit",
+      "purpose": "Document the Cursor kit under .cursor/: RULES.md, WORKFLOW.md, SPECS.md, SKILLS.md, QUALITY.md, GITHUB.md, JIRA.md, rules/, agents/ (agt-* including agt-orchestrator), skills/, and hooks. Explain Path A/B/C entry points and how the orchestrator sequences specialists.",
+      "parent": null
+    },
+    {
+      "title": "Claude Code Kit",
+      "purpose": "Document the Claude Code kit under .claude/: CLAUDE.md (imports AGENTS.md), README.md, WORKFLOW.md, path-scoped rules/, agents/, skills/ (including /orchestrate), settings.json hooks, and what sync preserves (settings.local.json, CLAUDE.local.md, local/, agent-memory).",
+      "parent": null
+    },
+    {
+      "title": "Codex Kit",
+      "purpose": "Document the Codex kit under .codex/ plus .agents/skills/: config.toml, nine custom agents, hooks.json, execpolicy, skills-manifest.json, and progressive-disclosure ai-backend-kit-* repository skills. Note preservation of unrelated skills and .codex/local/.",
+      "parent": null
+    },
+    {
+      "title": "Spec-Driven Workflow",
+      "purpose": "Document Spec-Driven delivery: artifacts under docs/specs/<feature-slug>/ (requirements.md → design.md → tasks.md → test-plan.md → qa-report.md), templates in docs/specs/_templates/, human gates APPROVED | CHANGES_REQUESTED | REJECTED | BLOCKED, and orchestrator entry points (agt-orchestrator, /orchestrate, Codex + $spec-driven).",
+      "parent": null
+    },
+    {
+      "title": "Adoption and Sync CLI",
+      "purpose": "Document how services adopt the kit via docs/ADOPTION.md, bin/ai-backend-kit.js, and lib/sync-kit.js: --kit flags, interactive panel, shared payload (AGENTS.md, architecture doc, specs templates, examples), what syncs vs what stays local to the service, and maintainer scripts/sync-cursor.sh.",
+      "parent": null
+    },
+    {
+      "title": "Canonical User Example",
+      "purpose": "Document examples/canonical-user/ as the pedagogical pattern (IUser, UserService, repositories, controller, factories, OpenAPI snippets). Clarify it is illustrative reference for any <context>, not a required user module in every service.",
+      "parent": null
+    },
+    {
+      "title": "Versioning and Release",
+      "purpose": "Document kit SemVer via VERSION, package.json, and CHANGELOG.md; stamping <kit-dir>/KIT_VERSION on sync; npm publish flow; and that service semantic-release is separate from kit version (see release rules in .cursor/rules/rule.release.mdc).",
+      "parent": null
+    }
+  ]
+}
