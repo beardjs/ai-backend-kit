@@ -128,7 +128,7 @@ The bash script requires `rsync`. Prefer the npm CLI for day-to-day adoption; ke
 
 ## Updating services after kit changes
 
-1. Publish a new `@beardjs/ai-backend-kit` version (bump `VERSION` + `package.json` + `CHANGELOG.md`, tag `v*`).
+1. Merge kit changes to **`main`** (Conventional Commits). CI runs semantic-release and publishes `@beardjs/ai-backend-kit` automatically.
 2. In the service: `yarn up @beardjs/ai-backend-kit` (or bump the pin) then `yarn ai-backend-kit -y` (use `--backup` if unsure).
 3. Review the service diff: expect kit dirs (incl. `KIT_VERSION`), `AGENTS.md`, and shared docs — not feature specs.
 4. Open a PR on the service if the sync must be reviewed there.
@@ -149,5 +149,5 @@ All kit content is **English**. Do not translate rules/agents/skills into anothe
 
 | Concern | Where |
 |---------|--------|
-| Kit SemVer (npm) | This package: `VERSION` / `package.json` / `CHANGELOG.md` → stamped as `<kit-dir>/KIT_VERSION` |
+| Kit SemVer (npm) | This package: semantic-release on `main` → `VERSION` / `package.json` / `CHANGELOG.md` → stamped as `<kit-dir>/KIT_VERSION` |
 | Service npm package release | Target service: semantic-release via [rule.release.mdc](../.cursor/rules/rule.release.mdc) / [release.md](../.claude/rules/release.md) |

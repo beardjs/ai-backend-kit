@@ -107,15 +107,15 @@ Native port of the same pipeline, optimized for Claude Code:
 
 | Concern | Mechanism |
 |---------|-----------|
-| This kit (npm) | `VERSION` + `package.json` + `CHANGELOG.md` → stamped as `<kit-dir>/KIT_VERSION` |
+| This kit (npm) | **semantic-release** on push to `main` (see [`.github/workflows/release.yml`](.github/workflows/release.yml)) → updates `VERSION` / `package.json` / `CHANGELOG.md`, publishes, stamps as `<kit-dir>/KIT_VERSION` after sync |
 | Service npm package | semantic-release in the **service** ([`rule.release.mdc`](.cursor/rules/rule.release.mdc) / [`release.md`](.claude/rules/release.md)) |
 
 ## Maintenance
 
 1. Evolve rules/agents/skills **in this** repository.
-2. Bump `VERSION` **and** `package.json` `version` together; update `CHANGELOG.md` for consumer-visible changes.
-3. Open a PR here with Conventional Commits (no AI attribution).
-4. After merge, tag `vX.Y.Z` to publish to npm (see `.github/workflows/publish.yml`), then services run `yarn up @beardjs/ai-backend-kit && yarn ai-backend-kit`.
+2. Open a PR with **Conventional Commits** (no AI attribution). Do **not** bump `VERSION` / `package.json` / `CHANGELOG.md` by hand.
+3. Merge to **`main`** — GitHub Actions runs semantic-release: changelog, version bump, npm publish, git tag, GitHub Release (requires secret `NPM_TOKEN`).
+4. Services then run `yarn up @beardjs/ai-backend-kit && yarn ai-backend-kit`.
 
 ---
 
