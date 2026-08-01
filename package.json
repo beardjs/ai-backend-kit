@@ -50,9 +50,16 @@
     "sync": "node bin/ai-backend-kit.js",
     "test": "node --test test/*.test.js",
     "check:version": "node scripts/check-version.js",
-    "prepack": "node scripts/check-version.js"
+    "prepack": "node scripts/check-version.js",
+    "release": "semantic-release"
   },
   "dependencies": {
     "@clack/prompts": "^0.11.0"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "semantic-release": "^24.2.7"
   }
 }

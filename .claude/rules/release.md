@@ -2,16 +2,25 @@
 paths:
   - "release.config.js"
 ---
-# Release (service package)
+# Release
 
-Applies to **backend services** that adopt this kit and ship an npm package via semantic-release (`release.config.js` present).
+## Kit package (`@beardjs/ai-backend-kit`)
+
+This repository publishes the kit with **semantic-release** on every push to **`main`** (see [`.github/workflows/release.yml`](../../.github/workflows/release.yml) and [`release.config.js`](../../release.config.js)).
+
+- Version bumps come from **Conventional Commits** (`feat:` → minor, `fix:` / `perf:` / `refactor:` → patch, `BREAKING CHANGE` → major).
+- The pipeline updates `CHANGELOG.md`, `package.json`, `package-lock.json`, and `VERSION`, publishes to npm, pushes a release commit/tag, and creates a GitHub Release.
+- **Do not** bump kit `VERSION` / `package.json` / `CHANGELOG.md` by hand for routine releases; merge to `main` with Conventional Commits instead.
+- Required secret: `NPM_TOKEN` (GitHub Actions). `GITHUB_TOKEN` is provided by Actions.
+- After a kit release, services run `yarn up @beardjs/ai-backend-kit && yarn ai-backend-kit`.
+
+## Service package (adopters)
+
+Applies to **backend services** that adopt this kit and ship their own npm package via semantic-release (`release.config.js` present in the service).
 
 - Versioning and changelog for the **service** are automated by **semantic-release** (`yarn release` → `semantic-release`).
-- Config lives in the service’s `release.config.js`; plugins are declared in the service’s `package.json` (`@semantic-release/commit-analyzer`, `release-notes-generator`, `changelog`, `git`, `exec`).
-- Version bumps are derived from **Conventional Commits** (`feat:`, `fix:`, `BREAKING CHANGE:`); do not bump the service version by hand.
+- Config lives in the service’s `release.config.js`; plugins are declared in the service’s `package.json`.
 - **Do not** use Changesets in service repos — there is no `.changeset/` and no `changeset` script.
 - Do not edit the service `CHANGELOG.md` or the `version` field in `package.json` manually; let the release pipeline manage them.
 
-## Kit version (separate)
-
-The kit package `@beardjs/ai-backend-kit` uses SemVer in [`VERSION`](../../VERSION) + [`package.json`](../../package.json) + [`CHANGELOG.md`](../../CHANGELOG.md), published on tag `v*` (see `.github/workflows/publish.yml`), and stamped into services as `<kit-dir>/KIT_VERSION` (`.claude/KIT_VERSION`, `.cursor/KIT_VERSION`) by the CLI / sync script. That is **not** the same as a service package version.
+Kit SemVer (stamped as `<kit-dir>/KIT_VERSION` after sync) is **not** the same as a service package version.
