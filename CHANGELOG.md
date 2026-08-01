@@ -9,6 +9,16 @@ Kit version lives in [`VERSION`](VERSION). After sync, the applied version is st
 
 > **Note:** Service package releases (`yarn release` / semantic-release) are separate from this kit version. See [`.cursor/rules/rule.release.mdc`](.cursor/rules/rule.release.mdc).
 
+## [Unreleased]
+
+### Added
+
+- [DeepWiki](https://deepwiki.com/beardjs/ai-backend-kit) integration for this public kit repo: Ask DeepWiki badge and wiki link in [`README.md`](README.md), steering via [`.devin/wiki.json`](.devin/wiki.json), and a short note in [`docs/ADOPTION.md`](docs/ADOPTION.md) (kit-repo only; not synced to services)
+
+### Changed
+
+- Root [`README.md`](README.md) — onboarding-first guide: what the kit does, numbered Getting started, narrative Feature workflow (steps + example prompt), table of contents; agents and orchestration overview with five Mermaid diagrams (path selection, orchestrator loop, Spec-Driven pipeline with artifacts/gates, architecture discovery, agent role map) plus a catalog of all 18 Cursor `agt-*` agents with links to definitions
+
 ## [1.3.0] — 2026-07-31
 
 ### Added

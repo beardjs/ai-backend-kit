@@ -145,6 +145,12 @@ Rules and skills use `user` as the pedagogical context (`UserService`, `IUser`, 
 
 All kit content is **English**. Do not translate rules/agents/skills into another language in service copies; keep the synced English source of truth.
 
+## Exploring this kit
+
+For an auto-generated, explorable wiki of **this** public repository (architecture diagrams, Q&A over the kit sources), see [DeepWiki — beardjs/ai-backend-kit](https://deepwiki.com/beardjs/ai-backend-kit).
+
+Steering for that wiki lives in [`.devin/wiki.json`](../.devin/wiki.json) at the kit root. That path is **kit-repo only** — it is not part of the sync payload and is never copied into consumer services.
+
 ## Kit version vs service release
 
 | Concern | Where |
