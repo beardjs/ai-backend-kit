@@ -21,7 +21,7 @@ Reference skill for `agt-jira-workflow`. Use when reading or creating issues in 
 
 | Setting | Value |
 |---------|-------|
-| Instance | `https://sauvvitech-team.atlassian.net` |
+| Instance | `https://your-org.atlassian.net` |
 | Project key | `SV` |
 | Story issuetype id | `10003` |
 | Subtask issuetype id | `10005` |
@@ -45,7 +45,7 @@ Load credentials from the environment or MCP config:
 
 | Env var | Purpose |
 |---------|---------|
-| `JIRA_INSTANCE_URL` | Base URL (`https://sauvvitech-team.atlassian.net`) |
+| `JIRA_INSTANCE_URL` | Base URL (`https://your-org.atlassian.net`) |
 | `JIRA_USER_EMAIL` | Account email |
 | `JIRA_API_KEY` | API token |
 
@@ -60,8 +60,8 @@ tools with ToolSearch when they are deferred). Typical read tools:
 
 | Tool shape | When to use | Example args |
 |------|-------------|--------------|
-| issue lookup (e.g. `get_issue`) | Single issue by key or id | `{ "issueIdOrKey": "SV-1487" }` |
-| JQL search (e.g. `jql_search`) | List/search issues | `{ "jql": "parent = SV-1487", "maxResults": 50 }` |
+| issue lookup (e.g. `get_issue`) | Single issue by key or id | `{ "issueIdOrKey": "PROJ-1487" }` |
+| JQL search (e.g. `jql_search`) | List/search issues | `{ "jql": "parent = PROJ-1487", "maxResults": 50 }` |
 
 If no Jira MCP server is configured, read via REST with the same Basic Auth
 credentials (`GET /rest/api/3/issue/<key>`, `GET /rest/api/3/search?jql=…`).
@@ -70,7 +70,7 @@ credentials (`GET /rest/api/3/issue/<key>`, `GET /rest/api/3/search?jql=…`).
 
 | Goal | JQL |
 |------|-----|
-| Subtasks of a story | `parent = SV-1487` |
+| Subtasks of a story | `parent = PROJ-1487` |
 | Recent stories | `project = SV AND issuetype = Story ORDER BY created DESC` |
 | My open issues | `assignee = currentUser() AND status != Done` |
 | Issues in sprint | `project = SV AND sprint in openSprints()` |
@@ -136,7 +136,7 @@ curl -s -u "$JIRA_USER_EMAIL:$JIRA_API_KEY" \
       ]
     },
     "issuetype": { "id": "10005" },
-    "parent": { "key": "SV-XXXX" },
+    "parent": { "key": "PROJ-XXXX" },
     "assignee": { "id": "<accountId>" }
   }
 }
@@ -260,7 +260,7 @@ curl -s -u "$JIRA_USER_EMAIL:$JIRA_API_KEY" \
   -d @/tmp/jira-story.json | jq -r '.key'
 ```
 
-Issue URL pattern: `https://sauvvitech-team.atlassian.net/browse/<KEY>`
+Issue URL pattern: `https://your-org.atlassian.net/browse/<KEY>`
 
 ---
 
@@ -275,8 +275,8 @@ feat(<scope>) <short description>
 Examples:
 
 ```text
-feat(st-packages) CSV and PDF export module for tabular reports
-feat(st-packages) CSV generator with RFC 4180 escaping and UTF-8 BOM
+feat(reports) CSV and PDF export module for tabular reports
+feat(reports) CSV generator with RFC 4180 escaping and UTF-8 BOM
 ```
 
 ---
@@ -287,9 +287,9 @@ Before creating issues, present a table:
 
 | Order | Type | Summary | Parent |
 |-------|------|---------|--------|
-| 1 | Story | `feat(st-packages) CSV and PDF export module...` | — |
-| 2 | Subtask | `feat(st-packages) CSV generator...` | (story key) |
-| 3 | Subtask | `feat(st-packages) PDF generator...` | (story key) |
+| 1 | Story | `feat(reports) CSV and PDF export module...` | — |
+| 2 | Subtask | `feat(reports) CSV generator...` | (story key) |
+| 3 | Subtask | `feat(reports) PDF generator...` | (story key) |
 
 Ask for user approval unless they explicitly requested creation.
 
@@ -297,13 +297,13 @@ Ask for user approval unless they explicitly requested creation.
 
 ## Real reference example
 
-Story **SV-1487** with subtasks **SV-1488** through **SV-1493** — export module in `st-packages`, titles `feat(st-packages) ...`.
+Story **PROJ-1487** with subtasks **PROJ-1488** through **PROJ-1493** — export module in `reports`, titles `feat(reports) ...`.
 
 Creation flow used:
 
 1. `GET /myself` → accountId
-2. `POST /issue` → SV-1487 (Story)
-3. `POST /issue` × 6 → SV-1488…SV-1493 (Subtasks with `parent: { "key": "SV-1487" }`)
+2. `POST /issue` → PROJ-1487 (Story)
+3. `POST /issue` × 6 → PROJ-1488…PROJ-1493 (Subtasks with `parent: { "key": "PROJ-1487" }`)
 
 ---
 

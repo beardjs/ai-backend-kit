@@ -2,7 +2,7 @@
 
 Index of the `.claude/` kit for **layered backend services**. Architecture source of truth: [AGENTS.md](../AGENTS.md) and [docs/architecture-and-layers.md](../docs/architecture-and-layers.md).
 
-This kit is maintained in **st-cursor-backend** and synced into each backend service. See [docs/ADOPTION.md](../docs/ADOPTION.md). Full pipeline (idea → release gate): [WORKFLOW.md](WORKFLOW.md).
+This kit is maintained in **ai-backend-kit** and synced into each backend service. See [docs/ADOPTION.md](../docs/ADOPTION.md). Full pipeline (idea → release gate): [WORKFLOW.md](WORKFLOW.md).
 
 ## How the pieces load (Claude Code)
 

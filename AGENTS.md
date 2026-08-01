@@ -100,4 +100,4 @@ Full flow: [`.cursor/WORKFLOW.md`](.cursor/WORKFLOW.md) / [`.claude/WORKFLOW.md`
 
 ## 8. Shared packages (org)
 
-Org backends typically use `@sauvvitech/st-packages` for auth (`authorizeByGroup`), translated errors (`handleTranslatedError`), and helper types. If the service does not use that package, preserve the **pattern** (auth middleware + i18n catalog + `IThrowedError` / `EErrorCode`) with the service’s equivalent libraries.
+Org backends typically use shared packages for auth (`authorizeByGroup`), translated errors (`handleTranslatedError`), and helper types. If the service does not use those packages, preserve the **pattern** (auth middleware + i18n catalog + `IThrowedError` / `EErrorCode`) with the service’s equivalent libraries.

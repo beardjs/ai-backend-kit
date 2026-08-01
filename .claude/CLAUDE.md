@@ -1,4 +1,4 @@
-# Sauvvi layered backend — Claude Code kit
+# AI backend kit — Claude Code kit
 
 @../AGENTS.md
 

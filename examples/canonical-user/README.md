@@ -2,7 +2,7 @@
 
 Pedagogical snippets for the layered backend pattern. **Not a runnable service** — copy shapes into a real service’s `<context>`.
 
-Synced kit docs and skills link here so references resolve inside **st-cursor-backend**. After adoption, prefer the same relative paths under the service’s `src/`.
+Synced kit docs and skills link here so references resolve inside **ai-backend-kit**. After adoption, prefer the same relative paths under the service’s `src/`.
 
 | Area | Path |
 |------|------|

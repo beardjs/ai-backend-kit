@@ -14,7 +14,7 @@ Read issues via the Jira MCP server (when configured) and create stories/subtask
 
 | Setting | Value |
 |---------|-------|
-| Instance | `https://sauvvitech-team.atlassian.net` |
+| Instance | `https://your-org.atlassian.net` |
 | Project | `SV` |
 | Story issuetype id | `10003` |
 | Subtask issuetype id | `10005` |

@@ -16,7 +16,7 @@ Invoke the agent by name in chat or via the agent picker. Skill: `@skill-jira-wo
 
 | Setting | Value |
 |---------|-------|
-| Instance | `https://sauvvitech-team.atlassian.net` |
+| Instance | `https://your-org.atlassian.net` |
 | Project | `SV` |
 | Story issuetype id | `10003` |
 | Subtask issuetype id | `10005` |

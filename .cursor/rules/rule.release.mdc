@@ -16,4 +16,4 @@ Applies to **backend services** that adopt this kit and ship an npm package via 
 
 ## Kit version (separate)
 
-The Cursor kit package `@sauvvitech/st-cursor-backend` uses SemVer in [`VERSION`](mdc:VERSION) + [`package.json`](mdc:package.json) + [`CHANGELOG.md`](mdc:CHANGELOG.md), published on tag `v*` (see `.github/workflows/publish.yml`), and stamped into services as `.cursor/KIT_VERSION` by the CLI / sync script. That is **not** the same as a service package version.
+The Cursor kit package `@beardjs/ai-backend-kit` uses SemVer in [`VERSION`](mdc:VERSION) + [`package.json`](mdc:package.json) + [`CHANGELOG.md`](mdc:CHANGELOG.md), published on tag `v*` (see `.github/workflows/publish.yml`), and stamped into services as `.cursor/KIT_VERSION` by the CLI / sync script. That is **not** the same as a service package version.

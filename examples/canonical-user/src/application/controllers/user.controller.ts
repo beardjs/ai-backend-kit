@@ -4,7 +4,7 @@
 import { Request, Response, Router } from 'express';
 import { IUserService } from '../../domain/user/service/user.service.interface';
 
-// Stand-ins for @sauvvitech/st-packages patterns
+// Stand-ins for shared-package patterns
 declare const ErrorCatalog: Record<string, unknown>;
 declare function handleTranslatedError(error: unknown, catalog: unknown, res: Response): void;
 declare function authorizeByGroup(groups: string[]): (req: Request, res: Response, next: () => void) => void;
