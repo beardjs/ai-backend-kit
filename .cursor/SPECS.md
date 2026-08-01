@@ -6,10 +6,11 @@ Versioned specs + product/QA agents for **layered backend services** that adopt 
 
 | Need | Use |
 |------|-----|
-| Feature / bugfix end-to-end | **`agt-orchestrator`** (runs PO → gate → design → QA plan → dev → QA → …) |
+| Feature / bugfix end-to-end | **`agt-orchestrator`** (runs PO → gate → design → QA plan → dev → test-author → QA verify → …) |
 | Write / refine requirements only | **`agt-product-owner`** |
 | Technical design from approved requirements | **`agt-architecture`** |
-| Test plan / acceptance / QA report vs spec | **`agt-quality-assurance`** (PLAN / AUTOMATE / VERIFY) |
+| Test plan / acceptance / QA report vs spec | **`agt-quality-assurance`** (PLAN / VERIFY; AUTOMATE dispatches author) |
+| Create / extend Jest unit & integration tests | **`agt-test-author`** |
 | Spec procedure (Specify → Design → Tasks) | **`@skill-spec-driven`** |
 | Templates / folder convention | [`docs/specs/`](../docs/specs/README.md) |
 
@@ -22,6 +23,7 @@ Versioned specs + product/QA agents for **layered backend services** that adopt 
 | `docs/specs/<slug>/tasks.md` | skill / tech | Implementable slices |
 | `docs/specs/<slug>/test-plan.md` | QA (PLAN) | Criterion → test matrix, before dev |
 | `docs/specs/<slug>/qa-report.md` | QA (VERIFY) | Evidence-based result (`PASS` / `PASS_WITH_RISKS` / `FAIL` / `BLOCKED`) |
+| `src/__tests__/**` | Test author | Automated unit / integration suites |
 
 ## Agents
 
@@ -29,16 +31,19 @@ Versioned specs + product/QA agents for **layered backend services** that adopt 
 |-------|--------|----------|
 | [agt-product-owner](agents/agt-product-owner.md) | `docs/specs/**` | Edit `src/` |
 | [agt-architecture](agents/agt-architecture.md) | `docs/specs/<slug>/design.md` | Edit `src/`; redefine product rules |
-| [agt-quality-assurance](agents/agt-quality-assurance.md) | `test-plan.md`, `qa-report.md` + tests under `src/__tests__` | Weaken asserts; “fix” prod to pass |
+| [agt-quality-assurance](agents/agt-quality-assurance.md) | `test-plan.md`, `qa-report.md` | Write Jest; weaken asserts; “fix” prod to pass |
+| [agt-test-author](agents/agt-test-author.md) | `src/__tests__/**` | Change production; own qa-report |
 | [agt-code-review](agents/agt-code-review.md) | nothing (read-only findings) | Edit code; approve product scope |
 
 ## Skills
 
 | Skill | Purpose |
 |-------|---------|
+| [skill-product-refinement](skills/skill-product-refinement/SKILL.md) | Ambiguity handling, slicing, AC / DoR for `requirements.md` |
 | [skill-spec-driven](skills/skill-spec-driven/SKILL.md) | Specify → Design → Tasks → consistency checklist |
 | [skill-technical-design](skills/skill-technical-design/SKILL.md) | Requirements → `design.md` (layers, contracts, rollout) |
-| [skill-quality-assurance](skills/skill-quality-assurance/SKILL.md) | Test plan, automation, QA report |
+| [skill-quality-assurance](skills/skill-quality-assurance/SKILL.md) | Test plan + QA report; dispatch author for automation |
+| [skill-tests-layered](skills/skill-tests-layered/SKILL.md) | Jest layout, `when`/`should`, mock policy |
 | [skill-backend-implementation](skills/skill-backend-implementation/SKILL.md) | Scope-safe implementation + dev DoD |
 | [skill-code-review](skills/skill-code-review/SKILL.md) | Spec ↔ code review with typed findings |
 
@@ -50,4 +55,4 @@ Versioned specs + product/QA agents for **layered backend services** that adopt 
 4. Approval decisions are explicit: `APPROVED` / `CHANGES_REQUESTED` / `REJECTED` / `BLOCKED` — comments alone are not approval.
 5. Trivial edits (rename/typo) skip the SDD pipeline.
 
-Related: [WORKFLOW.md](WORKFLOW.md) (fluxo completo), [QUALITY.md](QUALITY.md), [RULES.md](RULES.md), [AGENTS.md](../AGENTS.md).
+Related: [WORKFLOW.md](WORKFLOW.md) (full flow), [QUALITY.md](QUALITY.md), [SKILLS.md](SKILLS.md), [RULES.md](RULES.md), [AGENTS.md](../AGENTS.md).

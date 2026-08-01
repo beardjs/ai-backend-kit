@@ -15,9 +15,10 @@ Semantic naming, REST design, and light quality audits for **layered backend ser
 | **REST/OpenAPI design only** | **`agt-rest-endpoint-design`** |
 | **Rename suggestions (read-only)** | **`agt-naming-refactor`** |
 
-Invoke agents by name in chat or via the agent picker. Skills: `@skill-review-rest-endpoints`, `@skill-review-naming`, `@skill-spec-driven`.
+Invoke agents by name in chat or via the agent picker. Skills: `@skill-review-rest-endpoints`, `@skill-review-naming`, `@skill-spec-driven`. Full skill map (including scaffold skills): [SKILLS.md](SKILLS.md).
 
 Multi-step delivery (PO → gate → design → QA plan → implement → test → code review → QA verify → reviews → verify → optional PR): use [`agt-orchestrator`](agents/agt-orchestrator.md). Specs: [SPECS.md](SPECS.md).
+
 ## Rules (always-on context)
 
 | Rule | Focus |

@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 # Skill: Kafka (messaging)
 
-Follow the **Messaging (Kafka)** section of [AGENTS.md](../../../AGENTS.md).
+Follow **§10 Messaging (optional)** in [docs/architecture-and-layers.md](../../../docs/architecture-and-layers.md) (Kafka contracts in domain; concrete producers/consumers in infraestructure).
 
 ## Steps
 
@@ -23,7 +23,7 @@ Follow the **Messaging (Kafka)** section of [AGENTS.md](../../../AGENTS.md).
 
 4. **Configuration** — register producer (and consumer/worker if any) in the corresponding factory, e.g. `src/configuration/factory/messaging/`
 
-5. **Tests** — mock producer interface in service tests when applicable
+5. **Tests** — use `jest.spyOn` on the injected producer interface in service tests when applicable (do not mock the Repository). See [`agt-test-author`](../../agents/agt-test-author.md) / [`skill-tests-layered`](../skill-tests-layered/SKILL.md).
 
 ## Rules
 

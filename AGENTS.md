@@ -1,8 +1,8 @@
 # AGENTS.md — layered backend contract
 
-Short contract for **any** Node.js/TypeScript service that adopts this Cursor kit. Detail: [docs/architecture-and-layers.md](docs/architecture-and-layers.md). Cursor index: [`.cursor/RULES.md`](.cursor/RULES.md).
+Short contract for **any** Node.js/TypeScript service that adopts this kit. Detail: [docs/architecture-and-layers.md](docs/architecture-and-layers.md). Cursor index: [`.cursor/RULES.md`](.cursor/RULES.md) · Claude Code index: [`.claude/README.md`](.claude/README.md).
 
-> Examples using the `user` context (`UserService`, `IUser`, …) are the kit’s **canonical pattern**. Replace `<context>` with the service’s real bounded context.
+> Examples using the `user` context (`UserService`, `IUser`, …) are the kit’s **canonical pattern**. Illustrative files: [`examples/canonical-user/`](examples/canonical-user/). Replace `<context>` with the service’s real bounded context.
 
 ## 1. Stack and commands
 
@@ -40,7 +40,7 @@ Fixed spelling: **`infraestructure`** (with “e”), **`configuration`** (singu
 4. **Controller** — extract `req`, call service, status/JSON, `handleTranslatedError`. No product rules and no `*Model`.
 5. **Factories** — composition in `src/configuration/factory/`.
 6. **OpenAPI** — every route/payload change updates `src/contracts/service.yaml`.
-7. **Commits/PRs** — no AI attribution (`Made with Cursor`, etc.). See `.cursor/rules/rule.git-no-ai-attribution.mdc`.
+7. **Commits/PRs** — no AI attribution (`Made with Cursor`, `Generated with Claude Code`, etc.). See `.cursor/rules/rule.git-no-ai-attribution.mdc` / `.claude/rules/git-no-ai-attribution.md`.
 
 ## 4. Naming conventions
 
@@ -85,7 +85,7 @@ Artifacts under `docs/specs/<feature-slug>/`:
 
 Explicit human gate: `APPROVED` | `CHANGES_REQUESTED` | `REJECTED` | `BLOCKED`.
 
-Full flow: [`.cursor/WORKFLOW.md`](.cursor/WORKFLOW.md). Default entry: **`agt-orchestrator`**.
+Full flow: [`.cursor/WORKFLOW.md`](.cursor/WORKFLOW.md) / [`.claude/WORKFLOW.md`](.claude/WORKFLOW.md). Default entry: **`agt-orchestrator`** (Cursor) / **`/orchestrate`** (Claude Code).
 
 ## 7. Definition of Done (dev)
 

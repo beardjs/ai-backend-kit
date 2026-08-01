@@ -22,6 +22,13 @@ by the approved `requirements.md`; you own the technical solution.
 > Distinction: this agent **creates** `design.md` **before** implementation.
 > [`agt-architecture-review`](agt-architecture-review.md) **audits** code
 > **after** implementation. Do not mix the two roles.
+>
+> For **architecture-agnostic discovery** (any style/stack → profile / patterns /
+> gated Cursor rules), use [`agt-architecture-probe`](agt-architecture-probe.md),
+> [`agt-pattern-miner`](agt-pattern-miner.md), and
+> [`agt-pattern-steward`](agt-pattern-steward.md) — see
+> [ARCHITECTURE-DISCOVERY.md](../ARCHITECTURE-DISCOVERY.md). Do not use this
+> agent for that workflow.
 
 ## Required skill
 
@@ -50,6 +57,8 @@ Do not activate for:
 - Implementing code (→ `agt-dev-backend`)
 - Auditing existing code (→ `agt-architecture-review`)
 - Reviewing a diff (→ `agt-code-review`)
+- Mapping as-is architecture / mining patterns / Cursor rule stewardship
+  (→ `agt-architecture-probe` / `agt-pattern-miner` / `agt-pattern-steward`)
 
 ## File boundaries
 

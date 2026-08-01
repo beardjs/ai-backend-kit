@@ -1,0 +1,23 @@
+prefix_rule(
+    pattern = ["git", "reset", "--hard"],
+    decision = "forbidden",
+    justification = "Use a non-destructive Git operation or request explicit user handling.",
+    match = ["git reset --hard", "git reset --hard HEAD~1"],
+    not_match = ["git reset --soft HEAD~1"],
+)
+
+prefix_rule(
+    pattern = ["git", "push", ["--force", "-f"]],
+    decision = "forbidden",
+    justification = "Force pushes are forbidden by the repository safety policy.",
+    match = ["git push --force", "git push -f origin feature"],
+    not_match = ["git push origin feature"],
+)
+
+prefix_rule(
+    pattern = ["rm", ["-rf", "-fr"]],
+    decision = "forbidden",
+    justification = "Use a recoverable or narrowly scoped deletion instead of recursive force removal.",
+    match = ["rm -rf build", "rm -fr build"],
+    not_match = ["rm build/output.txt"],
+)

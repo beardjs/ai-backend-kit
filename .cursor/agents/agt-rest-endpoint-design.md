@@ -21,8 +21,8 @@ Review **API surface design only**: paths, HTTP methods, query usage, status cod
 ## Sources of truth
 
 - [docs/architecture-and-layers.md](../../docs/architecture-and-layers.md) (§4, §7)
-- [src/contracts/service.yaml](../../src/contracts/service.yaml)
-- Reference controller: [src/application/controllers/user.controller.ts](../../src/application/controllers/user.controller.ts)
+- [src/contracts/service.yaml](../../examples/canonical-user/src/contracts/service.yaml)
+- Reference controller: [src/application/controllers/user.controller.ts](../../examples/canonical-user/src/application/controllers/user.controller.ts)
 - Playbook: [.cursor/skills/skill-review-rest-endpoints/SKILL.md](../skills/skill-review-rest-endpoints/SKILL.md)
 - Status table: [reference-rest.md](../skills/skill-review-rest-endpoints/reference-rest.md)
 

@@ -1,0 +1,14 @@
+---
+paths:
+  - "src/domain/**/*"
+---
+# Domain (`src/domain`)
+
+- Domain interfaces: prefix **`I`** (e.g. `IUser`, `IUserService`).
+- Contracts: `*.repository.read.ts` / `*.repository.write.ts` with `I*RepositoryRead` / `I*RepositoryWrite`.
+- Entities (`*ServiceEntity`): **local** object invariants (fields, format) in the constructor; file `<context>.entity.ts` in `entity/`. Do not query repository or validate uniqueness.
+- **Service** (`*.service.ts`): **only** place for orchestration and business rules (uniqueness, 404/409, flows, idempotency). Use entity + `I*RepositoryRead` / `I*RepositoryWrite` contracts.
+- **Forbidden in service:** import `src/infraestructure`, `mongoose`, `*Model`, `IM*` models, concrete Kafka producers.
+- Services depend only on repository interfaces and domain types.
+- Detail and ❌/✅ examples: [business-rules-layers.md](business-rules-layers.md).
+- Messaging (optional): when added, keep **interfaces** only in `domain/<context>/messaging/<event>/` (e.g. `producer.interface.kafka.ts`); implementations go in infraestructure.

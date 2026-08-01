@@ -1,0 +1,44 @@
+---
+description: One-line description of what this rule enforces (shown in rule picker)
+globs: 
+alwaysApply: false
+---
+
+# Rule title
+
+> Draft produced by `agt-pattern-steward`. Lives under
+> `docs/architecture/rule-drafts/` until gate `APPROVED`, then copy/merge into
+> `.cursor/rules/`.
+>
+> Naming: if the repo uses `meta.cursor-rules` (this kit), prefer
+> `rule.<kebab>.mdc` or `meta.<kebab>.mdc`. Otherwise follow local convention
+> or plain `kebab-case.mdc`.
+
+- **Purpose**
+  - What invariant or convention this rule protects
+  - Link related mined pattern IDs (e.g. P-001) and proposal IDs (PROP-001)
+
+- **When it applies**
+  - Paths / layers / modules (align `globs` in frontmatter when path-scoped)
+
+- **DO**
+  - Concrete requirement
+  - Example from the real codebase when possible
+
+- **DON'T**
+  - Anti-pattern observed or to avoid
+  - Example
+
+- **Evidence (mining)**
+  - `path/to/example-a`
+  - `path/to/example-b`
+  - `path/to/example-c`
+
+- **Related**
+  - Other rules (use `mdc:` links when in this kit)
+  - Canonical docs (if any)
+
+- **Deprecation** (only when Action = deprecate)
+  - Replacement rule or practice
+  - Migration path
+  - Remove-after date or condition

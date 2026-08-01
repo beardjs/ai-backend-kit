@@ -1,15 +1,20 @@
 ---
 name: skill-quality-assurance
 description: >-
-  Reusable QA procedure for deriving traceable tests from approved requirements,
-  selecting the correct test level, validating layered architecture, automating
-  deterministic tests, classifying defects, and producing release evidence.
+  Reusable QA procedure for deriving traceable test plans from approved
+  requirements, selecting the correct test level, validating layered
+  architecture, dispatching test authoring to agt-test-author, classifying
+  defects, and producing release evidence (VERIFY).
 ---
 
 # Quality Assurance Skill
 
-Use this skill to create test plans, automate tests, verify implementations, and
-produce QA evidence.
+Use this skill to create test plans, dispatch automated test authoring, verify
+implementations, and produce QA evidence.
+
+Jest **authoring** is owned by [`agt-test-author`](../../agents/agt-test-author.md)
+and [`skill-tests-layered`](../skill-tests-layered/SKILL.md). Do not write
+`src/__tests__/**` from this skill.
 
 ## Goal
 
@@ -41,11 +46,12 @@ Do not treat an unapproved requirement as a final oracle.
 Depending on mode:
 
 ```text
-docs/specs/<feature-slug>/test-plan.md
-src/__tests__/**
-docs/specs/<feature-slug>/qa-report.md
+docs/specs/<feature-slug>/test-plan.md     # PLAN (+ optional traceability updates)
+docs/specs/<feature-slug>/qa-report.md     # VERIFY
 ```
 
+Automated tests under `src/__tests__/**` are produced by **`agt-test-author`**,
+not by this skill.
 ## Requirement-to-test transformation
 
 For every `AC-*`, determine:
@@ -203,26 +209,21 @@ Consider only relevant dimensions:
 - Time/date boundaries
 - Localization/error catalog behavior
 
-## Test doubles
+## Test doubles (for PLAN guidance / VERIFY review)
 
-Use:
+Authoring policy is defined in `skill-tests-layered` / `rule.tests.mdc`. When
+reviewing or planning, enforce:
 
-- Stub for fixed dependency response
-- Spy for interaction evidence
-- Fake for lightweight behavior with state
-- Mock only when interaction order or arguments are part of the contract
-
-Rules:
-
-- Mock interfaces, not implementation details
-- Do not over-specify irrelevant calls
-- Reset state between tests
-- Avoid global mutable fixtures
+- Do **not** mock Repository in Service tests
+- Prefer `jest.spyOn` for external services and Kafka producers/handlers
+- `__mocks__/` holds data fixtures, not Repository doubles
+- Do not mock the unit under test
+- Reset state between tests; avoid global mutable fixtures
 - Builders should create valid defaults and allow explicit overrides
 
 ## Mongo integration guidance
 
-For repository tests:
+For repository tests (authored by `agt-test-author`):
 
 - Use the project's isolated test database strategy
 - Clear only owned test collections
@@ -234,7 +235,7 @@ For repository tests:
 
 ## Kafka guidance
 
-Prefer unit/contract validation with injected producer or consumer interfaces.
+Prefer validation with injected producer or consumer interfaces and `jest.spyOn`.
 
 Verify:
 
@@ -247,6 +248,13 @@ Verify:
 - Unknown message behavior
 
 Use a real broker only through an existing safe integration setup.
+
+## AUTOMATE mode
+
+1. Dispatch `agt-test-author` with `test-plan.md` and implementation scope.
+2. Confirm suites use `describe('when …')` / `it('should …')`.
+3. Update TC → file/title traceability in `test-plan.md` only.
+4. Dispatch `agt-test-runner` if the suite is unhealthy for tooling reasons.
 
 ## Defect evidence standard
 
@@ -335,10 +343,12 @@ Release-quality verification requires:
 ## Anti-patterns
 
 - Writing tests from implementation without reading requirements
+- QA writing Jest files directly instead of dispatching `agt-test-author`
 - Asserting private methods or incidental call counts
 - Making a failing expectation match broken code
 - Testing every branch through HTTP
 - Mocking the unit under test
+- Mocking Repository in Service tests
 - Using arbitrary timers or sleeps
 - Depending on test order
 - Calling production systems

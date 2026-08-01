@@ -21,9 +21,9 @@ Read [docs/architecture-and-layers.md](../../../docs/architecture-and-layers.md)
 
 ## Flow for a new error code
 
-1. **Enum** — add value in [`EErrorCode.ts`](../../../src/domain/common/errors/enums/EErrorCode.ts).
+1. **Enum** — add value in [`EErrorCode.ts`](../../../examples/canonical-user/src/domain/common/errors/enums/EErrorCode.ts).
 
-2. **i18n catalog** — entry in [`error-catalog.ts`](../../../src/infraestructure/i18n/error-catalog.ts) with `pt-BR`, `en`, `es`.
+2. **i18n catalog** — entry in [`error-catalog.ts`](../../../examples/canonical-user/src/infraestructure/i18n/error-catalog.ts) with `pt-BR`, `en`, `es`.
 
 3. **Service** — throw object typed as `IThrowedError`:
 
@@ -36,7 +36,7 @@ throw {
 } as IThrowedError;
 ```
 
-Reference: [`user.service.ts`](../../../src/domain/user/service/user.service.ts) (409 conflict, 404 not found).
+Reference: [`user.service.ts`](../../../examples/canonical-user/src/domain/user/service/user.service.ts) (409 conflict, 404 not found).
 
 4. **Repository** — in Mongo operation `catch`:
 
@@ -45,7 +45,7 @@ serviceLogErrorHandler(error, { eventName: '...', eventData: { ... } });
 throw { status: 500, errorCode: EErrorCode.DATABASE_ERROR } as IThrowedError;
 ```
 
-Reference: [`user.repository.read.ts`](../../../src/infraestructure/repository/user/user.repository.read.ts).
+Reference: [`user.repository.read.ts`](../../../examples/canonical-user/src/infraestructure/repository/user/user.repository.read.ts).
 
 5. **Controller** — import `ErrorCatalog` and use in all handlers:
 
@@ -55,13 +55,13 @@ Reference: [`user.repository.read.ts`](../../../src/infraestructure/repository/u
 }
 ```
 
-Reference: [`user.controller.ts`](../../../src/application/controllers/user.controller.ts).
+Reference: [`user.controller.ts`](../../../examples/canonical-user/src/application/controllers/user.controller.ts).
 
 ## Tests
 
 - Service: `rejects.toMatchObject({ status, errorCode, details })` and `expect(ErrorCatalog[EErrorCode.*]).toBeDefined()`.
 - Controller: assert body with `code` / translated message when applicable.
-- Reference: [`create-user.int.test.ts`](../../../src/__tests__/integration/user/service/create-user.int.test.ts).
+- Reference: [`create-user.int.test.ts`](../../../examples/canonical-user/src/__tests__/integration/user/service/create-user.int.test.ts).
 
 ## Checklist
 

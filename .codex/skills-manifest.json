@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": [
+    "st-backend-add-http-endpoint",
+    "st-backend-architecture-discovery",
+    "st-backend-backend-implementation",
+    "st-backend-code-review",
+    "st-backend-domain-errors",
+    "st-backend-github-workflow",
+    "st-backend-jira-workflow",
+    "st-backend-kafka-messaging",
+    "st-backend-mongo-persistence",
+    "st-backend-new-context",
+    "st-backend-openapi-contract",
+    "st-backend-product-refinement",
+    "st-backend-quality-assurance",
+    "st-backend-review-naming",
+    "st-backend-review-rest-endpoints",
+    "st-backend-spec-driven",
+    "st-backend-technical-design",
+    "st-backend-tests-layered"
+  ]
+}

@@ -17,7 +17,7 @@ Read [docs/architecture-and-layers.md](../../../docs/architecture-and-layers.md)
 
 1. **Mirror routes**
    - Every route in the controller `initRoutes()` must exist under `paths` in the YAML.
-   - Compare [`user.controller.ts`](../../../src/application/controllers/user.controller.ts) with `paths` in [`service.yaml`](../../../src/contracts/service.yaml) (`/users`, `/users/{id}`, etc.).
+   - Compare [`user.controller.ts`](../../../examples/canonical-user/src/application/controllers/user.controller.ts) with `paths` in [`service.yaml`](../../../examples/canonical-user/src/contracts/service.yaml) (`/users`, `/users/{id}`, etc.).
 
 2. **Methods and parameters**
    - `get` / `post` / `put` / `delete` aligned with Express.

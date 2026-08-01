@@ -3,7 +3,18 @@
 How a demand moves from idea to validated delivery in a service that adopts this kit.
 Complements [SPECS.md](SPECS.md) (artifacts) and [AGENTS.md](../AGENTS.md) (short contract).
 
-**Default entry:** invoke **`agt-orchestrator`**. It classifies intent, builds the minimal pipeline, applies gates, and dispatches specialists — it does not implement, write specs, or commit on its own.
+**Default entry for new features:** invoke **`agt-orchestrator`**. It classifies intent, builds the minimal pipeline, applies gates, and dispatches specialists — it does not implement, write specs, or commit on its own.
+
+## Choose a path first
+
+| Path | When | What to run |
+|------|------|-------------|
+| **A — Hotfix / typo** | Rename, 1 line, or ≤3 files; no OpenAPI/route change; criterion clear in the prompt | `agt-dev-backend` → `agt-test-author` (if behavior changed) → `agt-test-runner` → `agt-verifier` (skip full SDD) |
+| **B — Feature (SDD)** | New feature, endpoint, context, or contract change | **`agt-orchestrator`** (pipeline below) |
+| **C — Specialist only** | Requirements only, design only, QA only, review only, commit/PR only | Call that agent directly |
+| **D — Architecture discovery** | Repo **diverges** from kit layered / [`examples/canonical-user/`](../examples/canonical-user/) (or user explicitly overrides). **Skip** if the service already follows that layered shape. | See [ARCHITECTURE-DISCOVERY.md](ARCHITECTURE-DISCOVERY.md) (`agt-architecture-probe` → `agt-pattern-miner` → `agt-pattern-steward` + gate) |
+
+Skill map (scaffold vs SDD vs review): [SKILLS.md](SKILLS.md). Canonical shapes: [`examples/canonical-user/`](../examples/canonical-user/).
 
 ---
 
@@ -24,11 +35,13 @@ Idea / Jira / chat
         ↓
   agt-dev-backend    →  implementation (reads tasks + test-plan)
         ↓
+  agt-test-author    →  Jest suites under src/__tests__/
+        ↓
   agt-test-runner    →  healthy Jest suite
         ↓
   agt-code-review    →  typed findings (read-only)
         ↓
-  agt-quality-assurance (AUTOMATE + VERIFY)  →  tests + qa-report.md
+  agt-quality-assurance (VERIFY)  →  qa-report.md
         ↓
   agt-architecture-review  ∥  agt-code-quality
         ↓
@@ -80,7 +93,8 @@ Agents must **read and preserve** these fields — never drop them.
 | [`agt-orchestrator`](agents/agt-orchestrator.md) | Classify, sequence, apply gates, synthesize | Edit `src/` or specs |
 | [`agt-product-owner`](agents/agt-product-owner.md) | Requirements, AC, DoR | Code, schema, library choices |
 | [`agt-architecture`](agents/agt-architecture.md) | Technical `design.md` | Edit `src/`; redefine product rules |
-| [`agt-quality-assurance`](agents/agt-quality-assurance.md) | PLAN / AUTOMATE / VERIFY | Change production to “pass” a test |
+| [`agt-quality-assurance`](agents/agt-quality-assurance.md) | PLAN / VERIFY (AUTOMATE dispatches author) | Write Jest; change production to “pass” a test |
+| [`agt-test-author`](agents/agt-test-author.md) | Create / extend unit & integration tests | Change production; own qa-report |
 | [`agt-dev-backend`](agents/agt-dev-backend.md) | Implement the approved slice | Reinterpret an ambiguous rule |
 | [`agt-test-runner`](agents/agt-test-runner.md) | Stabilize Jest / technical regression | Redefine product ACs |
 | [`agt-code-review`](agents/agt-code-review.md) | Spec ↔ code review (read-only) | Implement fixes |
@@ -90,7 +104,7 @@ Agents must **read and preserve** these fields — never drop them.
 | [`agt-github-workflow`](agents/agt-github-workflow.md) | Atomic commit / PR | Run without an explicit request |
 | [`agt-jira-workflow`](agents/agt-jira-workflow.md) | Read / create Jira | Required on every feature |
 
-Related skills: `@skill-product-refinement`, `@skill-technical-design`, `@skill-quality-assurance`, `@skill-backend-implementation`, `@skill-code-review`, `@skill-spec-driven`.
+Related skills: `@skill-product-refinement`, `@skill-technical-design`, `@skill-quality-assurance`, `@skill-tests-layered`, `@skill-backend-implementation`, `@skill-code-review`, `@skill-spec-driven`.
 
 ---
 
@@ -159,10 +173,10 @@ NON_BLOCKING_IMPROVEMENT | STYLE | QUESTION
 
 Blocking → back to `agt-dev-backend`. Style / non-blocking improvements do not stop the flow.
 
-### 7. QA AUTOMATE + VERIFY
+### 7. Test author + QA VERIFY
 
-1. `agt-quality-assurance` automates what is in the test-plan (`src/__tests__/`).
-2. Runs real `package.json` commands (test, coverage, lint, etc.).
+1. `agt-test-author` automates what is in the test-plan under `src/__tests__/` (`when`/`should`, mock policy).
+2. `agt-quality-assurance` in **VERIFY** runs real `package.json` commands (test, coverage, lint, etc.).
 3. Writes `qa-report.md` with result:
 
 | Result | Meaning | Next step |
@@ -187,11 +201,12 @@ Never weaken an assert to go green.
 | Situation | Pipeline |
 |-----------|----------|
 | Rename / typo / 1 line | One specialist; no SDD |
-| Hotfix ≤ 3 files, no OpenAPI/route, clear criterion in the prompt | `dev` → `test-runner` → `verifier` |
+| Hotfix ≤ 3 files, no OpenAPI/route, clear criterion in the prompt | `dev` → `test-author` (if behavior changed) → `test-runner` → `verifier` |
+| Create / extend tests only | `agt-test-author` → `agt-test-runner` |
 | Bugfix that changes HTTP/OpenAPI | At least `requirements.md` before verifier |
 | Requirements only | `agt-product-owner` → human gate and stop |
 | Design only | `agt-architecture` (requirements already approved) |
-| QA only | `agt-quality-assurance` in the requested mode (PLAN / AUTOMATE / VERIFY) |
+| QA only | `agt-quality-assurance` PLAN / VERIFY (AUTOMATE → dispatch `agt-test-author`) |
 | Review only | `agt-code-review` or `architecture-review` ∥ `code-quality` |
 | Commit / PR | `agt-verifier` → `agt-github-workflow` (explicit request) |
 
@@ -249,12 +264,18 @@ An obvious single-role request (PO only, QA only, PR only) → call that agent d
 
 ## Not yet part of this flow
 
-Reserved for later process phases:
+Reserved for later process phases (optional; not required for kit adoption):
 
-- `agt-release` / `skill-release-readiness` / `release-report.md`
 - Post-production outcome review and a formal state machine outside this document
 
-Package version release remains in [rule.release.mdc](rules/rule.release.mdc) (semantic-release / Conventional Commits) — distinct from “feature operational readiness”.
+**Do not confuse:**
+
+| Concern | Where |
+|---------|--------|
+| Cursor **kit** SemVer | Kit repo `VERSION` / `CHANGELOG.md` → `.cursor/KIT_VERSION` after sync ([ADOPTION.md](../docs/ADOPTION.md)) |
+| Service **package** release | [rule.release.mdc](rules/rule.release.mdc) (semantic-release / Conventional Commits in the service) |
+
+A dedicated `agt-release` / feature “release readiness” report is **out of scope** for now — use the service’s existing release pipeline and this kit’s version stamp instead.
 
 ---
 
@@ -263,6 +284,7 @@ Package version release remains in [rule.release.mdc](rules/rule.release.mdc) (s
 | Doc | Purpose |
 |-----|---------|
 | [SPECS.md](SPECS.md) | Spec-Driven kit, artifacts, skills |
+| [SKILLS.md](SKILLS.md) | Full skills map (scaffold / SDD / review / ops) |
 | [docs/specs/README.md](../docs/specs/README.md) | Folder convention and templates |
 | [RULES.md](RULES.md) | Per-layer rules index |
 | [QUALITY.md](QUALITY.md) | Naming / REST / audits |
@@ -271,3 +293,4 @@ Package version release remains in [rule.release.mdc](rules/rule.release.mdc) (s
 | [AGENTS.md](../AGENTS.md) | Short service contract |
 | [docs/architecture-and-layers.md](../docs/architecture-and-layers.md) | Layers Domain → Configuration |
 | [docs/ADOPTION.md](../docs/ADOPTION.md) | How to sync this kit into a service |
+| [examples/canonical-user/](../examples/canonical-user/) | Illustrative `user` reference |

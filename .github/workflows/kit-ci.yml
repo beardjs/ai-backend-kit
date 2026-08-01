@@ -1,0 +1,105 @@
+name: Kit CI
+
+on:
+  push:
+    branches: [staging, main, master]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check VERSION matches package.json
+        run: node scripts/check-version.js
+
+      - name: Shell syntax (sync script)
+        run: bash -n scripts/sync-cursor.sh
+
+      - name: Validate kit configuration
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .cursor/hooks/*.py .claude/hooks/*.py
+          python3 -c "import json; json.load(open('.claude/settings.json'))"
+          node -e "JSON.parse(require('fs').readFileSync('.codex/hooks.json')); JSON.parse(require('fs').readFileSync('.codex/skills-manifest.json'))"
+          python3 -c "import glob,tomllib; [tomllib.load(open(path,'rb')) for path in ['.codex/config.toml', *glob.glob('.codex/agents/*.toml')]]"
+
+      - name: Unit tests
+        run: npm test
+
+      - name: CLI sync against fixture
+        run: |
+          set -euo pipefail
+          FIXTURE="$(mktemp -d)"
+          mkdir -p "$FIXTURE/.git"
+          printf '%s\n' '{"name":"kit-fixture"}' > "$FIXTURE/package.json"
+          mkdir -p "$FIXTURE/.cursor/local" "$FIXTURE/.claude/local"
+          echo "service-local" > "$FIXTURE/.cursor/local/keep-me.txt"
+          echo "service-local" > "$FIXTURE/.claude/local/keep-me.txt"
+          printf '%s\n' '{"permissions":{"allow":["Bash(yarn test*)"]}}' > "$FIXTURE/.claude/settings.local.json"
+          node bin/st-cursor-backend.js "$FIXTURE" --dry-run --kit cursor --with-pr-template
+          mkdir -p "$FIXTURE/.agents/skills/service-local"
+          echo "local" > "$FIXTURE/.agents/skills/service-local/SKILL.md"
+          node bin/st-cursor-backend.js "$FIXTURE" --kit cursor,claude,codex --with-pr-template
+          test -f "$FIXTURE/.cursor/KIT_VERSION"
+          test -f "$FIXTURE/.cursor/local/keep-me.txt"
+          test -f "$FIXTURE/.claude/KIT_VERSION"
+          test -f "$FIXTURE/.claude/local/keep-me.txt"
+          test -f "$FIXTURE/.claude/CLAUDE.md"
+          test -f "$FIXTURE/.claude/settings.json"
+          test -f "$FIXTURE/.codex/KIT_VERSION"
+          test -f "$FIXTURE/.codex/config.toml"
+          test -f "$FIXTURE/.agents/skills/st-backend-code-review/SKILL.md"
+          test -f "$FIXTURE/.agents/skills/service-local/SKILL.md"
+          # consumer-owned Claude Code files survive the sync
+          test -f "$FIXTURE/.claude/settings.local.json"
+          test -f "$FIXTURE/AGENTS.md"
+          test -f "$FIXTURE/examples/canonical-user/README.md"
+          test -f "$FIXTURE/.github/PULL_REQUEST_TEMPLATE.md"
+          KIT_V="$(tr -d '[:space:]' < VERSION)"
+          for kit_dir in .cursor .claude .codex; do
+            STAMP="$(tr -d '[:space:]' < "$FIXTURE/$kit_dir/KIT_VERSION")"
+            test "$KIT_V" = "$STAMP"
+          done
+          # default target = cwd; -y skips prompt
+          (
+            cd "$FIXTURE"
+            node "$GITHUB_WORKSPACE/bin/st-cursor-backend.js" --dry-run -y
+          )
+          # --all syncs every kit present in the package
+          node bin/st-cursor-backend.js "$FIXTURE" --dry-run --all
+          rm -rf "$FIXTURE"
+
+      - name: Bash sync smoke (optional rsync path)
+        run: |
+          set -euo pipefail
+          FIXTURE="$(mktemp -d)"
+          mkdir -p "$FIXTURE/.git" "$FIXTURE/.cursor/local" "$FIXTURE/.claude"
+          printf '%s\n' '{"name":"kit-fixture"}' > "$FIXTURE/package.json"
+          echo "service-local" > "$FIXTURE/.cursor/local/keep-me.txt"
+          printf '%s\n' '{}' > "$FIXTURE/.claude/settings.local.json"
+          ./scripts/sync-cursor.sh "$FIXTURE" --with-pr-template --kit cursor,claude,codex
+          test -f "$FIXTURE/.cursor/KIT_VERSION"
+          test -f "$FIXTURE/.cursor/local/keep-me.txt"
+          test -f "$FIXTURE/.claude/KIT_VERSION"
+          test -f "$FIXTURE/.claude/settings.local.json"
+          test -f "$FIXTURE/.codex/KIT_VERSION"
+          test -f "$FIXTURE/.agents/skills/st-backend-code-review/SKILL.md"
+          ./scripts/sync-cursor.sh "$FIXTURE" --dry-run --all
+          rm -rf "$FIXTURE"
+
+      - name: Check internal markdown links
+        run: python3 scripts/check-md-links.py
+
+      - name: npm pack dry-run
+        run: npm pack --dry-run

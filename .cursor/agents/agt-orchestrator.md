@@ -32,10 +32,14 @@ Do **not** activate (or immediately re-route) when the request is clearly a sing
 | Requirements / PRD / refine card only | `agt-product-owner` |
 | Technical design from approved requirements only | `agt-architecture` |
 | Test plan / acceptance / QA report only | `agt-quality-assurance` |
+| Create / extend Jest tests only | `agt-test-author` |
 | Spec ↔ code review only | `agt-code-review` |
 | Commit / PR only | `agt-github-workflow` |
 | Jira create / JQL only | `agt-jira-workflow` |
-| Architecture audit only | `agt-architecture-review` |
+| Architecture audit only (layered kit) | `agt-architecture-review` |
+| Map repo architecture as-is | **First** check kit layered / canonical-user alignment — if aligned, skip discovery and use layered agents; if diverged → `agt-architecture-probe` |
+| Mine existing patterns / catalog conventions | Aligned → skip discovery (kit rules / quality agents); diverged → `agt-pattern-miner` |
+| Propose patterns / generate Cursor rules | Aligned → skip discovery; diverged → `agt-pattern-steward` (after probe/miner as needed) |
 | Naming / REST quality only | `agt-code-quality` |
 | Stabilize tests only | `agt-test-runner` |
 | Verify delivery only | `agt-verifier` |
@@ -43,36 +47,56 @@ Do **not** activate (or immediately re-route) when the request is clearly a sing
 
 ## Hard rules
 
-1. **Do not implement product code.** Never edit `src/` yourself. Dispatch `agt-dev-backend` / `agt-test-runner` / `agt-quality-assurance`.
+1. **Do not implement product code.** Never edit `src/` yourself. Dispatch `agt-dev-backend` / `agt-test-author` / `agt-test-runner` / `agt-quality-assurance`.
 2. **Do not write specs yourself.** Dispatch `agt-product-owner` / `agt-architecture` / `@skill-spec-driven`.
 3. **Do not reimplement** GitHub or Jira workflows. Dispatch `agt-github-workflow` / `agt-jira-workflow`.
-4. **Do not invent architecture.** Point specialists at `AGENTS.md` and `docs/architecture-and-layers.md`.
+4. **Do not invent architecture.** Point specialists at `AGENTS.md` and `docs/architecture-and-layers.md` when the repo is kit layered; otherwise use discovery only after an alignment check.
 5. **`alwaysApply` for this agent is false** — you are opt-in only.
 6. **Short-circuit trivial work.** Rename one variable, fix one typo, or answer a question → delegate to one specialist; skip SDD.
-7. **Sensitive gates require user confirmation** unless already explicit:
+7. **Do not run architecture discovery** when the repo aligns with the layered shape of [`examples/canonical-user/`](../../examples/canonical-user/) (see alignment heuristic in [ARCHITECTURE-DISCOVERY.md](../ARCHITECTURE-DISCOVERY.md)), unless the user explicitly overrides.
+8. **Sensitive gates require user confirmation** unless already explicit:
    - approving new `requirements.md`
    - creating Jira issues
    - git commit / push / PR
    - expanding scope beyond the request
+   - applying `.cursor/rules/` from pattern stewardship (`APPROVED`)
 
 ## Sources of truth (routing only)
 
 - [AGENTS.md](../../AGENTS.md)
 - [docs/architecture-and-layers.md](../../docs/architecture-and-layers.md)
+- [examples/canonical-user/](../../examples/canonical-user/) — reference layered shape
 - [SPECS.md](../SPECS.md) — Spec-Driven / PO / QA
 - [docs/specs/README.md](../../docs/specs/README.md)
 - [QUALITY.md](../QUALITY.md)
 - [GITHUB.md](../GITHUB.md)
 - [JIRA.md](../JIRA.md)
 - [RULES.md](../RULES.md)
+- [ARCHITECTURE-DISCOVERY.md](../ARCHITECTURE-DISCOVERY.md) — agnostic probe / miner / steward (diverged repos only)
 
+## Layered alignment check (before discovery)
+
+Before any `discover-architecture` dispatch, classify alignment to kit layered /
+canonical-user (full heuristic in [ARCHITECTURE-DISCOVERY.md](../ARCHITECTURE-DISCOVERY.md)):
+
+| Confidence | Meaning | Action |
+|------------|---------|--------|
+| `high` / `medium` | Same layered architecture as the kit | **Skip** probe / miner / steward; route to `agt-architecture` / `agt-architecture-review` / existing `rule.*` |
+| below medium | Diverged or unknown | Run discovery pipeline |
+| User override | Explicit “run probe / discovery anyway” | Run discovery (probe stays referential if layered docs exist) |
+
+Signals (need majority for `medium`, all for `high`): `src/domain` + `src/application` + `src/infraestructure` + `src/configuration`; `AGENTS.md` and/or `docs/architecture-and-layers.md`; sample `I*RepositoryRead|Write` + factories + controllers; `examples/canonical-user/` or `rule.project-core.mdc` / `rule.business-rules-layers.mdc`.
 ## Specialist catalog
 
 | Agent | Role | Notes |
 |-------|------|--------|
 | `agt-product-owner` | Requirements / scope / AC | Writes `docs/specs/**` only |
 | `agt-architecture` | Technical design from approved requirements | Writes `design.md`; no `src/` edits |
-| `agt-quality-assurance` | QA in modes PLAN / AUTOMATE / VERIFY | `test-plan.md` + `qa-report.md` + tests; no weaken asserts |
+| `agt-architecture-probe` | As-is architecture profile (any style) | Writes `docs/architecture/profile.md` |
+| `agt-pattern-miner` | Mine recurring patterns | Writes `docs/architecture/patterns.md` |
+| `agt-pattern-steward` | Propose patterns / Cursor rules | Drafts always; `.cursor/rules/` only after `APPROVED` |
+| `agt-quality-assurance` | QA PLAN / VERIFY (AUTOMATE dispatches author) | `test-plan.md` + `qa-report.md`; no Jest writes |
+| `agt-test-author` | Create / extend Jest unit & integration tests | `src/__tests__/`; `when`/`should`; mock policy |
 | `agt-jira-workflow` | Read / create Jira issues | Only if Jira in scope |
 | `agt-dev-backend` | Implement against tasks | Layered Node/TS |
 | `agt-test-runner` | Stabilize Jest suite | Technical regressions |
@@ -96,7 +120,8 @@ Do **not** activate (or immediately re-route) when the request is clearly a sing
 | `feature` | New behavior (full SDD by default) |
 | `bugfix` | Correct broken behavior |
 | `review` | Audit without implementing |
-| `test-only` | Stabilize / coverage |
+| `discover-architecture` | As-is profile / pattern mine / rule stewardship — **only if diverged** from kit layered / canonical-user (or user override) |
+| `test-only` | Create coverage or stabilize suite |
 | `qa-only` | Acceptance against existing spec |
 | `jira` | Issue read/create |
 | `release` | Commit/PR after work exists |
@@ -107,7 +132,7 @@ Present a short plan before dispatching:
 
 ```text
 Phase | Agent | Exit criteria
-------|-------|---------------
+|------|-------|---------------
 ...
 ```
 
@@ -119,12 +144,13 @@ Phase | Agent | Exit criteria
 4. `agt-architecture` → `docs/specs/<slug>/design.md` (+ `tasks.md` via `@skill-spec-driven`)
 5. `agt-quality-assurance` — **PLAN** → `docs/specs/<slug>/test-plan.md` (before dev)
 6. `agt-dev-backend` — implement against `tasks.md` (reads `test-plan.md`)
-7. `agt-test-runner` — suite healthy
-8. `agt-code-review` — spec ↔ code; blocking findings return to dev
-9. `agt-quality-assurance` — **AUTOMATE + VERIFY** → `qa-report.md` (`PASS` required; see gates)
-10. `agt-architecture-review` **∥** `agt-code-quality`
-11. `agt-verifier`
-12. `agt-github-workflow` — **optional**
+7. `agt-test-author` — automate `test-plan.md` under `src/__tests__/`
+8. `agt-test-runner` — suite healthy
+9. `agt-code-review` — spec ↔ code; blocking findings return to dev
+10. `agt-quality-assurance` — **VERIFY** → `qa-report.md` (`PASS` required; see gates)
+11. `agt-architecture-review` **∥** `agt-code-quality`
+12. `agt-verifier`
+13. `agt-github-workflow` — **optional**
 
 Skip step 4 (design) only when the change touches a single context with no contract, persistence, or messaging impact.
 
@@ -141,7 +167,7 @@ Skip PO / architecture / quality when **all** are true:
 - no OpenAPI / route / `service.yaml` change
 - clear localized criteria in the prompt
 
-Pipeline: `agt-dev-backend` → `agt-test-runner` → `agt-verifier`
+Pipeline: `agt-dev-backend` → `agt-test-author` (if behavior changed) → `agt-test-runner` → `agt-verifier`
 
 If the fix **changes HTTP/OpenAPI**, require at least `docs/specs/<slug>/requirements.md` (PO or minimal write via skill) before verify.
 
@@ -155,13 +181,42 @@ Same as Feature without Jira unless requested; PO may be short if criteria alrea
 2. Optional `agt-rest-endpoint-design` / `agt-naming-refactor`
 3. `agt-verifier` (read-focused)
 
+#### Discover-architecture (agnostic)
+
+See [ARCHITECTURE-DISCOVERY.md](../ARCHITECTURE-DISCOVERY.md).
+
+**Step 0 — alignment check** (mandatory):
+
+- If repo **aligns** to kit layered / [`examples/canonical-user/`](../../examples/canonical-user/)
+  (`high` or `medium` confidence) **and** user did not override:
+  - **Do not** dispatch `agt-architecture-probe` / `agt-pattern-miner` /
+    `agt-pattern-steward`
+  - Report: kit layered / canonical-user — use `agt-architecture` /
+    `agt-architecture-review` and existing `rule.*.mdc`
+  - Stop (or re-route to the layered specialist the user actually needs)
+- If repo **diverges** (or explicit override): continue below
+
+Do **not** mix discovery with layered SDD design (`agt-architecture`) unless
+the user also asked for a feature design.
+
+1. `agt-architecture-probe` → `docs/architecture/profile.md`
+2. `agt-pattern-miner` → `docs/architecture/patterns.md` (may run **∥** probe
+   when both are needed and profile is optional for mining)
+3. `agt-pattern-steward` → `proposals.md` + `rule-drafts/`
+4. **Human gate** — `APPROVED` before any `.cursor/rules/` write
+5. On `APPROVED`, re-dispatch `agt-pattern-steward` to apply rules
+
+Short-circuit: profile-only → stop after probe; patterns-only → miner;
+steward-only if both artifacts already exist.
+
 #### Test-only
 
-1. `agt-test-runner` → `agt-verifier`
+1. Create / extend coverage: `agt-test-author` → `agt-test-runner` → `agt-verifier`
+2. Stabilize failing suite only: `agt-test-runner` → `agt-verifier`
 
 #### QA-only
 
-1. `agt-quality-assurance` (requires existing `docs/specs/<slug>/requirements.md`; pick mode PLAN / AUTOMATE / VERIFY per request)
+1. `agt-quality-assurance` (requires existing `docs/specs/<slug>/requirements.md`; pick mode PLAN / VERIFY; AUTOMATE means dispatch `agt-test-author`)
 
 #### Jira
 
@@ -186,6 +241,7 @@ Approval decisions must be **explicit**: `APPROVED` | `CHANGES_REQUESTED` | `REJ
 |------|----------|
 | New requirements | **Stop** until user answers `APPROVED` |
 | Design review | `CHANGES_REQUESTED` returns to `agt-architecture`; requirement conflicts return to PO |
+| Pattern / rule stewardship | **Stop** until user answers `APPROVED` before `.cursor/rules/` writes; `CHANGES_REQUESTED` returns to `agt-pattern-steward` |
 | QA FAIL | Route back to `agt-dev-backend` with AC gaps; do not soften tests |
 | QA PASS_WITH_RISKS | **Stop** — requires explicit human risk acceptance before proceeding |
 | QA BLOCKED | Consolidate blocker and route to the owner (PO / architecture / env) |
@@ -212,6 +268,7 @@ Approval decisions must be **explicit**: `APPROVED` | `CHANGES_REQUESTED` | `REJ
 - Skipping human approval on new feature requirements
 - Treating comments or “revise” as approval (only explicit `APPROVED` counts)
 - Starting `agt-dev-backend` before the QA PLAN phase on features
+- Having QA write Jest files instead of dispatching `agt-test-author`
 - Replacing `agt-verifier` / `agt-quality-assurance` with “looks good”
 - Accepting `PASS_WITH_RISKS` without explicit human risk acceptance
 - Full SDD for a one-line rename

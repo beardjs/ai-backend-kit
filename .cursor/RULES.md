@@ -25,7 +25,7 @@ See [meta.cursor-rules.mdc](rules/meta.cursor-rules.mdc) for the full convention
 | [rule.configuration.mdc](rules/rule.configuration.mdc) | Configuration — dotenv, env, composition factories |
 | [rule.contracts-openapi.mdc](rules/rule.contracts-openapi.mdc) | OpenAPI `service.yaml` aligned with the HTTP API |
 | [rule.semantic-quality.mdc](rules/rule.semantic-quality.mdc) | Semantic naming, REST paths, OpenAPI schemas |
-| [rule.tests.mdc](rules/rule.tests.mdc) | Jest tests — layer mirror, `*.int`/`*.unit`, coverage |
+| [rule.tests.mdc](rules/rule.tests.mdc) | Jest tests — `when`/`should`, mock policy, `*.int`/`*.unit`, coverage |
 | [rule.release.mdc](rules/rule.release.mdc) | Release via semantic-release (not Changesets) |
 | [rule.git-no-ai-attribution.mdc](rules/rule.git-no-ai-attribution.mdc) | Never add `Made with Cursor` / AI attribution to commits or PRs (`alwaysApply`) |
 
@@ -44,9 +44,22 @@ Obvious single-specialist request (PR only, Jira only, review only) → call tha
 
 ## Spec-Driven toolkit
 
-Versioned specs, PO, architecture (design), QA (PLAN/AUTOMATE/VERIFY), and code review: [SPECS.md](SPECS.md) · artifacts under [`docs/specs/`](../docs/specs/README.md) (`requirements`, `design`, `tasks`, `test-plan`, `qa-report`).
+Versioned specs, PO, architecture (design), QA (PLAN/VERIFY), test author, and code review: [SPECS.md](SPECS.md) · artifacts under [`docs/specs/`](../docs/specs/README.md) (`requirements`, `design`, `tasks`, `test-plan`, `qa-report`).
 
 Full flow (idea → release gate): [WORKFLOW.md](WORKFLOW.md).
+
+## Architecture discovery (agnostic)
+
+Map any repo as-is, mine patterns, steward Cursor rules (gated) — without
+assuming Clean/Hexagonal/MVC. Coexists with layered SDD agents:
+
+[ARCHITECTURE-DISCOVERY.md](ARCHITECTURE-DISCOVERY.md) ·
+`agt-architecture-probe` · `agt-pattern-miner` · `agt-pattern-steward` ·
+`skill-architecture-discovery`.
+
+## Skills index
+
+Scaffold, Spec-Driven, review, discovery, and ops skills: [SKILLS.md](SKILLS.md).
 
 ## Quality toolkit
 
