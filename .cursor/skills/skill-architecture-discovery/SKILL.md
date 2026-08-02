@@ -3,9 +3,9 @@ name: skill-architecture-discovery
 description: >-
   Architecture-agnostic discovery procedure: inventory a repo as-is, classify
   style without dogma, map observed boundaries and dependencies, mine recurring
-  patterns with evidence, and steward proposals into Cursor rules after an
-  explicit human gate. Used by agt-architecture-probe, agt-pattern-miner, and
-  agt-pattern-steward. Works for any stack or architectural style.
+  patterns with evidence, consolidate into analysis.md, and steward proposals
+  into Cursor rules after an explicit human gate. Used by agt-architecture-probe,
+  agt-pattern-miner, agt-architecture-analyst, and agt-pattern-steward.
 ---
 
 # Architecture discovery (agnostic)
@@ -28,6 +28,7 @@ services — use the existing layered agents and `rule.*.mdc` instead.
 |-------|-------|--------|
 | [`agt-architecture-probe`](../../agents/agt-architecture-probe.md) | Profile | `docs/architecture/profile.md` |
 | [`agt-pattern-miner`](../../agents/agt-pattern-miner.md) | Patterns | `docs/architecture/patterns.md` |
+| [`agt-architecture-analyst`](../../agents/agt-architecture-analyst.md) | Consolidate | `docs/architecture/analysis.md` |
 | [`agt-pattern-steward`](../../agents/agt-pattern-steward.md) | Stewardship | `docs/architecture/proposals.md`, `docs/architecture/rule-drafts/`, then `.cursor/rules/` only after `APPROVED` |
 
 ## Templates
@@ -36,6 +37,7 @@ services — use the existing layered agents and `rule.*.mdc` instead.
 |----------|--------|
 | [`templates/profile.md`](templates/profile.md) | `docs/architecture/profile.md` |
 | [`templates/patterns.md`](templates/patterns.md) | `docs/architecture/patterns.md` |
+| [`templates/analysis.md`](templates/analysis.md) | `docs/architecture/analysis.md` |
 | [`templates/proposals.md`](templates/proposals.md) | `docs/architecture/proposals.md` |
 | [`templates/rule-draft.mdc`](templates/rule-draft.mdc) | `docs/architecture/rule-drafts/<name>.mdc` |
 

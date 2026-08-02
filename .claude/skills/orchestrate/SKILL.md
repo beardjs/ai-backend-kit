@@ -92,6 +92,7 @@ Signals (need majority for `medium`, all for `high`): `src/domain` + `src/applic
 | `agt-architecture` | Technical design from approved requirements | Writes `design.md`; no `src/` edits |
 | `agt-architecture-probe` | As-is architecture profile (any style) | Writes `docs/architecture/profile.md` |
 | `agt-pattern-miner` | Mine recurring patterns | Writes `docs/architecture/patterns.md` |
+| `agt-architecture-analyst` | Consolidate profile + patterns | Writes `docs/architecture/analysis.md` |
 | `agt-pattern-steward` | Propose patterns / rules | Drafts always; `.claude/rules/` only after `APPROVED` |
 | `agt-quality-assurance` | QA PLAN / VERIFY (AUTOMATE routes to author) | `test-plan.md` + `qa-report.md`; no Jest writes |
 | `agt-test-author` | Create / extend Jest unit & integration tests | `src/__tests__/`; `when`/`should`; mock policy |
@@ -200,12 +201,14 @@ the user also asked for a feature design.
 1. `agt-architecture-probe` → `docs/architecture/profile.md`
 2. `agt-pattern-miner` → `docs/architecture/patterns.md` (may run **∥** probe
    when both are needed and profile is optional for mining)
-3. `agt-pattern-steward` → `proposals.md` + `rule-drafts/`
-4. **Human gate** — `APPROVED` before any `.claude/rules/` write
-5. On `APPROVED`, re-dispatch `agt-pattern-steward` to apply rules
+3. `agt-architecture-analyst` → `docs/architecture/analysis.md` (consolidated)
+4. `agt-pattern-steward` → `proposals.md` + `rule-drafts/` **only if** the user
+   asked for standards / rules
+5. **Human gate** — `APPROVED` before any `.claude/rules/` write
+6. On `APPROVED`, re-dispatch `agt-pattern-steward` to apply rules
 
 Short-circuit: profile-only → stop after probe; patterns-only → miner;
-steward-only if both artifacts already exist.
+analysis-only if both sources exist → analyst; steward-only if asked.
 
 #### Test-only
 

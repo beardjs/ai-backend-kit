@@ -54,7 +54,7 @@ Map any repo as-is, mine patterns, steward Cursor rules (gated) — without
 assuming Clean/Hexagonal/MVC. Coexists with layered SDD agents:
 
 [ARCHITECTURE-DISCOVERY.md](ARCHITECTURE-DISCOVERY.md) ·
-`agt-architecture-probe` · `agt-pattern-miner` · `agt-pattern-steward` ·
+`agt-architecture-probe` · `agt-pattern-miner` · `agt-architecture-analyst` · `agt-pattern-steward` ·
 `skill-architecture-discovery`.
 
 ## Skills index

@@ -12,6 +12,12 @@ const {
   listAvailableKits,
   resolveKits,
 } = require('../lib/sync-kit');
+const {
+  analyzeArchitecture,
+  formatArchitectureReport,
+  isFirstKitInstall,
+  writeAlignmentScanMarkdown,
+} = require('../lib/analyze-architecture');
 
 const KIT_ROOT = path.join(__dirname, '..');
 
@@ -45,7 +51,7 @@ function shouldPrompt(options) {
   return canRenderUi();
 }
 
-async function runInteractivePanel(options) {
+async function runInteractivePanel(options, { firstInstall }) {
   const p = require('@clack/prompts');
   const available = listAvailableKits(KIT_ROOT);
   const availableSet = new Set(available);
@@ -115,6 +121,32 @@ async function runInteractivePanel(options) {
     kits = [choice];
   }
 
+  let analyzeArchitectureChoice = options.analyzeArchitecture;
+  if (analyzeArchitectureChoice == null) {
+    const wantScan = await p.select({
+      message: firstInstall
+        ? 'First install — run a local architecture alignment scan after sync? (recommended)'
+        : 'Run a local architecture alignment scan of this repository after sync?',
+      options: [
+        {
+          value: true,
+          label: 'Yes',
+          hint: firstInstall
+            ? 'writes docs/architecture/alignment-scan.md + Path D next steps'
+            : 'checks kit-layered signals and prints Path D next steps',
+        },
+        { value: false, label: 'No', hint: 'skip' },
+      ],
+      // First kit install defaults to Yes; later syncs default to No (question stays).
+      initialValue: firstInstall,
+    });
+    if (p.isCancel(wantScan)) {
+      p.cancel('Sync cancelled.');
+      process.exit(0);
+    }
+    analyzeArchitectureChoice = Boolean(wantScan);
+  }
+
   let withPrTemplate = options.withPrTemplate;
   if (!options.withPrTemplate) {
     const seedPr = await p.select({
@@ -149,7 +181,16 @@ async function runInteractivePanel(options) {
     backup = Boolean(doBackup);
   }
 
-  return { kits, withPrTemplate, backup };
+  return { kits, withPrTemplate, backup, analyzeArchitecture: analyzeArchitectureChoice };
+}
+
+function printArchitectureReport(report, p) {
+  const text = formatArchitectureReport(report);
+  if (p && p.note) {
+    p.note(text, 'Architecture alignment');
+  } else {
+    console.log(`\n${text}\n`);
+  }
 }
 
 async function main() {
@@ -172,7 +213,11 @@ async function main() {
   let kits;
   let withPrTemplate = options.withPrTemplate;
   let backup = options.backup;
+  /** @type {boolean | null} */
+  let analyzeArchitectureChoice = options.analyzeArchitecture;
   const prompted = shouldPrompt(options);
+  // Detect before syncKit stamps KIT_VERSION.
+  const firstInstall = isFirstKitInstall(target);
 
   if (prompted && !process.stdout.isTTY) {
     console.error(
@@ -183,16 +228,21 @@ async function main() {
 
   try {
     if (prompted) {
-      const panel = await runInteractivePanel(options);
+      const panel = await runInteractivePanel(options, { firstInstall });
       kits = panel.kits;
       withPrTemplate = panel.withPrTemplate;
       backup = panel.backup;
+      analyzeArchitectureChoice = panel.analyzeArchitecture;
     } else {
       kits = resolveKits({
         kits: options.kits,
         all: options.all,
         kitRoot: KIT_ROOT,
       });
+      // Non-interactive first install: always run the local scan unless explicitly disabled.
+      if (analyzeArchitectureChoice == null && firstInstall) {
+        analyzeArchitectureChoice = true;
+      }
     }
   } catch (err) {
     console.error(err.message || err);
@@ -237,6 +287,35 @@ async function main() {
     if (spinner) {
       spinner.stop(`Synced: ${result.kits.join(', ')} (v${result.kitVersion})`);
     }
+
+    // Interactive choice is collected in the install panel; flags force/skip.
+    // First non-interactive install also defaults to true (see above).
+    if (analyzeArchitectureChoice === true) {
+      const report = analyzeArchitecture(target);
+      const scanPath = writeAlignmentScanMarkdown(target, report, {
+        dryRun: options.dryRun,
+      });
+      printArchitectureReport(report, p);
+      const followUp =
+        'Next: in the IDE run agt-architecture-analyst (after probe + miner) ' +
+        'or /architecture-discovery to write docs/architecture/analysis.md';
+      if (p && p.log) {
+        p.log.info(
+          options.dryRun
+            ? `Would write ${path.relative(target, scanPath) || scanPath}`
+            : `Wrote ${path.relative(target, scanPath) || scanPath}`,
+        );
+        p.log.step(followUp);
+      } else {
+        console.log(
+          options.dryRun
+            ? `\nWould write ${scanPath}`
+            : `\nWrote ${scanPath}`,
+        );
+        console.log(followUp);
+      }
+    }
+
     if (p) {
       p.outro(`Done. See docs/ADOPTION.md for the checklist.\n${AUTHOR_CREDIT}`);
     }

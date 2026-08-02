@@ -94,6 +94,7 @@ Signals (need majority for `medium`, all for `high`): `src/domain` + `src/applic
 | `agt-architecture` | Technical design from approved requirements | Writes `design.md`; no `src/` edits |
 | `agt-architecture-probe` | As-is architecture profile (any style) | Writes `docs/architecture/profile.md` |
 | `agt-pattern-miner` | Mine recurring patterns | Writes `docs/architecture/patterns.md` |
+| `agt-architecture-analyst` | Consolidate profile + patterns | Writes `docs/architecture/analysis.md` |
 | `agt-pattern-steward` | Propose patterns / Cursor rules | Drafts always; `.cursor/rules/` only after `APPROVED` |
 | `agt-quality-assurance` | QA PLAN / VERIFY (AUTOMATE dispatches author) | `test-plan.md` + `qa-report.md`; no Jest writes |
 | `agt-test-author` | Create / extend Jest unit & integration tests | `src/__tests__/`; `when`/`should`; mock policy |
@@ -185,6 +186,17 @@ Same as Feature without Jira unless requested; PO may be short if criteria alrea
 
 See [ARCHITECTURE-DISCOVERY.md](../ARCHITECTURE-DISCOVERY.md).
 
+**Example user prompts** (classify as `discover-architecture`):
+
+```text
+Map this repository architecture as-is (Path D). Profile boundaries and mine recurring patterns.
+
+Run architecture discovery anyway (explicit override), even if the repo looks kit-layered.
+```
+
+Override phrases: `run the probe anyway`, `run architecture discovery anyway`,
+`explicit override`.
+
 **Step 0 — alignment check** (mandatory):
 
 - If repo **aligns** to kit layered / [`examples/canonical-user/`](../../examples/canonical-user/)
@@ -202,12 +214,14 @@ the user also asked for a feature design.
 1. `agt-architecture-probe` → `docs/architecture/profile.md`
 2. `agt-pattern-miner` → `docs/architecture/patterns.md` (may run **∥** probe
    when both are needed and profile is optional for mining)
-3. `agt-pattern-steward` → `proposals.md` + `rule-drafts/`
-4. **Human gate** — `APPROVED` before any `.cursor/rules/` write
-5. On `APPROVED`, re-dispatch `agt-pattern-steward` to apply rules
+3. `agt-architecture-analyst` → `docs/architecture/analysis.md` (consolidated)
+4. `agt-pattern-steward` → `proposals.md` + `rule-drafts/` **only if** the user
+   asked for standards / rules
+5. **Human gate** — `APPROVED` before any `.cursor/rules/` write
+6. On `APPROVED`, re-dispatch `agt-pattern-steward` to apply rules
 
 Short-circuit: profile-only → stop after probe; patterns-only → miner;
-steward-only if both artifacts already exist.
+analysis-only if both sources exist → analyst; steward-only if asked.
 
 #### Test-only
 

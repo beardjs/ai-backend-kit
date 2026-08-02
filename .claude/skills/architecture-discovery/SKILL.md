@@ -1,11 +1,11 @@
 ---
 name: architecture-discovery
 description: >-
-  Architecture-agnostic discovery procedure: inventory a repo as-is, classify
-  style without dogma, map observed boundaries and dependencies, mine recurring
-  patterns with evidence, and steward proposals into kit rules after an
-  explicit human gate. Used by agt-architecture-probe, agt-pattern-miner, and
-  agt-pattern-steward. Works for any stack or architectural style.
+  Path D entry for architecture discovery. Thin pipeline: alignment check,
+  then dispatch agt-architecture-probe → agt-pattern-miner →
+  agt-architecture-analyst → agt-pattern-steward (gated). Also the shared as-is
+  procedure those specialists follow. Use for divergent repos or explicit
+  override; skip when kit-layered / canonical-user.
 ---
 
 # Architecture discovery (agnostic)
@@ -22,12 +22,43 @@ repo **diverges** from the layered shape of
 user explicitly overrides. Do **not** use discovery on kit-aligned layered
 services — use the existing layered agents and kit rules instead.
 
+## Slash entry (`/architecture-discovery`)
+
+When the user invokes **`/architecture-discovery`** (or asks to run Path D /
+map the repo as-is), act as a **thin pipeline** in the main conversation — same
+spirit as [`/orchestrate`](../orchestrate/SKILL.md):
+
+1. **Classify override** — phrases such as `run the probe anyway`,
+   `run architecture discovery anyway`, or `explicit override` force discovery
+   even on a layered-looking repo.
+2. **Alignment check** (procedure step 0) — if `high` / `medium` and no
+   override, return `SKIPPED_LAYERED_KIT` and point to
+   `agt-architecture` / `agt-architecture-review`; **do not** write discovery
+   artifacts.
+3. **Dispatch specialists** via the Agent tool (`subagent_type` matching
+   `agt-*`). Do **not** absorb their work or edit production `src/` yourself:
+   - `agt-architecture-probe` → `docs/architecture/profile.md`
+   - `agt-pattern-miner` → `docs/architecture/patterns.md`
+   - `agt-architecture-analyst` → `docs/architecture/analysis.md` (consolidated)
+   - `agt-pattern-steward` → `proposals.md` + `rule-drafts/` **only if** the
+     user asked to propose/apply standards; otherwise stop after `analysis.md`
+4. **Human gate** — never write `.claude/rules/` / `.cursor/rules/` without
+   explicit `APPROVED`.
+5. **Synthesize** — short status: alignment result, artifacts written, next step.
+
+Short-circuit: profile-only → stop after probe; patterns-only → miner;
+analysis-only if both sources exist → analyst; steward-only if asked.
+
+Specialists preloaded with this skill still follow the **Procedure** below when
+they execute a phase.
+
 ## Agents that use this skill
 
 | Agent | Phase | Writes |
 |-------|-------|--------|
 | [`agt-architecture-probe`](../../agents/discovery/agt-architecture-probe.md) | Profile | `docs/architecture/profile.md` |
 | [`agt-pattern-miner`](../../agents/discovery/agt-pattern-miner.md) | Patterns | `docs/architecture/patterns.md` |
+| [`agt-architecture-analyst`](../../agents/discovery/agt-architecture-analyst.md) | Consolidate | `docs/architecture/analysis.md` |
 | [`agt-pattern-steward`](../../agents/discovery/agt-pattern-steward.md) | Stewardship | `docs/architecture/proposals.md`, `docs/architecture/rule-drafts/`, then kit rules (`.claude/rules/`, `.cursor/rules/` when present) only after `APPROVED` |
 
 ## Templates
@@ -36,6 +67,7 @@ services — use the existing layered agents and kit rules instead.
 |----------|--------|
 | [`templates/profile.md`](templates/profile.md) | `docs/architecture/profile.md` |
 | [`templates/patterns.md`](templates/patterns.md) | `docs/architecture/patterns.md` |
+| [`templates/analysis.md`](templates/analysis.md) | `docs/architecture/analysis.md` |
 | [`templates/proposals.md`](templates/proposals.md) | `docs/architecture/proposals.md` |
 | [`templates/rule-draft.md`](templates/rule-draft.md) | `docs/architecture/rule-drafts/<name>.md` |
 
