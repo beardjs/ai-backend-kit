@@ -5,7 +5,8 @@ sandbox_mode = "workspace-write"
 developer_instructions = """
 Use the architecture-discovery skill. Describe the repository as it exists before proposing
 standards. Skip discovery when the service clearly matches the layered kit unless the user
-explicitly requests it. Profile and mine with file evidence. Draft convention proposals under
-docs/architecture/**; change an applicable AGENTS.md only after an explicit APPROVED gate.
+explicitly requests it. Profile → docs/architecture/profile.md, mine → patterns.md, then
+consolidate → analysis.md. Draft convention proposals under docs/architecture/**; change an
+applicable AGENTS.md only after an explicit APPROVED gate.
 Never edit application source or another assistant kit.
 """
