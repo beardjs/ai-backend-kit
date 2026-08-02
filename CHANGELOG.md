@@ -9,6 +9,25 @@ Kit version lives in [`VERSION`](VERSION). After sync, the applied version is st
 
 > **Note:** Service package releases (`yarn release` / semantic-release) are separate from this kit version. See [`.cursor/rules/rule.release.mdc`](.cursor/rules/rule.release.mdc).
 
+# [1.4.0](https://github.com/beardjs/ai-backend-kit/compare/v1.3.0...v1.4.0) (2026-08-02)
+
+
+### Features
+
+* **agents:** consolidate discovery report into analysis.md ([839ede4](https://github.com/beardjs/ai-backend-kit/commit/839ede402330e0d33e1ab293ccce775d70260e92))
+* **claude:** add architecture analyst agent for analysis.md ([666f2af](https://github.com/beardjs/ai-backend-kit/commit/666f2af3c25987bda822a4b102173888188ff318))
+* **claude:** add consolidated architecture analysis template ([ea5cd0e](https://github.com/beardjs/ai-backend-kit/commit/ea5cd0e9122ee58aec45e6204d84bc68587e2e34))
+* **claude:** dispatch architecture analyst in discovery pipeline ([7c6389a](https://github.com/beardjs/ai-backend-kit/commit/7c6389a379cd3c250fb69bb54b999dea3d2faa46))
+* **claude:** wire analyst into architecture-discovery slash entry ([6758077](https://github.com/beardjs/ai-backend-kit/commit/6758077cb449dc050eb023973fe29daada0785b8))
+* **cli:** add analyze-architecture flags to sync CLI ([d5b5f5e](https://github.com/beardjs/ai-backend-kit/commit/d5b5f5e884640d6578fe9af8e765ab4d1affd511))
+* **cli:** add deterministic architecture alignment scanner ([39166d6](https://github.com/beardjs/ai-backend-kit/commit/39166d6c866e88d2a13bc0821fa03aaf92360c0d))
+* **cli:** prompt architecture scan on install and write baseline ([601d55d](https://github.com/beardjs/ai-backend-kit/commit/601d55d5ebba9e4d9aa295fd130d3fb16d0c1397))
+* **codex:** consolidate discovery into analysis.md ([b24804f](https://github.com/beardjs/ai-backend-kit/commit/b24804ff248bc2cd70e9e1aa4a31b04ef7c8a0ba))
+* **cursor:** add architecture analyst agent for analysis.md ([6fd7316](https://github.com/beardjs/ai-backend-kit/commit/6fd7316fad248c0dc94fa4b54790b5bb4124e645))
+* **cursor:** add consolidated architecture analysis template ([b9c6f27](https://github.com/beardjs/ai-backend-kit/commit/b9c6f273ba226dfd3eea05d0ea4c5328c7b26ae8))
+* **cursor:** dispatch architecture analyst in discovery pipeline ([895ae67](https://github.com/beardjs/ai-backend-kit/commit/895ae675540cdfedee996d83b020abbcd9441c96))
+* **cursor:** wire analyst into architecture-discovery skill ([50afd90](https://github.com/beardjs/ai-backend-kit/commit/50afd90a95c6b079d68fb2909642d5d796e353c2))
+
 ## [Unreleased]
 
 ### Added
