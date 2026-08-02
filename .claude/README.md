@@ -19,6 +19,8 @@ This kit is maintained in **ai-backend-kit** and synced into each backend servic
 
 Broad request / end-to-end feature or bugfix / chain several agents → **`/orchestrate`** ([skill](skills/orchestrate/SKILL.md)): the main thread classifies intent, dispatches `agt-*` subagents, and enforces gates.
 
+Map a **divergent** (or overridden) repo as-is / mine patterns / consolidate / steward rules → **`/architecture-discovery`** ([skill](skills/architecture-discovery/SKILL.md)): thin Path D pipeline (`agt-architecture-probe` → `agt-pattern-miner` → `agt-architecture-analyst` → optional steward + gate). Aligned kit-layered services skip discovery — see [ARCHITECTURE-DISCOVERY.md](ARCHITECTURE-DISCOVERY.md).
+
 Obvious single-specialist request (PR only, Jira only, review only) → invoke that subagent directly.
 
 ## Rules index (`rules/`)
@@ -54,6 +56,17 @@ Project core (spelling, layer boundaries, gates) lives in [CLAUDE.md](CLAUDE.md)
 | Create / extend Jest unit & integration tests | **`agt-test-author`** |
 | Spec procedure (Specify → Design → Tasks) | **`/spec-driven`** |
 | Templates / folder convention | [`docs/specs/`](../docs/specs/README.md) |
+
+## Architecture discovery toolkit
+
+| Need | Use |
+|------|-----|
+| Map repo architecture as-is / mine patterns (Path D) | **`/architecture-discovery`** — see [ARCHITECTURE-DISCOVERY.md](ARCHITECTURE-DISCOVERY.md) |
+| Profile only | **`agt-architecture-probe`** |
+| Patterns catalog only | **`agt-pattern-miner`** |
+| Consolidated analysis `.md` | **`agt-architecture-analyst`** → `docs/architecture/analysis.md` |
+| Propose / apply rules (human gate) | **`agt-pattern-steward`** |
+| Layer audit on a **kit-aligned** service | **`agt-architecture-review`** (not discovery) |
 
 ### Artifacts
 
@@ -94,6 +107,7 @@ Project core (spelling, layer boundaries, gates) lives in [CLAUDE.md](CLAUDE.md)
 | [agt-jira-workflow](agents/ops/agt-jira-workflow.md) | ops | no | Jira read / create (org defaults) |
 | [agt-architecture-probe](agents/discovery/agt-architecture-probe.md) | discovery | no | As-is architecture profile |
 | [agt-pattern-miner](agents/discovery/agt-pattern-miner.md) | discovery | no | Pattern catalog with evidence |
+| [agt-architecture-analyst](agents/discovery/agt-architecture-analyst.md) | discovery | no | Consolidated `analysis.md` |
 | [agt-pattern-steward](agents/discovery/agt-pattern-steward.md) | discovery | gated | Proposals + rule drafts; rules after `APPROVED` |
 
 ## Skills index (`skills/`)
