@@ -14,6 +14,11 @@ Complements [SPECS.md](SPECS.md) (artifacts) and [AGENTS.md](../AGENTS.md) (shor
 | **C — Specialist only** | Requirements only, design only, QA only, review only, commit/PR only | Call that agent directly |
 | **D — Architecture discovery** | Repo **diverges** from kit layered / [`examples/canonical-user/`](../examples/canonical-user/) (or user explicitly overrides). **Skip** if the service already follows that layered shape. | See [ARCHITECTURE-DISCOVERY.md](ARCHITECTURE-DISCOVERY.md) (`agt-architecture-probe` → `agt-pattern-miner` → `agt-pattern-steward` + gate) |
 
+**Path D quick start:** prompts and Entry by tool live in
+[README — Architecture discovery workflow](../README.md#architecture-discovery-workflow)
+and the Quick start block in [ARCHITECTURE-DISCOVERY.md](ARCHITECTURE-DISCOVERY.md).
+Example: *Map this repository architecture as-is (Path D). Profile boundaries and mine recurring patterns.*
+
 Skill map (scaffold vs SDD vs review): [SKILLS.md](SKILLS.md). Canonical shapes: [`examples/canonical-user/`](../examples/canonical-user/).
 
 ---
