@@ -14,10 +14,14 @@ Kit version lives in [`VERSION`](VERSION). After sync, the applied version is st
 ### Added
 
 - [DeepWiki](https://deepwiki.com/beardjs/ai-backend-kit) integration for this public kit repo: Ask DeepWiki badge and wiki link in [`README.md`](README.md), steering via [`.devin/wiki.json`](.devin/wiki.json), and a short note in [`docs/ADOPTION.md`](docs/ADOPTION.md) (kit-repo only; not synced to services)
+- Architecture Discovery **entry UX**: [README — Architecture discovery workflow](README.md#architecture-discovery-workflow) (steps, Entry by tool, copy-paste prompts); Quick start blocks in [`.cursor/ARCHITECTURE-DISCOVERY.md`](.cursor/ARCHITECTURE-DISCOVERY.md) and [`.claude/ARCHITECTURE-DISCOVERY.md`](.claude/ARCHITECTURE-DISCOVERY.md); Claude `/architecture-discovery` slash-entry thin pipeline; Codex Path D quick start in [`.codex/README.md`](.codex/README.md)
+- CLI **architecture alignment scan** (deterministic, no AI): Yes/No in the install panel right after kit selection (**default Yes on first install**), writes `docs/architecture/alignment-scan.md`, `--analyze-architecture` / `--no-analyze-architecture`, [`lib/analyze-architecture.js`](lib/analyze-architecture.js)
+- Discovery consolidator **`agt-architecture-analyst`** → `docs/architecture/analysis.md` (keeps `profile.md` + `patterns.md`); wired into Path D / `/architecture-discovery` / orchestrator
 
 ### Changed
 
 - Root [`README.md`](README.md) — onboarding-first guide: what the kit does, numbered Getting started, narrative Feature workflow (steps + example prompt), table of contents; agents and orchestration overview with five Mermaid diagrams (path selection, orchestrator loop, Spec-Driven pipeline with artifacts/gates, architecture discovery, agent role map) plus a catalog of all 18 Cursor `agt-*` agents with links to definitions
+- Getting started and Cursor kit indexes now surface Path D / [`ARCHITECTURE-DISCOVERY.md`](.cursor/ARCHITECTURE-DISCOVERY.md); [`.claude/README.md`](.claude/README.md) lists `/architecture-discovery` next to `/orchestrate`; orchestrator and workflow indexes include example discovery prompts
 
 ## [1.3.0] — 2026-07-31
 
