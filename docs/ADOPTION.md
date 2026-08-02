@@ -24,7 +24,7 @@ yarn ai-backend-kit --dry-run --kit cursor
 yarn ai-backend-kit --backup --no-delete --kit cursor
 ```
 
-Bare `npx` / `yarn ai-backend-kit` in a terminal opens an interactive panel (↑↓ + Enter): pick one kit, **All available kits**, or a custom multi-select; then PR template and backup. Default target is the **current working directory**. Pass an explicit path if needed: `npx @beardjs/ai-backend-kit /path/to/service`.
+Bare `npx` / `yarn ai-backend-kit` in a terminal opens an interactive panel (↑↓ + Enter): pick one kit, **All available kits**, or a custom multi-select; then whether to run a **local architecture alignment scan** after sync (deterministic kit-layered signals — no AI; **default Yes on first install**, default No on later syncs); then PR template and backup. Choosing Yes writes `docs/architecture/alignment-scan.md`. Full narrative `docs/architecture/analysis.md` is produced later by `agt-architecture-analyst` in the IDE. Default target is the **current working directory**. Pass an explicit path if needed: `npx @beardjs/ai-backend-kit /path/to/service`.
 
 There is **no** `postinstall` hook — sync only runs when you invoke the CLI (avoids overwriting kit folders on every `yarn install`).
 
@@ -92,6 +92,8 @@ If every selected kit is missing from the package, sync fails. `local/` under an
 | `--backup` | Backup overwritten paths under `.cursor-kit-backup-<timestamp>/` |
 | `--force-specs-readme` | Always overwrite `docs/specs/README.md` |
 | `--with-pr-template` | Seed `.github/PULL_REQUEST_TEMPLATE.md` from `docs/templates/` if missing |
+| `--analyze-architecture` | After sync, run a local kit-layered alignment scan and print Path D next steps (no AI) |
+| `--no-analyze-architecture` | Never run / never ask for the post-sync architecture scan |
 | `-h` / `--help` | Usage |
 
 The CLI:
@@ -104,6 +106,7 @@ The CLI:
 6. Always syncs shared payload: `AGENTS.md`, architecture doc, specs templates, examples.
 7. Copies `docs/specs/README.md` only when missing (unless `--force-specs-readme`).
 8. Optionally seeds the PR template with `--with-pr-template`.
+9. Optionally runs the architecture alignment scan (Yes/No in the install panel right after kit selection — default Yes on first install; non-interactive first install also defaults to on; `--analyze-architecture` / `--no-analyze-architecture` override; writes `docs/architecture/alignment-scan.md`).
 
 ## Maintainer alternative (this git repo)
 
@@ -121,10 +124,11 @@ The bash script requires `rsync`. Prefer the npm CLI for day-to-day adoption; ke
 
 1. Run `npx @beardjs/ai-backend-kit` (interactive panel) or `yarn ai-backend-kit -y` after pinning.
 2. Confirm `<kit-dir>/KIT_VERSION` matches the kit version you intended.
-3. Confirm the service has `.github/PULL_REQUEST_TEMPLATE.md` if you use `agt-github-workflow`.
-4. Confirm Jest scripts match [AGENTS.md](../AGENTS.md) (`yarn test`, `yarn lint`, `yarn test:coverage`).
-5. Keep org Jira defaults in `.cursor/JIRA.md` / `.claude/skills/jira-workflow/reference.md`, or edit those files **in the service** only if the project key/ids differ — prefer changing defaults in this kit repo when the whole org changes.
-6. Open Cursor, Claude Code, or Codex on the **service** repo. For Claude Code, run `/context`; for Codex, trust the repo, inspect `/hooks`, and confirm the custom agents/skills are listed.
+3. In the install panel, optionally accept the architecture alignment scan (or pass `--analyze-architecture`). If confidence is low, follow Path D in the IDE before Spec-Driven delivery.
+4. Confirm the service has `.github/PULL_REQUEST_TEMPLATE.md` if you use `agt-github-workflow`.
+5. Confirm Jest scripts match [AGENTS.md](../AGENTS.md) (`yarn test`, `yarn lint`, `yarn test:coverage`).
+6. Keep org Jira defaults in `.cursor/JIRA.md` / `.claude/skills/jira-workflow/reference.md`, or edit those files **in the service** only if the project key/ids differ — prefer changing defaults in this kit repo when the whole org changes.
+7. Open Cursor, Claude Code, or Codex on the **service** repo. For Claude Code, run `/context`; for Codex, trust the repo, inspect `/hooks`, and confirm the custom agents/skills are listed.
 
 ## Updating services after kit changes
 

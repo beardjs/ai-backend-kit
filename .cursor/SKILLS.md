@@ -40,8 +40,13 @@ Canonical code shapes: [`examples/canonical-user/`](../examples/canonical-user/)
 |-------|---------|
 | [skill-architecture-discovery](skills/skill-architecture-discovery/SKILL.md) | As-is profile, pattern mining, gated rule stewardship (any style/stack) |
 
-Agents: `agt-architecture-probe`, `agt-pattern-miner`, `agt-pattern-steward` —
-see [ARCHITECTURE-DISCOVERY.md](ARCHITECTURE-DISCOVERY.md).
+**Quick start (Path D):** ask [`agt-orchestrator`](agents/agt-orchestrator.md) to
+map the repo as-is, or invoke [`agt-architecture-probe`](agents/agt-architecture-probe.md)
+directly. Consolidated report: [`agt-architecture-analyst`](agents/agt-architecture-analyst.md)
+→ `docs/architecture/analysis.md`. Copy-paste prompts: [README — Architecture discovery workflow](../README.md#architecture-discovery-workflow)
+and [ARCHITECTURE-DISCOVERY.md](ARCHITECTURE-DISCOVERY.md) (Quick start).
+
+Agents: `agt-architecture-probe`, `agt-pattern-miner`, `agt-architecture-analyst`, `agt-pattern-steward`.
 
 ## Ops
 

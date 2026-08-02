@@ -15,6 +15,7 @@ Kit SemVer: [`VERSION`](VERSION) · [`package.json`](package.json) · changes: [
 - [What this kit does](#what-this-kit-does)
 - [Getting started](#getting-started)
 - [Feature workflow](#feature-workflow)
+- [Architecture discovery workflow](#architecture-discovery-workflow)
 - [Three ways to work](#three-ways-to-work-in-a-service)
 - [Agents and orchestration](#agents-and-orchestration)
 - [What this repo contains](#what-this-repo-contains)
@@ -59,6 +60,10 @@ npx @beardjs/ai-backend-kit --kit claude            # Claude Code kit
 npx @beardjs/ai-backend-kit --kit codex             # Codex + repository skills
 npx @beardjs/ai-backend-kit --kit cursor,claude,codex
 
+# Optional: force / skip local architecture alignment scan after sync
+npx @beardjs/ai-backend-kit -y --analyze-architecture
+npx @beardjs/ai-backend-kit -y --no-analyze-architecture
+
 # Pin for updates
 yarn add -D @beardjs/ai-backend-kit
 yarn ai-backend-kit
@@ -66,9 +71,11 @@ yarn ai-backend-kit
 
 2. **Pick kit(s)** in the panel (or via `--kit`): Cursor, Claude Code, Codex, or a combination. Shared docs (`AGENTS.md`, architecture, spec templates, examples) always sync.
 3. **Confirm install** — you should have `AGENTS.md`, `docs/architecture-and-layers.md`, and `<kit-dir>/KIT_VERSION` (e.g. `.cursor/KIT_VERSION`).
-4. **Open the IDE** on that service (Cursor, Claude Code, or Codex).
-5. **Start your first feature** with the orchestrator entry for your tool (see [Feature workflow](#feature-workflow)). Describe the outcome in clear English.
-6. **At the requirements gate**, answer with an explicit decision — comments alone do not approve:
+4. **Architecture scan (interactive panel)** — in the same install panel (right after choosing Cursor / Claude / Codex), the CLI asks whether to run a **local** kit-layered alignment scan after sync (no AI). On **first install** the default is **Yes** (question stays); later syncs default to No. Yes writes `docs/architecture/alignment-scan.md` and prints Path D next steps. Full narrative `analysis.md` comes from `agt-architecture-analyst` in the IDE. Use `--analyze-architecture` / `--no-analyze-architecture` in non-interactive runs.
+5. **Open the IDE** on that service (Cursor, Claude Code, or Codex).
+6. **Start your first feature** with the orchestrator entry for your tool (see [Feature workflow](#feature-workflow)). Describe the outcome in clear English.
+7. **Legacy or foreign layout?** If the scan (or the service) does **not** already follow kit layered / [`examples/canonical-user/`](examples/canonical-user/), map it with [Architecture discovery workflow](#architecture-discovery-workflow) (**Path D**) before Spec-Driven delivery.
+8. **At the requirements gate**, answer with an explicit decision — comments alone do not approve:
 
 ```text
 APPROVED | CHANGES_REQUESTED | REJECTED | BLOCKED
@@ -79,6 +86,7 @@ APPROVED | CHANGES_REQUESTED | REJECTED | BLOCKED
 - [ ] Kit files and `KIT_VERSION` are present in the service
 - [ ] You know which entry to use (`agt-orchestrator` / `/orchestrate` / `$spec-driven`)
 - [ ] You know that new features need an explicit `APPROVED` on `requirements.md` before code
+- [ ] For a divergent/legacy repo, you know the Path D entry (`agt-architecture-probe` / `/architecture-discovery` / `architecture_discovery`)
 
 Sync flags, overwrite vs preserve, and Claude/Codex specifics: [docs/ADOPTION.md](docs/ADOPTION.md).
 
@@ -115,6 +123,39 @@ Visual pipeline (artifacts, gates, feedback loops): [Feature pipeline (Spec-Driv
 
 Need something smaller? Use **Path A** (hot fix) or **Path C** (one specialist) in the table below — no full Spec-Driven loop.
 
+## Architecture discovery workflow
+
+**Path D** — map a repository **as-is** before (or instead of) assuming kit layered conventions. Run when alignment to kit layered / [`examples/canonical-user/`](examples/canonical-user/) is below medium, or when you **explicitly override**. If the service already matches that layered shape, discovery is **skipped** (`SKIPPED_LAYERED_KIT`) — use `agt-architecture` / `agt-architecture-review` and existing kit rules instead.
+
+| Step | Who | You do / you get |
+|------|-----|------------------|
+| 1. Alignment check | Entry (orchestrator / skill) | `high` / `medium` → skip; diverged or override → continue |
+| 2. Profile | `agt-architecture-probe` | `docs/architecture/profile.md` (style, boundaries, dependencies) |
+| 3. Patterns | `agt-pattern-miner` | `docs/architecture/patterns.md` (recurring practices + evidence) |
+| 4. Consolidate | `agt-architecture-analyst` | `docs/architecture/analysis.md` (single narrative over profile + patterns) |
+| 5. Stewardship | `agt-pattern-steward` | `proposals.md` + `rule-drafts/` (optional; only if you want standards) |
+| 6. Gate | **You** | Explicit `APPROVED` before any kit rules are written |
+
+Example prompts:
+
+```text
+Map this repository architecture as-is (Path D). Profile boundaries and mine recurring patterns.
+
+Run architecture discovery anyway (explicit override), even if the repo looks kit-layered.
+```
+
+Recognized override phrases include: `run the probe anyway`, `run architecture discovery anyway`, `explicit override`.
+
+**Entry by tool:**
+
+| Surface | Invoke |
+|---------|--------|
+| Cursor | [`agt-orchestrator`](.cursor/agents/agt-orchestrator.md) (intent `discover-architecture`) **or** [`agt-architecture-probe`](.cursor/agents/agt-architecture-probe.md) directly |
+| Claude Code | [`/architecture-discovery`](.claude/skills/architecture-discovery/SKILL.md) |
+| Codex | Agent [`architecture_discovery`](.codex/README.md) / [`$architecture-discovery`](.agents/skills/ai-backend-kit-architecture-discovery/SKILL.md) |
+
+Detail and routing: [`.cursor/ARCHITECTURE-DISCOVERY.md`](.cursor/ARCHITECTURE-DISCOVERY.md) · diagram: [Architecture discovery](#architecture-discovery).
+
 ## Three ways to work (in a service)
 
 | Path | When | Entry |
@@ -122,7 +163,7 @@ Need something smaller? Use **Path A** (hot fix) or **Path C** (one specialist) 
 | **A — Hotfix / typo** | Rename, 1-liner, or ≤3 files with no OpenAPI/route change | Specialist agent directly (`agt-dev-backend` → `agt-test-author` if needed → `agt-test-runner` → `agt-verifier`) |
 | **B — Feature (SDD)** | New endpoint/context or contract change | **`agt-orchestrator`** (Cursor) / **`/orchestrate`** (Claude Code) / primary Codex agent + `$spec-driven` — PO → human gate → design → QA plan → … |
 | **C — Specialist only** | Requirements only, design only, review only, PR only | Call that agent (`agt-product-owner`, `agt-code-review`, `agt-github-workflow`, …) |
-| **D — Architecture discovery** | Repo **diverges** from kit layered / [`examples/canonical-user/`](examples/canonical-user/) (or explicit override) | `agt-architecture-probe` → `agt-pattern-miner` → `agt-pattern-steward` + human gate — see [ARCHITECTURE-DISCOVERY.md](.cursor/ARCHITECTURE-DISCOVERY.md) |
+| **D — Architecture discovery** | Repo **diverges** from kit layered / [`examples/canonical-user/`](examples/canonical-user/) (or explicit override) | [Architecture discovery workflow](#architecture-discovery-workflow) — probe → miner → analyst → steward + gate — [ARCHITECTURE-DISCOVERY.md](.cursor/ARCHITECTURE-DISCOVERY.md) |
 
 Shortcuts detail: [`.cursor/WORKFLOW.md`](.cursor/WORKFLOW.md) / [`.claude/WORKFLOW.md`](.claude/WORKFLOW.md).
 
@@ -263,7 +304,7 @@ Blocking code-review findings and QA `FAIL` return to `agt-dev-backend`. `PASS_W
 
 ### Architecture discovery
 
-Path **D**. Run only when alignment to kit layered / [`examples/canonical-user/`](examples/canonical-user/) is below medium, or the user explicitly overrides. Detail: [`.cursor/ARCHITECTURE-DISCOVERY.md`](.cursor/ARCHITECTURE-DISCOVERY.md).
+Path **D**. Steps, Entry by tool, and copy-paste prompts: [Architecture discovery workflow](#architecture-discovery-workflow). Detail: [`.cursor/ARCHITECTURE-DISCOVERY.md`](.cursor/ARCHITECTURE-DISCOVERY.md).
 
 ```mermaid
 flowchart TD
@@ -273,7 +314,9 @@ flowchart TD
   Probe --> Profile[/profile.md/]
   Profile --> Miner[agt-pattern-miner]
   Miner --> Patterns[/patterns.md/]
-  Patterns --> Steward[agt-pattern-steward]
+  Patterns --> Analyst[agt-architecture-analyst]
+  Analyst --> Analysis[/analysis.md/]
+  Analysis --> Steward[agt-pattern-steward]
   Steward --> Drafts["proposals + rule-drafts"]
   Drafts --> GateDisc{APPROVED?}
   GateDisc -->|yes| Apply["Apply .cursor/rules"]
@@ -312,6 +355,7 @@ flowchart TB
   subgraph discovery [Discovery]
     Probe2[agt-architecture-probe]
     Miner2[agt-pattern-miner]
+    Analyst2[agt-architecture-analyst]
     Steward2[agt-pattern-steward]
   end
 
@@ -343,6 +387,7 @@ flowchart TB
 | Quality | [`agt-naming-refactor`](.cursor/agents/agt-naming-refactor.md) | Read-only naming review and ordered rename suggestions |
 | Discovery | [`agt-architecture-probe`](.cursor/agents/agt-architecture-probe.md) | As-is architecture profile for any style → `profile.md` |
 | Discovery | [`agt-pattern-miner`](.cursor/agents/agt-pattern-miner.md) | Mines recurring practices with evidence → `patterns.md` |
+| Discovery | [`agt-architecture-analyst`](.cursor/agents/agt-architecture-analyst.md) | Consolidates profile + patterns → `analysis.md` |
 | Discovery | [`agt-pattern-steward`](.cursor/agents/agt-pattern-steward.md) | Proposes rules; writes `.cursor/rules/` only after `APPROVED` |
 | Ops | [`agt-github-workflow`](.cursor/agents/agt-github-workflow.md) | Conventional commits and PR creation — explicit request only |
 | Ops | [`agt-jira-workflow`](.cursor/agents/agt-jira-workflow.md) | Read / create Jira issues — explicit request only |
@@ -384,6 +429,7 @@ Skills that back these agents are indexed in [`.cursor/SKILLS.md`](.cursor/SKILL
 | [`.cursor/WORKFLOW.md`](.cursor/WORKFLOW.md) | Idea → release-gate pipeline |
 | [`.cursor/SPECS.md`](.cursor/SPECS.md) | Spec-Driven toolkit |
 | [`.cursor/SKILLS.md`](.cursor/SKILLS.md) | Skills map (scaffold / SDD / review / ops) |
+| [`.cursor/ARCHITECTURE-DISCOVERY.md`](.cursor/ARCHITECTURE-DISCOVERY.md) | Agnostic probe / miner / steward (Path D) |
 | [`.cursor/QUALITY.md`](.cursor/QUALITY.md) | Naming / REST / audits |
 | [`.cursor/GITHUB.md`](.cursor/GITHUB.md) | Commits and PRs |
 | [`.cursor/JIRA.md`](.cursor/JIRA.md) | Jira issues (org defaults) |
