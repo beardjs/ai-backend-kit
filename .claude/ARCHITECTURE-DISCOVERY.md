@@ -7,6 +7,34 @@ MVC, or fixed folder names.
 They **coexist** with this kit’s layered Spec-Driven agents. They do **not**
 replace them.
 
+## Quick start
+
+**When:** repo **diverges** from kit layered / [`examples/canonical-user/`](../examples/canonical-user/), or you pass an **explicit override**. Aligned services skip discovery (`SKIPPED_LAYERED_KIT`).
+
+**Entry by tool:**
+
+| Surface | Invoke |
+|---------|--------|
+| Claude Code | **[`/architecture-discovery`](skills/architecture-discovery/SKILL.md)** (preferred entry) |
+| Cursor | [`agt-orchestrator`](../.cursor/agents/agt-orchestrator.md) / [`agt-architecture-probe`](../.cursor/agents/agt-architecture-probe.md) |
+| Codex | `architecture_discovery` / [`$architecture-discovery`](../.agents/skills/ai-backend-kit-architecture-discovery/SKILL.md) |
+
+**Copy-paste prompts:**
+
+```text
+Map this repository architecture as-is (Path D). Profile boundaries and mine recurring patterns.
+
+Run architecture discovery anyway (explicit override), even if the repo looks kit-layered.
+```
+
+Recognized override phrases: `run the probe anyway`, `run architecture discovery anyway`, `explicit override`.
+
+Pipeline: `agt-architecture-probe` → `agt-pattern-miner` → `agt-architecture-analyst` → `agt-pattern-steward` + human gate.
+
+Artifacts: `profile.md` + `patterns.md` → **`analysis.md`**. CLI first-install may write `alignment-scan.md`.
+
+Root guide: [Architecture discovery workflow](../README.md#architecture-discovery-workflow).
+
 ## Skip when layered kit (canonical-user)
 
 If the target repo **aligns** with the layered architecture illustrated by
@@ -52,16 +80,18 @@ Byte-for-byte copy of the example is **not** required — the **same layered arc
 | Audit Domain ↔ Infra / layer coupling (this layered kit) | [`agt-architecture-review`](agents/review/agt-architecture-review.md) |
 | **Divergent** repo: what architecture does it use? | **`agt-architecture-probe`** |
 | **Divergent** repo: which patterns do we already use? | **`agt-pattern-miner`** |
+| **Divergent** repo: one consolidated analysis `.md` | **`agt-architecture-analyst`** |
 | **Divergent** repo: propose standards / kit rules (human gate) | **`agt-pattern-steward`** |
 | Feature / SDD pipeline | [`/orchestrate`](skills/orchestrate/SKILL.md) |
 
 ```text
 # Only when diverged (or explicit override):
-agt-architecture-probe  →  docs/architecture/profile.md
-agt-pattern-miner       →  docs/architecture/patterns.md
-agt-pattern-steward     →  docs/architecture/proposals.md
-                        →  docs/architecture/rule-drafts/*.md
-                        →  .claude/rules/* (and .cursor/rules/* when present)   (only after APPROVED)
+agt-architecture-probe    →  docs/architecture/profile.md
+agt-pattern-miner         →  docs/architecture/patterns.md
+agt-architecture-analyst  →  docs/architecture/analysis.md
+agt-pattern-steward       →  docs/architecture/proposals.md
+                          →  docs/architecture/rule-drafts/*.md
+                          →  .claude/rules/* (and .cursor/rules/* when present)   (only after APPROVED)
 ```
 
 ## Agents
@@ -70,6 +100,7 @@ agt-pattern-steward     →  docs/architecture/proposals.md
 |-------|--------|--------|
 | [agt-architecture-probe](agents/discovery/agt-architecture-probe.md) | `docs/architecture/profile.md` | Style, boundaries, dependencies as-is |
 | [agt-pattern-miner](agents/discovery/agt-pattern-miner.md) | `docs/architecture/patterns.md` | Recurring practices + evidence |
+| [agt-architecture-analyst](agents/discovery/agt-architecture-analyst.md) | `docs/architecture/analysis.md` | Consolidated narrative report |
 | [agt-pattern-steward](agents/discovery/agt-pattern-steward.md) | proposals, drafts, rules (gated) | Adopt / keep / deprecate → kit rules |
 
 ## Skill
