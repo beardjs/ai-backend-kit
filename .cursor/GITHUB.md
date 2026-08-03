@@ -19,6 +19,10 @@ Invoke the agent by name in chat or via the agent picker. Skill: `@skill-github-
 | PR base branch | `staging` |
 | Commits | 1 file = 1 commit |
 | Commit format | Conventional Commits (`feat:`, `fix:`, `docs:`, …) |
+| Tests with methods | **Always** commit matching `src/__tests__/**` in the same plan run, paired after each method (same branch / PR) |
+| Test naming | `describe('when …')` / `it('should …')` — [rule.tests.mdc](rules/rule.tests.mdc) |
+| Boundary tests | Exact + just below + just above when inputs have edges |
+| Never commit | Spec/plan outputs (`requirements.md`, `design.md`, `tasks.md`, …), `.cursor/plans/**`, secrets — unless user explicitly asks |
 | PR body | [.github/PULL_REQUEST_TEMPLATE.md](../.github/PULL_REQUEST_TEMPLATE.md) (per service; seed from [`docs/templates/PULL_REQUEST_TEMPLATE.md`](../docs/templates/PULL_REQUEST_TEMPLATE.md) via sync `--with-pr-template`) |
 | Attribution | **Never** `Made with Cursor` / AI footers — [rule.git-no-ai-attribution.mdc](rules/rule.git-no-ai-attribution.mdc) |
 

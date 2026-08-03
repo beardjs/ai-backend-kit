@@ -115,6 +115,30 @@ describe('when creating a user with an existing email', () => {
 
 Do not use SUT-name-only describes (`describe('UserService.createUser')`) for new tests.
 
+## Boundary cases (mandatory when inputs have edges)
+
+For values with a defined expected result or limit, cover **exact**, **just below**, and **just above** — not only the happy path.
+
+```ts
+// ✅ Pattern
+describe('when adding 1 and 1', () => {
+  it('should return 2', async () => { /* exact */ });
+});
+describe('when adding 1 and 0', () => {
+  it('should return 1', async () => { /* below */ });
+});
+describe('when adding 1 and 2', () => {
+  it('should return 3', async () => { /* above */ });
+});
+
+// ❌ Anti-pattern — only the exact case
+describe('when adding 1 and 1', () => {
+  it('should return 2', async () => { /* ... */ });
+});
+```
+
+Apply the same triad to domain limits (max length, thresholds, min/max counts, status cutoffs).
+
 ## Scenario coverage checklist
 
 For each operation/method under test, cover **applicable** cases:
@@ -122,6 +146,7 @@ For each operation/method under test, cover **applicable** cases:
 | Scenario | Typical layer |
 |----------|----------------|
 | Happy path (result + relevant side effects) | Service / Controller / Repository |
+| Boundary (exact / just below / just above) | Entity / Service / Unit |
 | Invalid input / entity validation | Entity / Service |
 | Not found (`404` / `RESOURCE_NOT_FOUND`) | **Service** (never assert product 404 in Repository) |
 | Conflict / uniqueness (`409`) | **Service** |
