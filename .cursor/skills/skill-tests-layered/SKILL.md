@@ -44,11 +44,36 @@ describe('when <context>', () => {
 
 Do not use SUT-name-only describes for new tests.
 
+## Boundary cases (mandatory when inputs have edges)
+
+For values with a defined expected result or limit, cover **exact**, **just below**, and **just above** — not only the happy path.
+
+```ts
+// ✅ Pattern
+describe('when adding 1 and 1', () => {
+  it('should return 2', async () => { /* exact */ });
+});
+describe('when adding 1 and 0', () => {
+  it('should return 1', async () => { /* below */ });
+});
+describe('when adding 1 and 2', () => {
+  it('should return 3', async () => { /* above */ });
+});
+
+// ❌ Anti-pattern — only the exact case
+describe('when adding 1 and 1', () => {
+  it('should return 2', async () => { /* ... */ });
+});
+```
+
+Apply the same triad to domain limits (max length, thresholds, min/max counts, status cutoffs).
+
 ## Scenario checklist
 
 For each operation under test, cover applicable cases:
 
 - Happy path (result + relevant side effects)
+- **Boundary** — exact, just below, just above when the input/result has a defined edge
 - Invalid input / entity validation
 - Not found (`404` / `RESOURCE_NOT_FOUND`) — assert in **Service**, not Repository
 - Conflict / uniqueness (`409`) — **Service**
@@ -117,6 +142,7 @@ For each operation under test, cover applicable cases:
 
 - [ ] New behavior has a test in the layer where the logic lives
 - [ ] `describe('when …')` / `it('should …')` on every new suite
+- [ ] Boundary cases (exact / just below / just above) when inputs have edges
 - [ ] Controller: happy path + at least one relevant HTTP error
 - [ ] Service: conflict / not found when applicable; Repository **not** mocked
 - [ ] External / Kafka interactions use `jest.spyOn` when applicable
