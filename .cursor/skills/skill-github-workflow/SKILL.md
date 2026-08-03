@@ -86,17 +86,148 @@ ci: add GitHub Actions workflow for linting
 
 ---
 
-## Commit order (layer-first)
+## Commit order (method + its tests)
 
-When multiple files change, commit in this order (foundations before consumers):
+When multiple files change:
 
-1. `src/domain/**`
-2. `src/infraestructure/**`
-3. `src/application/**`
-4. `src/configuration/**`
-5. `src/contracts/**`
-6. `src/__tests__/**`
-7. `.cursor/**`, `docs/**`, `.github/**`, root config files
+1. Group by operation/method when possible.
+2. For each group: production file(s) for that method (`src/domain` → `infraestructure` → `application` → `configuration` → `contracts` as needed), then **immediately** the matching `src/__tests__/**` file(s).
+3. Repeat for the next method.
+4. Allowed kit/docs/config last — **never** include excluded plan/spec outputs.
+
+```text
+// ✅ Pattern — pair each method with its tests
+1. src/domain/user/service/user.service.ts          feat(user): add createUser ...
+2. src/__tests__/.../create-user.int.test.ts        test(user): add integration test for createUser
+3. src/domain/user/service/user.service.ts          feat(user): add getUserById ...
+4. src/__tests__/.../get-user-by-id.int.test.ts     test(user): add integration test for getUserById
+```
+
+**Always commit tests with their methods** in the same plan run. Do not batch all production commits first and leave tests for later.
+
+---
+
+## Do not commit (exclude)
+
+Never stage or commit unless the user **explicitly** asks for that file:
+
+| Path / artifact | Reason |
+|-----------------|--------|
+| `.env`, credentials, tokens | Secrets |
+| `docs/specs/**/requirements.md` | Spec / plan output |
+| `docs/specs/**/design.md` | Spec / plan output |
+| `docs/specs/**/tasks.md` | Spec / plan output |
+| `docs/specs/**/test-plan.md` | Spec / plan output |
+| `docs/specs/**/qa-report.md` | Spec / plan output |
+| `.cursor/plans/**`, `*.plan.md` | Plan-mode / orchestrator output |
+| Other generated plan/gate artifacts | Not product code |
+
+List skipped files under Notes when reporting.
+
+---
+
+## Tests committed with their methods
+
+**Same plan run / same feature branch / same PR — still 1 file = 1 commit.**
+
+- When committing a method or behavior change, **always** commit the corresponding `src/__tests__/**` file(s) in the **same workflow run**, immediately after that method’s production commit(s).
+- Before committing or opening a PR: if behavior changed under `src/domain|application|infraestructure|configuration` without matching `src/__tests__/**` (or the inverse for this feature), **stop and warn** the user.
+
+```text
+// ✅ Pattern — tests committed with their methods
+feat/create-user
+  commit 1: feat(user): add createUser method in user service
+  commit 2: test(user): add integration test for createUser
+  → one PR; tests not deferred
+
+// ❌ Anti-pattern — methods without tests in this run
+commit 1–3: only production files (tests left uncommitted)
+
+// ❌ Anti-pattern — split across branches
+feat/create-user        → PR with only user.service.ts (no tests)
+feat/create-user-tests  → later PR with only create-user.int.test.ts
+
+// ❌ Anti-pattern — production PR then test-only follow-up
+PR #10: only src/domain/** + src/application/**
+PR #11: only src/__tests__/** for those same methods
+```
+
+### Mandatory Jest naming (precondition for `src/__tests__/**`)
+
+Every new/changed `describe` string **must** start with `when `; every new/changed `it` string **must** start with `should `.
+
+```ts
+// ✅ Pattern
+describe('when creating a user with a unique email', () => {
+  it('should return the created user', async () => { /* ... */ });
+});
+
+describe('when creating a user with an existing email', () => {
+  it('should reject with 409 RESOURCE_CONFLICT', async () => { /* ... */ });
+});
+
+describe('when getting a user by a missing id', () => {
+  it('should reject with 404 RESOURCE_NOT_FOUND', async () => { /* ... */ });
+});
+
+// ❌ Anti-pattern — SUT / method name as describe
+describe('UserService', () => {
+  it('creates a user', async () => { /* ... */ });
+});
+
+describe('createUser', () => {
+  it('works', async () => { /* ... */ });
+});
+
+// ❌ Anti-pattern — missing when / should prefixes
+describe('creating a user with a unique email', () => {
+  it('returns the created user', async () => { /* ... */ });
+});
+
+describe('POST /users', () => {
+  it('201', async () => { /* ... */ });
+});
+```
+
+### Boundary cases (mandatory when inputs have edges)
+
+For values with a defined expected result or limit, cover **exact**, **just below**, and **just above** — not only the happy path.
+
+```ts
+// ✅ Pattern — exact + below + above
+describe('when adding 1 and 1', () => {
+  it('should return 2', async () => { /* exact */ });
+});
+
+describe('when adding 1 and 0', () => {
+  it('should return 1', async () => { /* below */ });
+});
+
+describe('when adding 1 and 2', () => {
+  it('should return 3', async () => { /* above */ });
+});
+
+// ✅ Pattern — domain limit (e.g. max length / threshold)
+describe('when the name has exactly the maximum allowed length', () => {
+  it('should accept the user', async () => { /* exact boundary */ });
+});
+
+describe('when the name is one character below the maximum length', () => {
+  it('should accept the user', async () => { /* below */ });
+});
+
+describe('when the name exceeds the maximum length by one character', () => {
+  it('should reject with validation error', async () => { /* above */ });
+});
+
+// ❌ Anti-pattern — only the happy / exact case
+describe('when adding 1 and 1', () => {
+  it('should return 2', async () => { /* ... */ });
+});
+// missing below (1+0) and above (1+2)
+```
+
+Full mock/layout policy: [rule.tests.mdc](../../rules/rule.tests.mdc), [skill-tests-layered](../skill-tests-layered/SKILL.md) — do not restate mock rules here.
 
 ---
 
@@ -122,6 +253,11 @@ EOF
 - `git reset --hard`, `git clean -fdx` without explicit user approval
 - Committing secrets (`.env`, credentials, tokens)
 - AI/IDE attribution in commits or PRs: `Made with Cursor`, `Generated with Cursor`, `Co-authored-by: Cursor`, “Generated with …” emoji trailers, or any similar footer — strip before commit/PR create ([rule.git-no-ai-attribution.mdc](../../rules/rule.git-no-ai-attribution.mdc))
+- Spec/plan outputs (`docs/specs/**` such as `requirements.md`, `design.md`, `tasks.md`, `test-plan.md`, `qa-report.md`; `.cursor/plans/**`; `*.plan.md`) unless the user explicitly asks
+- Committing methods without also committing their matching tests in the same plan run
+- Shipping slice tests on a **separate branch/PR** from the methods they cover
+- Committing `src/__tests__/**` that omit `describe('when …')` / `it('should …')`
+- Committing suites that skip boundary cases (exact / just below / just above) when the behavior has defined edges
 
 ### Special cases
 
