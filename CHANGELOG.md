@@ -9,6 +9,20 @@ Kit version lives in [`VERSION`](VERSION). After sync, the applied version is st
 
 > **Note:** Service package releases (`yarn release` / semantic-release) are separate from this kit version. See [`.cursor/rules/rule.release.mdc`](.cursor/rules/rule.release.mdc).
 
+# [1.5.0](https://github.com/beardjs/ai-backend-kit/compare/v1.4.0...v1.5.0) (2026-08-12)
+
+
+### Bug Fixes
+
+* **examples:** add auth error codes and contract security schemes ([f3173f6](https://github.com/beardjs/ai-backend-kit/commit/f3173f6d93875b53e8c31d14b592e2ca6bca24aa))
+
+
+### Features
+
+* **claude:** add security baseline rule, review agent and skill ([cdca86a](https://github.com/beardjs/ai-backend-kit/commit/cdca86a655e9005293fe1763ff5650fd8664c106))
+* **codex:** add security reviewer agent ([b6eda9f](https://github.com/beardjs/ai-backend-kit/commit/b6eda9ff90673550460cde104fb5e52e9a47e829))
+* **cursor:** add security baseline rule, review agent and skill ([7f80bd6](https://github.com/beardjs/ai-backend-kit/commit/7f80bd6ef26006b9e68dd996457b451a0c4ef868))
+
 # [1.4.0](https://github.com/beardjs/ai-backend-kit/compare/v1.3.0...v1.4.0) (2026-08-02)
 
 
