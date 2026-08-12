@@ -32,6 +32,10 @@ Kit version lives in [`VERSION`](VERSION). After sync, the applied version is st
 
 ### Added
 
+- **Cybersecurity suite** across the three kits: always-on rule [`rule.security-baseline.mdc`](.cursor/rules/rule.security-baseline.mdc) / [`security-baseline.md`](.claude/rules/security-baseline.md) (authorization, injection, secrets, and data exposure by layer); read-only audit agent `agt-security-review` ([Cursor](.cursor/agents/agt-security-review.md), [Claude](.claude/agents/review/agt-security-review.md)) and Codex [`security-reviewer`](.codex/agents/security-reviewer.toml); skill `review-security` with an OWASP Top 10 / API Top 10 reference ([Cursor](.cursor/skills/skill-review-security/SKILL.md), [Claude](.claude/skills/review-security/SKILL.md), [Codex](.agents/skills/ai-backend-kit-review-security/SKILL.md))
+- Security review is now a **mandatory review phase**, running in parallel with `agt-code-review`; `BLOCKING_SECURITY` blocks the gate ([`.cursor/WORKFLOW.md`](.cursor/WORKFLOW.md), [`.claude/WORKFLOW.md`](.claude/WORKFLOW.md), orchestrator and `/orchestrate`)
+- Security in the Spec-Driven artifacts: `NFR-SEC-01` and `ABUSE-*` in [`requirements.md`](docs/specs/_templates/requirements.md), a `## Security` section (authorization matrix, data classification, attack surface) in [`design.md`](docs/specs/_templates/design.md), security and authorization cases in [`test-plan.md`](docs/specs/_templates/test-plan.md), and a security evidence block in [`qa-report.md`](docs/specs/_templates/qa-report.md)
+- Non-negotiable rule 8 (security baseline) and a security item in the Definition of Done in [`AGENTS.md`](AGENTS.md); new cross-layer section 13 in [`docs/architecture-and-layers.md`](docs/architecture-and-layers.md)
 - [DeepWiki](https://deepwiki.com/beardjs/ai-backend-kit) integration for this public kit repo: Ask DeepWiki badge and wiki link in [`README.md`](README.md), steering via [`.devin/wiki.json`](.devin/wiki.json), and a short note in [`docs/ADOPTION.md`](docs/ADOPTION.md) (kit-repo only; not synced to services)
 - Architecture Discovery **entry UX**: [README — Architecture discovery workflow](README.md#architecture-discovery-workflow) (steps, Entry by tool, copy-paste prompts); Quick start blocks in [`.cursor/ARCHITECTURE-DISCOVERY.md`](.cursor/ARCHITECTURE-DISCOVERY.md) and [`.claude/ARCHITECTURE-DISCOVERY.md`](.claude/ARCHITECTURE-DISCOVERY.md); Claude `/architecture-discovery` slash-entry thin pipeline; Codex Path D quick start in [`.codex/README.md`](.codex/README.md)
 - CLI **architecture alignment scan** (deterministic, no AI): Yes/No in the install panel right after kit selection (**default Yes on first install**), writes `docs/architecture/alignment-scan.md`, `--analyze-architecture` / `--no-analyze-architecture`, [`lib/analyze-architecture.js`](lib/analyze-architecture.js)
@@ -41,6 +45,12 @@ Kit version lives in [`VERSION`](VERSION). After sync, the applied version is st
 
 - Root [`README.md`](README.md) — onboarding-first guide: what the kit does, numbered Getting started, narrative Feature workflow (steps + example prompt), table of contents; agents and orchestration overview with five Mermaid diagrams (path selection, orchestrator loop, Spec-Driven pipeline with artifacts/gates, architecture discovery, agent role map) plus a catalog of all 18 Cursor `agt-*` agents with links to definitions
 - Getting started and Cursor kit indexes now surface Path D / [`ARCHITECTURE-DISCOVERY.md`](.cursor/ARCHITECTURE-DISCOVERY.md); [`.claude/README.md`](.claude/README.md) lists `/architecture-discovery` next to `/orchestrate`; orchestrator and workflow indexes include example discovery prompts
+- `agt-code-review` keeps a thin security pass and routes deep or systemic findings to `agt-security-review`; the Codex `reviewer` agent delegates the same way
+
+### Fixed
+
+- Canonical example contract drift: [`service.yaml`](examples/canonical-user/src/contracts/service.yaml) now defines the `bearerAuth` security scheme, a global `security` block, `401` / `403` responses, and the `Error` / `AuthMiddlewareError` schemas that the `openapi-contract` skill already told agents to reuse
+- [`EErrorCode`](examples/canonical-user/src/domain/common/errors/enums/EErrorCode.ts) and the [i18n catalog](examples/canonical-user/src/infraestructure/i18n/error-catalog.ts) gained `UNAUTHORIZED` and `FORBIDDEN`, the codes the documented authorization pattern needs
 
 ## [1.3.0] — 2026-07-31
 

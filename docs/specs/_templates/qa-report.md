@@ -97,6 +97,15 @@ Impact:
 Recommended owner:
 - ...
 
+## Security checks
+
+Evidence from the security review phase (`agt-security-review`).
+
+- Verdict: APPROVED | CHANGES_REQUESTED | BLOCKED
+- Abuse cases executed (`ABUSE-*` → `TC-*`):
+- Authorization matrix verified (route → group → ownership):
+- Open `BLOCKING_SECURITY` findings: none | <list>
+
 ## Blocked validations
 
 - <validation and reason>

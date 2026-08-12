@@ -24,6 +24,8 @@ Every approved `AC-*` / `NFR-*` must be technically supported (or explicitly blo
 |-------------|-------------------|-------|
 | AC-01 | <layer / component / decision> | |
 | NFR-01 | <how it is met> | |
+| NFR-SEC-01 | <how authorization and data protection are met> | |
+| ABUSE-01 | <where the misuse is rejected> | |
 
 ## End-to-end flow
 
@@ -69,6 +71,32 @@ Answer explicitly for any data change:
 
 - Repeated request/event behavior:
 - Concurrent execution behavior:
+
+## Security
+
+### Authorization matrix
+
+| Route | Method | Required group | Ownership rule (Service) |
+|-------|--------|----------------|--------------------------|
+| `/…` | GET | `authorizeByGroup([...])` | <how the Service proves this actor may touch this record, or N/A> |
+
+### Data and exposure
+
+- Data classification handled here (public | internal | personal/PII | secret):
+- Fields returned by the API (allow-list):
+- Fields deliberately **not** returned or logged:
+
+### Attack surface
+
+- Untrusted input entering a query (how it is validated and cast):
+- Outbound calls (URL source, timeout):
+- Resource limits (pagination maximum, payload size):
+- Secrets used (env constant name, never the value):
+
+### Error exposure
+
+- Codes returned: `UNAUTHORIZED` (401) | `FORBIDDEN` (403) | <others>
+- Confirmed: no stack trace, driver message, or raw `error.message` leaves the service.
 
 ## Observability
 

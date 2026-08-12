@@ -14,6 +14,7 @@ Semantic naming, REST design, and light quality audits for **layered backend ser
 | **Naming + REST + light layers (PR review)** | **`agt-code-quality`** |
 | **REST/OpenAPI design only** | **`agt-rest-endpoint-design`** |
 | **Rename suggestions (read-only)** | **`agt-naming-refactor`** |
+| **Security / OWASP audit of a diff** | **`agt-security-review`** |
 
 Invoke agents by name in chat or via the agent picker. Skills: `@skill-review-rest-endpoints`, `@skill-review-naming`, `@skill-spec-driven`. Full skill map (including scaffold skills): [SKILLS.md](SKILLS.md).
 
@@ -26,6 +27,7 @@ Multi-step delivery (PO → gate → design → QA plan → implement → test �
 | [rule.semantic-quality.mdc](rules/rule.semantic-quality.mdc) | Variables, methods, files, REST summary, OpenAPI schemas |
 | [rule.naming-patterns.mdc](rules/rule.naming-patterns.mdc) | `I*`, `IM*`, `E*` prefixes |
 | [rule.business-rules-layers.mdc](rules/rule.business-rules-layers.mdc) | Service vs repository vs controller |
+| [rule.security-baseline.mdc](rules/rule.security-baseline.mdc) | Authorization, injection, secrets, data exposure |
 
 ## Skills (explicit workflows)
 
@@ -33,10 +35,12 @@ Multi-step delivery (PO → gate → design → QA plan → implement → test �
 |-------|---------|
 | [skill-review-rest-endpoints](skills/skill-review-rest-endpoints/SKILL.md) | Audit routes, verbs, query, YAML parity |
 | [skill-review-naming](skills/skill-review-naming/SKILL.md) | Audit identifiers by layer |
+| [skill-review-security](skills/skill-review-security/SKILL.md) | Audit authorization, injection, secrets, exposure |
 | [skill-add-http-endpoint](skills/skill-add-http-endpoint/SKILL.md) | **Implement** new route (not review) |
 | [skill-openapi-contract](skills/skill-openapi-contract/SKILL.md) | Sync `service.yaml` after changes |
 
 REST status reference: [skill-review-rest-endpoints/reference-rest.md](skills/skill-review-rest-endpoints/reference-rest.md).
+OWASP reference: [skill-review-security/reference-owasp.md](skills/skill-review-security/reference-owasp.md).
 
 ## Agents (this kit)
 
@@ -45,6 +49,7 @@ REST status reference: [skill-review-rest-endpoints/reference-rest.md](skills/sk
 | [agt-code-quality](agents/agt-code-quality.md) | yes | Naming + REST smoke + light layers |
 | [agt-rest-endpoint-design](agents/agt-rest-endpoint-design.md) | yes | Endpoint inventory, YAML, anti-patterns |
 | [agt-naming-refactor](agents/agt-naming-refactor.md) | yes | Rename table by risk |
+| [agt-security-review](agents/agt-security-review.md) | yes | Authorization, injection, secrets, exposure (OWASP) |
 
 ## Map: rule → skill → agent
 
@@ -53,6 +58,9 @@ rule.semantic-quality
   ├── skill-review-naming ──► agt-naming-refactor
   └── skill-review-rest-endpoints ──► agt-rest-endpoint-design
          └── agt-code-quality (combines both + light layers)
+
+rule.security-baseline
+  └── skill-review-security ──► agt-security-review
 ```
 
 ## Project conventions (quick)

@@ -34,6 +34,7 @@ Do **not** activate (or immediately re-route) when the request is clearly a sing
 | Test plan / acceptance / QA report only | `agt-quality-assurance` |
 | Create / extend Jest tests only | `agt-test-author` |
 | Spec ↔ code review only | `agt-code-review` |
+| Security / OWASP audit only | `agt-security-review` |
 | Commit / PR only | `agt-github-workflow` |
 | Jira create / JQL only | `agt-jira-workflow` |
 | Architecture audit only (layered kit) | `agt-architecture-review` |
@@ -102,6 +103,7 @@ Signals (need majority for `medium`, all for `high`): `src/domain` + `src/applic
 | `agt-dev-backend` | Implement against tasks | Layered Node/TS |
 | `agt-test-runner` | Stabilize Jest suite | Technical regressions |
 | `agt-code-review` | Spec ↔ code review with typed findings | Read-only; blocking findings return to dev |
+| `agt-security-review` | Adversarial security pass (OWASP) | Read-only; runs in parallel with code review |
 | `agt-architecture-review` | Layer / coupling audit | Parallel with quality |
 | `agt-code-quality` | Naming + REST + light layers | Parallel with architecture |
 | `agt-rest-endpoint-design` | REST/OpenAPI deep-dive | HTTP-focused only |
@@ -147,7 +149,7 @@ Phase | Agent | Exit criteria
 6. `agt-dev-backend` — implement against `tasks.md` (reads `test-plan.md`)
 7. `agt-test-author` — automate `test-plan.md` under `src/__tests__/`
 8. `agt-test-runner` — suite healthy
-9. `agt-code-review` — spec ↔ code; blocking findings return to dev
+9. `agt-code-review` **∥** `agt-security-review` — spec ↔ code and adversarial security pass (mandatory); blocking findings return to dev
 10. `agt-quality-assurance` — **VERIFY** → `qa-report.md` (`PASS` required; see gates)
 11. `agt-architecture-review` **∥** `agt-code-quality`
 12. `agt-verifier`
@@ -179,7 +181,8 @@ Same as Feature without Jira unless requested; PO may be short if criteria alrea
 #### Review-only
 
 1. `agt-code-review` (when a spec exists) or `agt-architecture-review` **∥** `agt-code-quality`
-2. Optional `agt-rest-endpoint-design` / `agt-naming-refactor`
+2. `agt-security-review` whenever the change touches auth, user input, queries, logging, or external calls
+3. Optional `agt-rest-endpoint-design` / `agt-naming-refactor`
 3. `agt-verifier` (read-focused)
 
 #### Discover-architecture (agnostic)
@@ -260,6 +263,7 @@ Approval decisions must be **explicit**: `APPROVED` | `CHANGES_REQUESTED` | `REJ
 | QA PASS_WITH_RISKS | **Stop** — requires explicit human risk acceptance before proceeding |
 | QA BLOCKED | Consolidate blocker and route to the owner (PO / architecture / env) |
 | Code review blocking finding | Route back to `agt-dev-backend`; non-blocking may proceed with note |
+| `BLOCKING_SECURITY` finding | Route back to `agt-dev-backend`; never proceed on a “known risk” without explicit human risk acceptance |
 | Jira create | Confirm unless already explicit |
 | Commit / push / PR | Confirm unless already requested |
 | Verifier FAIL | No PR; route to dev / test-runner |

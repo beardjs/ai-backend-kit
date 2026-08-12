@@ -33,6 +33,7 @@ Canonical code shapes: [`examples/canonical-user/`](../examples/canonical-user/)
 |-------|---------|
 | [skill-review-naming](skills/skill-review-naming/SKILL.md) | Identifier audit by layer |
 | [skill-review-rest-endpoints](skills/skill-review-rest-endpoints/SKILL.md) | Routes, verbs, YAML parity (+ `reference-rest.md`) |
+| [skill-review-security](skills/skill-review-security/SKILL.md) | Authorization, injection, secrets, exposure (+ `reference-owasp.md`) |
 
 ## Architecture discovery (agnostic)
 

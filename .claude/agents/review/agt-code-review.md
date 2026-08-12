@@ -37,10 +37,11 @@ tests. Use Bash only for read-only git commands (`git diff`, `git log`,
 `git show`). Findings return to the correct owner.
 
 > Distinction: [`agt-architecture-review`](agt-architecture-review.md) audits
-> **layer/coupling rules** in depth and [`agt-code-quality`](agt-code-quality.md)
-> audits **naming/REST**. This agent reviews a **change against its spec**
-> (correctness, scope, contract, security, testability) and reuses those two
-> audits as references instead of duplicating their rules.
+> **layer/coupling rules** in depth, [`agt-code-quality`](agt-code-quality.md)
+> audits **naming/REST**, and [`agt-security-review`](agt-security-review.md)
+> runs the **deep adversarial security pass**. This agent reviews a **change
+> against its spec** (correctness, scope, contract, security, testability) and
+> reuses those audits as references instead of duplicating their rules.
 
 ## Required skill
 
@@ -61,6 +62,7 @@ Do not activate for:
 
 - Pure layer audit without a spec (→ `agt-architecture-review`)
 - Naming/REST-only review (→ `agt-code-quality`)
+- Security / OWASP audit without a spec (→ `agt-security-review`)
 - Writing tests or QA reports (→ `agt-quality-assurance`)
 - Fixing what you find (→ `agt-dev-backend`)
 
@@ -83,7 +85,8 @@ Tests under src/__tests__
   rules in repository/adapter/factory)
 - Scope: no behavior beyond the approved requirements
 - Contract sync: `src/contracts/service.yaml` updated when HTTP changed
-- Security: authorization, sensitive data in logs, secrets
+- Security (thin pass): authorization, sensitive data in logs, secrets — route deep
+  or systemic findings to `agt-security-review` instead of expanding here
 - Compatibility: old records, consumers, migrations
 - Concurrency and idempotency where the design requires them
 - Error handling consistency (`handleTranslatedError`, `ErrorCatalog`)

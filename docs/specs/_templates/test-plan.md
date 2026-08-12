@@ -43,6 +43,17 @@ Design: <path or N/A>
 
 - ...
 
+### Security and authorization
+
+Derive one case per `ABUSE-*` and per row of the design authorization matrix:
+
+- Unauthenticated request → 401
+- Authenticated but wrong group → 403
+- Authenticated, right group, record owned by another actor → 403 (or 404 when existence itself is sensitive)
+- Injection payload in a filtered field (e.g. `{ "$ne": null }`) → rejected, no broadened result set
+- Oversized or unpaginated list request → bounded by the enforced maximum
+- Error response and logs contain no stack trace, credential, or PII
+
 ### Contract/OpenAPI
 
 - ...
@@ -103,6 +114,9 @@ Test data:
 - [ ] OpenAPI is synchronized
 - [ ] Kafka interface is in Domain and implementation in Infraestructure
 - [ ] Tests are under `src/__tests__`
+- [ ] Every new or changed route has an explicit authorization decision
+- [ ] No sensitive data (credentials, tokens, PII) in logs or error bodies
+- [ ] OpenAPI documents the auth scheme and 401/403 on guarded routes
 
 ## Environment and data
 
