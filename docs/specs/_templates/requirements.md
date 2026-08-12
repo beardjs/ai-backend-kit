@@ -93,6 +93,25 @@ And <required side effect>
 
 <Category and objectively verifiable expectation.>
 
+### NFR-SEC-01 — Security expectation
+
+- Who may perform each operation (actor → permission):
+- Ownership rule (may an actor act on records they do not own?):
+- Data classification (public | internal | personal/PII | secret):
+- Retention, masking, or logging restriction:
+
+## Abuse cases
+
+Expected rejections, written like acceptance criteria. Required when the feature
+touches authentication, authorization, personal data, or external input.
+
+### ABUSE-01 — <misuse title>
+
+Given <actor without the required permission>
+When <misuse attempt>
+Then <expected rejection and status>
+And <what must not leak or change>
+
 ## Out of scope
 
 - <Exclusion> — Deferred | Separate feature | Unsupported by design
@@ -161,6 +180,7 @@ And <required side effect>
 - [ ] Acceptance criteria are testable
 - [ ] Authorization and invalid-state behavior are covered when relevant
 - [ ] Relevant NFRs are documented
+- [ ] Security expectations and abuse cases are documented when the feature touches auth, PII, or external input
 - [ ] Out-of-scope is explicit
 - [ ] Dependencies and risks are documented
 - [ ] Assumptions and blocking questions are visible
