@@ -189,4 +189,34 @@ See [`.cursor/rules/rule.tests.mdc`](../.cursor/rules/rule.tests.mdc) / [`.claud
 | Naming/REST quality | `.cursor/QUALITY.md` | `.claude/README.md` (quality section) |
 | Kit adoption | [ADOPTION.md](ADOPTION.md) | [ADOPTION.md](ADOPTION.md) |
 | Skills map | [`.cursor/SKILLS.md`](../.cursor/SKILLS.md) | [`.claude/README.md`](../.claude/README.md) |
+| Security audit | `agt-security-review` + `@skill-review-security` | `agt-security-review` + `/review-security` |
 | Canonical `user` snippets | [`examples/canonical-user/`](../examples/canonical-user/) | idem |
+
+## 13. Security baseline (cross-layer)
+
+Security is not a layer — it is a set of controls, each owned by the layer that can
+actually enforce it. A control implemented in the wrong layer is a finding, exactly
+like a business rule in a repository.
+
+| Control | Owning layer | Enforcement |
+|---------|--------------|-------------|
+| Who is the caller | **Application** | `authorizeByGroup([...])` middleware on every route in `initRoutes()` |
+| May this actor touch **this** record | **Domain** (Service) | Ownership/tenancy check before returning or mutating; throws 403 `FORBIDDEN` |
+| Object format and required fields | **Domain** (Entity) | `*ServiceEntity` invariants |
+| Untrusted value never reaches a query | **Infraestructure** | Cast and validate before building a Mongoose filter; no `$where`, no user-built regex |
+| Nothing internal leaves the service | **Application** | `handleTranslatedError` + `EErrorCode`; no stack trace or driver message in the body |
+| Secrets and env | **Configuration** | Named constants in `env-constants/`; never `process.env` in Domain; never logged |
+| Documented auth surface | **Contracts** | `securitySchemes` + `security` in `service.yaml`, with `401` / `403` on guarded routes |
+
+Consequences that follow from the layer rules in §3–§7:
+
+- Authorization **middleware** proves identity and group; it never proves ownership.
+  A route guarded by `authorizeByGroup(['admin'])` still needs a Service check when the
+  resource belongs to a specific actor.
+- The repository never decides an authorization outcome, for the same reason it never
+  throws a product 404 — it returns data or `null`, and the Service decides.
+- Mass assignment (`{ ...req.body }`) breaks the Entity contract as much as it breaks
+  security: the controller must build the payload from documented fields only.
+
+Rules: [`.cursor/rules/rule.security-baseline.mdc`](../.cursor/rules/rule.security-baseline.mdc) / [`.claude/rules/security-baseline.md`](../.claude/rules/security-baseline.md).
+Audit: `agt-security-review` (OWASP mapping in the `review-security` skill reference).

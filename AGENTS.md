@@ -41,6 +41,7 @@ Fixed spelling: **`infraestructure`** (with “e”), **`configuration`** (singu
 5. **Factories** — composition in `src/configuration/factory/`.
 6. **OpenAPI** — every route/payload change updates `src/contracts/service.yaml`.
 7. **Commits/PRs** — no AI attribution (`Made with Cursor`, `Generated with Claude Code`, etc.). See `.cursor/rules/rule.git-no-ai-attribution.mdc` / `.claude/rules/git-no-ai-attribution.md`.
+8. **Security baseline** — every route carries an explicit authorization decision, ownership checks live in the Service, no raw request value reaches a Mongo filter, and no secret or PII reaches code, logs, or error bodies. See `.cursor/rules/rule.security-baseline.mdc` / `.claude/rules/security-baseline.md` and [§13](docs/architecture-and-layers.md).
 
 ## 4. Naming conventions
 
@@ -92,6 +93,7 @@ Full flow: [`.cursor/WORKFLOW.md`](.cursor/WORKFLOW.md) / [`.claude/WORKFLOW.md`
 - [ ] Slice matches the approved spec (if any)
 - [ ] Domain has no infraestructure import
 - [ ] Rules in Service; repo/controller clean
+- [ ] Security baseline respected (authz on routes, ownership in Service, no secrets/PII in logs, no raw request values in queries)
 - [ ] `service.yaml` updated if HTTP changed
 - [ ] New controller registered in `src/app.ts` when needed
 - [ ] Relevant unit/int tests green
