@@ -27,4 +27,14 @@ export const ErrorCatalog: Record<
     en: 'Validation error',
     es: 'Error de validación',
   },
+  [EErrorCode.UNAUTHORIZED]: {
+    'pt-BR': 'Não autenticado',
+    en: 'Unauthorized',
+    es: 'No autenticado',
+  },
+  [EErrorCode.FORBIDDEN]: {
+    'pt-BR': 'Acesso negado',
+    en: 'Forbidden',
+    es: 'Acceso denegado',
+  },
 };

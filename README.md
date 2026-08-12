@@ -104,7 +104,7 @@ Default path for a **new feature**, endpoint, context, or contract change (**Pat
 | 4. Design | `agt-architecture` | `design.md` + `tasks.md` |
 | 5. QA plan | `agt-quality-assurance` (PLAN) | `test-plan.md` **before** any product code |
 | 6. Implement | `agt-dev-backend` → `agt-test-author` → `agt-test-runner` | Code under `src/` + Jest under `src/__tests__/` |
-| 7. Review / verify | `agt-code-review` → QA VERIFY → `agt-verifier` | Typed findings + `qa-report.md` |
+| 7. Review / verify | `agt-code-review` ∥ `agt-security-review` → QA VERIFY → `agt-verifier` | Typed findings + `qa-report.md` |
 | 8. PR | `agt-github-workflow` | Commit / push / PR **only if you ask** |
 
 Example prompt:
@@ -283,11 +283,13 @@ flowchart TD
 
   subgraph verify [Verify]
     CR[agt-code-review]
+    SR[agt-security-review]
     QaV["agt-quality-assurance VERIFY"]
     AR[agt-architecture-review]
     CQ[agt-code-quality]
     V[agt-verifier]
     CR --> QaV
+    SR --> QaV
     QaV --> AR
     QaV --> CQ
     AR --> V
@@ -350,6 +352,7 @@ flowchart TB
     CQ2[agt-code-quality]
     REST[agt-rest-endpoint-design]
     Name[agt-naming-refactor]
+    Sec[agt-security-review]
   end
 
   subgraph discovery [Discovery]
@@ -385,6 +388,7 @@ flowchart TB
 | Quality | [`agt-code-quality`](.cursor/agents/agt-code-quality.md) | Naming, REST conventions, and light layer checks |
 | Quality | [`agt-rest-endpoint-design`](.cursor/agents/agt-rest-endpoint-design.md) | Deep REST / OpenAPI design review for Express + `service.yaml` |
 | Quality | [`agt-naming-refactor`](.cursor/agents/agt-naming-refactor.md) | Read-only naming review and ordered rename suggestions |
+| Quality | [`agt-security-review`](.cursor/agents/agt-security-review.md) | Adversarial security review (OWASP) — authorization, injection, secrets, exposure |
 | Discovery | [`agt-architecture-probe`](.cursor/agents/agt-architecture-probe.md) | As-is architecture profile for any style → `profile.md` |
 | Discovery | [`agt-pattern-miner`](.cursor/agents/agt-pattern-miner.md) | Mines recurring practices with evidence → `patterns.md` |
 | Discovery | [`agt-architecture-analyst`](.cursor/agents/agt-architecture-analyst.md) | Consolidates profile + patterns → `analysis.md` |

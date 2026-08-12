@@ -31,6 +31,7 @@ Naming: plain `kebab-case.md` for layer/subject rules; `meta-<kebab>.md` for met
 |------|---------|-------|
 | [business-rules-layers.md](rules/business-rules-layers.md) | always | Business rules in Service; forbidden in Repository and Controller |
 | [git-no-ai-attribution.md](rules/git-no-ai-attribution.md) | always | Never add AI attribution to commits or PRs |
+| [security-baseline.md](rules/security-baseline.md) | always | Authorization, injection, secrets, data exposure by layer |
 | [domain.md](rules/domain.md) | `src/domain/**` | Domain — interfaces, entities, repo/service contracts |
 | [application.md](rules/application.md) | `src/application/**` | Application — thin Express controllers, error/auth pattern |
 | [infraestructure.md](rules/infraestructure.md) | `src/infraestructure/**` | Infraestructure — Mongo `IM*`, adapters, repositories |
@@ -99,6 +100,7 @@ Project core (spelling, layer boundaries, gates) lives in [CLAUDE.md](CLAUDE.md)
 | [agt-test-runner](agents/sdd/agt-test-runner.md) | sdd | no | Stabilize the Jest suite |
 | [agt-verifier](agents/sdd/agt-verifier.md) | sdd | mostly | Delivery evidence gate |
 | [agt-code-review](agents/review/agt-code-review.md) | review | yes | Spec ↔ code review, typed findings |
+| [agt-security-review](agents/review/agt-security-review.md) | review | yes | Adversarial security pass (OWASP), `BLOCKING_SECURITY` |
 | [agt-architecture-review](agents/review/agt-architecture-review.md) | review | yes | Layer / coupling audit (post-code) |
 | [agt-code-quality](agents/review/agt-code-quality.md) | review | yes | Naming + REST smoke + light layers |
 | [agt-rest-endpoint-design](agents/review/agt-rest-endpoint-design.md) | review | yes | Endpoint inventory, YAML parity |
@@ -144,6 +146,9 @@ Directory name = command. Skills marked **manual** have `disable-model-invocatio
 |-------|---------|
 | [/review-naming](skills/review-naming/SKILL.md) | Identifier audit by layer (`context: fork` → `agt-naming-refactor`) |
 | [/review-rest-endpoints](skills/review-rest-endpoints/SKILL.md) | Routes, verbs, YAML parity (fork → `agt-rest-endpoint-design`; + [reference-rest.md](skills/review-rest-endpoints/reference-rest.md)) |
+| [/review-security](skills/review-security/SKILL.md) | Authorization, injection, secrets, exposure (fork → `agt-security-review`; + [reference-owasp.md](skills/review-security/reference-owasp.md)) |
+
+`/review-security` is this kit's audit, scoped to the layered backend contract. It is **not** Claude Code's built-in `/security-review` command — invoke `/review-security` to get the kit behavior.
 
 ### Discovery
 
@@ -167,6 +172,7 @@ Directory name = command. Skills marked **manual** have `disable-model-invocatio
 | **Naming + REST + light layers (PR review)** | **`agt-code-quality`** |
 | **REST/OpenAPI design only** | **`agt-rest-endpoint-design`** or `/review-rest-endpoints` |
 | **Rename suggestions (read-only)** | **`agt-naming-refactor`** or `/review-naming` |
+| **Security / OWASP audit of a diff** | **`agt-security-review`** or `/review-security` |
 
 Map: rule → skill → agent:
 
@@ -175,6 +181,9 @@ semantic-quality (rule)
   ├── review-naming (skill) ──► agt-naming-refactor
   └── review-rest-endpoints (skill) ──► agt-rest-endpoint-design
          └── agt-code-quality (combines both + light layers)
+
+security-baseline (rule)
+  └── review-security (skill) ──► agt-security-review
 ```
 
 ### Project conventions (quick)
