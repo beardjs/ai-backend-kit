@@ -162,6 +162,7 @@ Directory name = command. Skills marked **manual** have `disable-model-invocatio
 |-------|---------|
 | [/github-workflow](skills/github-workflow/SKILL.md) | Atomic commits + PR template (+ [reference.md](skills/github-workflow/reference.md) org defaults) |
 | [/jira-workflow](skills/jira-workflow/SKILL.md) | Jira read/create (+ [reference.md](skills/jira-workflow/reference.md) org defaults) |
+| [/rca-post-mortem](skills/rca-post-mortem/SKILL.md) | RCA / post-mortem incident report (+ [template.md](skills/rca-post-mortem/template.md)) |
 
 ## Quality toolkit
 

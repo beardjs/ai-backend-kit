@@ -39,6 +39,7 @@ describe('when syncing the codex kit selection', () => {
     assert.equal(fs.existsSync(path.join(target, '.codex', 'config.toml')), true);
     assert.equal(fs.existsSync(path.join(target, '.codex', 'KIT_VERSION')), true);
     assert.equal(fs.existsSync(path.join(target, '.agents', 'skills', 'ai-backend-kit-code-review', 'SKILL.md')), true);
+    assert.equal(fs.existsSync(path.join(target, '.agents', 'skills', 'ai-backend-kit-rca-post-mortem', 'SKILL.md')), true);
     assert.equal(fs.existsSync(path.join(target, '.agents', 'skills', 'service-local', 'SKILL.md')), true);
     assert.equal(fs.existsSync(path.join(target, '.cursor')), false);
   });

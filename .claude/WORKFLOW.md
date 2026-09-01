@@ -11,7 +11,7 @@ Complements [README.md](README.md) (kit index) and [AGENTS.md](../AGENTS.md) (sh
 |------|------|-------------|
 | **A — Hotfix / typo** | Rename, 1 line, or ≤3 files; no OpenAPI/route change; criterion clear in the prompt | `agt-dev-backend` → `agt-test-author` (if behavior changed) → `agt-test-runner` → `agt-verifier` (skip full SDD) |
 | **B — Feature (SDD)** | New feature, endpoint, context, or contract change | **`/orchestrate`** (pipeline below) |
-| **C — Specialist only** | Requirements only, design only, QA only, review only, commit/PR only | Dispatch that subagent directly |
+| **C — Specialist only** | Requirements only, design only, QA only, review only, commit/PR only, RCA / post mortem | Dispatch that subagent or skill directly |
 | **D — Architecture discovery** | Repo **diverges** from kit layered / [`examples/canonical-user/`](../examples/canonical-user/) (or user explicitly overrides). **Skip** if the service already follows that layered shape. | See [ARCHITECTURE-DISCOVERY.md](ARCHITECTURE-DISCOVERY.md) (`agt-architecture-probe` → `agt-pattern-miner` → `agt-pattern-steward` + gate) |
 
 **Path D quick start:** invoke **`/architecture-discovery`**. Prompts and Entry by tool:
@@ -109,7 +109,7 @@ Agents must **read and preserve** these fields — never drop them.
 | [`agt-github-workflow`](agents/ops/agt-github-workflow.md) | Atomic commit / PR | Run without an explicit request |
 | [`agt-jira-workflow`](agents/ops/agt-jira-workflow.md) | Read / create Jira | Required on every feature |
 
-Related skills: `/product-refinement`, `/technical-design`, `/quality-assurance`, `/tests-layered`, `/backend-implementation`, `/code-review`, `/spec-driven`.
+Related skills: `/product-refinement`, `/technical-design`, `/quality-assurance`, `/tests-layered`, `/backend-implementation`, `/code-review`, `/spec-driven`, `/rca-post-mortem`.
 
 ---
 
@@ -219,6 +219,7 @@ Never weaken an assert to go green.
 | Review only | `agt-code-review` or `architecture-review` ∥ `code-quality` |
 | Security review only | `agt-security-review` (or `/review-security`) |
 | Commit / PR | `agt-verifier` → `agt-github-workflow` (explicit request) |
+| RCA / post mortem | Follow `/rca-post-mortem`; write `docs/incidents/<id>-rca.md`; do not invent numbers |
 
 ---
 
