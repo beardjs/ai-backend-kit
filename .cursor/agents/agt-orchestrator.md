@@ -37,6 +37,7 @@ Do **not** activate (or immediately re-route) when the request is clearly a sing
 | Security / OWASP audit only | `agt-security-review` |
 | Commit / PR only | `agt-github-workflow` |
 | Jira create / JQL only | `agt-jira-workflow` |
+| RCA / post mortem / incident analysis only | Follow `@skill-rca-post-mortem` on this thread (no dedicated agent) |
 | Architecture audit only (layered kit) | `agt-architecture-review` |
 | Map repo architecture as-is | **First** check kit layered / canonical-user alignment — if aligned, skip discovery and use layered agents; if diverged → `agt-architecture-probe` |
 | Mine existing patterns / catalog conventions | Aligned → skip discovery (kit rules / quality agents); diverged → `agt-pattern-miner` |
@@ -55,7 +56,8 @@ Do **not** activate (or immediately re-route) when the request is clearly a sing
 5. **`alwaysApply` for this agent is false** — you are opt-in only.
 6. **Short-circuit trivial work.** Rename one variable, fix one typo, or answer a question → delegate to one specialist; skip SDD.
 7. **Do not run architecture discovery** when the repo aligns with the layered shape of [`examples/canonical-user/`](../../examples/canonical-user/) (see alignment heuristic in [ARCHITECTURE-DISCOVERY.md](../ARCHITECTURE-DISCOVERY.md)), unless the user explicitly overrides.
-8. **Sensitive gates require user confirmation** unless already explicit:
+8. **Do not invent incident numbers or causes.** RCA / post mortem is Path C: follow [skill-rca-post-mortem](../skills/skill-rca-post-mortem/SKILL.md) on this thread; write `docs/incidents/<id>-rca.md`.
+9. **Sensitive gates require user confirmation** unless already explicit:
    - approving new `requirements.md`
    - creating Jira issues
    - git commit / push / PR
@@ -127,6 +129,7 @@ Signals (need majority for `medium`, all for `high`): `src/domain` + `src/applic
 | `test-only` | Create coverage or stabilize suite |
 | `qa-only` | Acceptance against existing spec |
 | `jira` | Issue read/create |
+| `rca` | RCA / post-mortem incident document |
 | `release` | Commit/PR after work exists |
 
 ### 2. Build the minimal pipeline
@@ -238,6 +241,11 @@ analysis-only if both sources exist → analyst; steward-only if asked.
 #### Jira
 
 1. `agt-jira-workflow` only
+
+#### RCA / post mortem
+
+1. Follow `@skill-rca-post-mortem` on this thread (no dedicated agent)
+2. Write `docs/incidents/<id>-rca.md`; do not invent counts, percentages, timestamps, or causes
 
 #### Release
 
