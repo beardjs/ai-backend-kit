@@ -9,6 +9,18 @@ Kit version lives in [`VERSION`](VERSION). After sync, the applied version is st
 
 > **Note:** Service package releases (`yarn release` / semantic-release) are separate from this kit version. See [`.cursor/rules/rule.release.mdc`](.cursor/rules/rule.release.mdc).
 
+# [1.6.0](https://github.com/beardjs/ai-backend-kit/compare/v1.5.0...v1.6.0) (2026-10-12)
+
+
+### Features
+
+* **claude:** add rca-post-mortem skill ([836070d](https://github.com/beardjs/ai-backend-kit/commit/836070d9e78734eac3798e994aca62d7c726d55b))
+* **claude:** add rca-post-mortem template ([42af21c](https://github.com/beardjs/ai-backend-kit/commit/42af21cf23432ee795051466d0e8282f3698bde4))
+* **codex:** add rca-post-mortem skill ([d9b2c2f](https://github.com/beardjs/ai-backend-kit/commit/d9b2c2ffbc8271c3ace6cd4957709553cee3bbd8))
+* **codex:** add rca-post-mortem template ([78d3e7e](https://github.com/beardjs/ai-backend-kit/commit/78d3e7eb6e44b157dcf8ac380f53842dae5efb79))
+* **cursor:** add rca-post-mortem skill ([995af86](https://github.com/beardjs/ai-backend-kit/commit/995af862510c88d50694e29ce5667ab5a8ad85ad))
+* **cursor:** add rca-post-mortem template ([976abe0](https://github.com/beardjs/ai-backend-kit/commit/976abe03f564c2b2d6114c4eac4ca8dead6805f0))
+
 # [1.5.0](https://github.com/beardjs/ai-backend-kit/compare/v1.4.0...v1.5.0) (2026-08-12)
 
 
