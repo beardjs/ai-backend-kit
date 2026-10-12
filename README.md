@@ -162,7 +162,7 @@ Detail and routing: [`.cursor/ARCHITECTURE-DISCOVERY.md`](.cursor/ARCHITECTURE-D
 |------|------|--------|
 | **A — Hotfix / typo** | Rename, 1-liner, or ≤3 files with no OpenAPI/route change | Specialist agent directly (`agt-dev-backend` → `agt-test-author` if needed → `agt-test-runner` → `agt-verifier`) |
 | **B — Feature (SDD)** | New endpoint/context or contract change | **`agt-orchestrator`** (Cursor) / **`/orchestrate`** (Claude Code) / primary Codex agent + `$spec-driven` — PO → human gate → design → QA plan → … |
-| **C — Specialist only** | Requirements only, design only, review only, PR only | Call that agent (`agt-product-owner`, `agt-code-review`, `agt-github-workflow`, …) |
+| **C — Specialist only** | Requirements only, design only, review only, PR only, RCA / post mortem | Call that agent or skill (`agt-product-owner`, `agt-code-review`, `agt-github-workflow`, `@skill-rca-post-mortem`, …) |
 | **D — Architecture discovery** | Repo **diverges** from kit layered / [`examples/canonical-user/`](examples/canonical-user/) (or explicit override) | [Architecture discovery workflow](#architecture-discovery-workflow) — probe → miner → analyst → steward + gate — [ARCHITECTURE-DISCOVERY.md](.cursor/ARCHITECTURE-DISCOVERY.md) |
 
 Shortcuts detail: [`.cursor/WORKFLOW.md`](.cursor/WORKFLOW.md) / [`.claude/WORKFLOW.md`](.claude/WORKFLOW.md).
@@ -234,6 +234,7 @@ flowchart TD
 | `test-only` | Create coverage or stabilize suite |
 | `qa-only` | Acceptance against an existing spec |
 | `jira` | Issue read / create |
+| `rca` | RCA / post-mortem incident document |
 | `release` | Commit / PR after work exists |
 
 **Gates** use a closed vocabulary. Comments, praise, or “please revise” do **not** change state:
@@ -447,14 +448,14 @@ Native port of the same pipeline, optimized for Claude Code:
 - [`WORKFLOW.md`](.claude/WORKFLOW.md) — idea → release-gate pipeline (`/orchestrate` entry)
 - `rules/` — path-scoped rules that load only when Claude touches matching files
 - `agents/` — 17 subagents with tiered models (`haiku` / `sonnet` / `inherit`) and per-role tool restrictions
-- `skills/` — 19 skills (directory name = `/command`; manual ones use `disable-model-invocation`)
+- `skills/` — 20 skills (directory name = `/command`; manual ones use `disable-model-invocation`)
 
 ## Codex kit (`.codex/` + `.agents/skills/`)
 
 - [`config.toml`](.codex/config.toml) — project-scoped multi-agent configuration with a three-subagent cap and inherited models
 - [`agents/`](.codex/agents/) — nine consolidated roles with per-role reasoning and sandbox boundaries
 - [`hooks.json`](.codex/hooks.json) + `rules/` — trusted-project guardrails for sensitive files and destructive commands
-- [`.agents/skills/`](.agents/skills/) — 18 focused workflows discovered natively and loaded progressively
+- [`.agents/skills/`](.agents/skills/) — 19 focused workflows discovered natively and loaded progressively
 - [`README.md`](.codex/README.md) — agent map, trust setup, and default delivery flow
 
 ## Kit version vs service release

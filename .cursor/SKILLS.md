@@ -55,6 +55,7 @@ Agents: `agt-architecture-probe`, `agt-pattern-miner`, `agt-architecture-analyst
 |-------|---------|
 | [skill-github-workflow](skills/skill-github-workflow/SKILL.md) | Atomic commits + PR template |
 | [skill-jira-workflow](skills/skill-jira-workflow/SKILL.md) | Jira read/create |
+| [skill-rca-post-mortem](skills/skill-rca-post-mortem/SKILL.md) | RCA / post-mortem incident report (+ `template.md`) |
 
 ## Related indexes
 

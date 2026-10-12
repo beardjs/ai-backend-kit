@@ -48,7 +48,9 @@ product_owner -> APPROVED -> architect -> qa PLAN -> implementer
 security finding returns to `implementer` like any other blocking finding.
 
 Small, clear changes should use only the necessary specialists. GitHub and
-Jira operations always require an explicit user request.
+Jira operations always require an explicit user request. RCA / post mortem
+uses the [`$rca-post-mortem`](../.agents/skills/ai-backend-kit-rca-post-mortem/SKILL.md)
+skill on the primary thread (no dedicated operator).
 
 ## Architecture discovery (Path D)
 
